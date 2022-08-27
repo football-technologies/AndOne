@@ -1,0 +1,23 @@
+{
+    "editor.wordWrap": "on",
+    "editor.tabSize": 2,
+    "editor.renderLineHighlight": "all",
+  
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+      "source.fixAll.tslint": true,
+      "source.fixAll": true
+    },
+    "xmlTools.splitAttributesOnFormat": true,
+    "editor.formatOnSave": true,
+    "bracketPairColorizer.forceIterationColorCycle": true,
+    "bracketPairColorizer.highlightActiveScope": true,
+    "search.useIgnoreFiles": false,
+  
+    "emmet.includeLanguages": {
+      "javascript": "javascriptreact",
+      "typescript": "typescriptreact"
+    }
+  }
+  
