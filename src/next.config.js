@@ -13,6 +13,8 @@ console.log(">>>>>>>  CURRENT_ENV", CURRENT_ENV);
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+
+  env: CURRENT_ENV,
 };
 
 module.exports = nextConfig;
