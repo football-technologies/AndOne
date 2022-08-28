@@ -1,5 +1,5 @@
-const V1 = require("./v1");
-exports.v1 = { ...V1 };
+// const V1 = require("./v1");
+// exports.v1 = { ...V1 };
 
 const busketInitFunctions = {
   // Adminの設定ファイル。消してはダメ
