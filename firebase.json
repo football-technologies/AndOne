@@ -6,12 +6,6 @@
   "hosting": {
     "public": "public",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
-    // "rewrites": [
-    //   {
-    //     "source": "**",
-    //     "function": "nextapp"
-    //   }
-    // ]
   },
   "storage": {
     "rules": "storage.rules"
