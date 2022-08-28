@@ -36,7 +36,7 @@ steps:
   #   waitFor: ["Install:npm_packages", "Install:functions_npm_packages"]
   - id: "Build:App"
     name: "gcr.io/$PROJECT_ID/maven-node-openjdk"
-    args: ["npm", "run", "build-nuxt:${_FIREBASE_ENV}"]
+    args: ["npm", "run", "build-next:${_FIREBASE_ENV}"]
     dir: "src"
   - id: "Deploy:Firebase"
     name: "gcr.io/$PROJECT_ID/maven-node-openjdk"

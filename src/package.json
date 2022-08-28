@@ -24,6 +24,7 @@
     "ci-deploy:production": "firebase deploy --non-interactive --force --project production"
   },
   "dependencies": {
+    "firebase-admin": "^10.0.2",
     "@chakra-ui/icons": "^2.0.9",
     "@chakra-ui/react": "^2.2.9",
     "@emotion/react": "^11.10.0",
