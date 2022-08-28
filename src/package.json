@@ -11,7 +11,7 @@
     "emulators:start": "firebase emulators:start --import=../data --only auth,firestore,functions,pubsub",
     "emulators:export": "firebase emulators:export --force ../data/",
     "cleanup": "rm -rf ../functions/.next && rm -rf ../functions/next.config.js && rm -rf ../public/* && rm -fr ../functions/config/*",
-    "copy-next": "rm -rf ../functions/.next && cp -R .next/ ../functions/.next && cp next.config.js ../functions/next.config.js && rm -rf ../public/* && mkdir -p ../public/_next && cp -R .next/dist/client/ ../public/_next && cp -a static/. ../public/ && cp -R config/ ../functions/config",
+    "copy-next": "rm -rf ../functions/.next && cp -R .next/ ../functions/.next && cp next.config.js ../functions/next.config.js && rm -rf ../public/* && mkdir -p ../public/_next && cp -a public/. ../public/ ",
     "copy-disctionary-scheme": "mkdir -p ../functions/v1/helpers && cp ./helpers/disctionary.js ../functions/v1/helpers/disctionary.js && cp ./helpers/scheme.js ../functions/v1/helpers/scheme.js",
     "build-next:mino": "NODE_ENV=\"mino\" next build && npm run copy-next",
     "build-next:imoto": "NODE_ENV=\"imoto\" next build && npm run copy-next",
