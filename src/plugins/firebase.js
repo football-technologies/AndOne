@@ -19,8 +19,9 @@ const config = {
 console.log(">>>>>>>>>> called firebase.js", config);
 
 const apps = getApps();
+let app = null;
 if (!apps.length) {
-  initializeApp(config);
+  app = initializeApp(config);
 }
 
 const functions = getFunctions(app, REGION_TOKYO);
