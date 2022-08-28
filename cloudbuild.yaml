@@ -25,7 +25,7 @@ steps:
     args:
       [
         "-c",
-        "gcloud secrets versions access latest --secret=dotenv_file --format='get(payload.data)' --project $PROJECT_ID | tr '_-' '/+' | base64 -d > .env.${_FIREBASE_ENV}",
+        "gcloud secrets versions access latest --secret=dotenv_file --format='get(payload.data)' --project $PROJECT_ID | tr '_-' '/+' | base64 -d > .env.production",
       ]
     dir: "src"
     waitFor: ["Watch:slackbot"]
