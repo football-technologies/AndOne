@@ -19,16 +19,16 @@ steps:
     args: ["npm", "install"]
     dir: "functions"
     waitFor: ["-"]
-  # - id: "Fetch:dotenv"
-  #   name: gcr.io/cloud-builders/gcloud
-  #   entrypoint: "bash"
-  #   args:
-  #     [
-  #       "-c",
-  #       "gcloud secrets versions access latest --secret=dotenv_file --format='get(payload.data)' --project $PROJECT_ID | tr '_-' '/+' | base64 -d > .env.${_FIREBASE_ENV}",
-  #     ]
-  #   dir: "src/config"
-  #   waitFor: ["Watch:slackbot"]
+  - id: "Fetch:dotenv"
+    name: gcr.io/cloud-builders/gcloud
+    entrypoint: "bash"
+    args:
+      [
+        "-c",
+        "gcloud secrets versions access latest --secret=dotenv_file --format='get(payload.data)' --project $PROJECT_ID | tr '_-' '/+' | base64 -d > .env.${_FIREBASE_ENV}",
+      ]
+    dir: "src/config"
+    waitFor: ["Watch:slackbot"]
   # - id: "Run:test"
   #   name: "gcr.io/$PROJECT_ID/maven-node-openjdk"
   #   args: ["npm", "run", "ci-test"]
