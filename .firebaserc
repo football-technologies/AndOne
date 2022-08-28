@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "andone-production"
+    "production": "andone-production",
+    "imoto": "andone-imoto",
+    "mino": "andone-mino"
   }
 }
