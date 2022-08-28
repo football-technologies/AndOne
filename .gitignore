@@ -32,6 +32,8 @@ src/.pnpm-debug.log*
 # local env files
 .env*.local
 src/.env*.local
+src/.env.*
+
 # vercel
 src/.vercel
 

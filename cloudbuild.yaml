@@ -6,7 +6,7 @@ steps:
         "--build",
         "$BUILD_ID",
         "--webhook",
-        "https://hooks.slack.com/services/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",
+        "https://hooks.slack.com/services/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",
         "--copy-timeout",
       ]
   - id: "Install:npm_packages"
