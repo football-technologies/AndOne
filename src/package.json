@@ -6,7 +6,22 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest",
+    "emulators:start": "firebase emulators:start --import=../data --only auth,firestore,functions,pubsub",
+    "emulators:export": "firebase emulators:export --force ../data/",
+    "cleanup": "rm -rf ../functions/.next && rm -rf ../functions/next.config.js && rm -rf ../public/* && rm -fr ../functions/config/*",
+    "copy-next": "rm -rf ../functions/.next && cp -R .next/ ../functions/.next && cp next.config.js ../functions/next.config.js && rm -rf ../public/* && mkdir -p ../public/_next && cp -R .next/dist/client/ ../public/_next && cp -a static/. ../public/ && cp -R config/ ../functions/config",
+    "copy-disctionary-scheme": "mkdir -p ../functions/v1/helpers && cp ./helpers/disctionary.js ../functions/v1/helpers/disctionary.js && cp ./helpers/scheme.js ../functions/v1/helpers/scheme.js",
+    "build-next:mino": "NODE_ENV=\"mino\" next build && npm run copy-next && npm run copy-disctionary-scheme",
+    "build-next:imoto": "NODE_ENV=\"imoto\" next build && npm run copy-next && npm run copy-disctionary-scheme",
+    "build-next:production": "NODE_ENV=\"production\" next build && npm run copy-next && npm run copy-disctionary-scheme",
+    "start:mino": "NODE_ENV=\"mino\" next start",
+    "start:imoto": "NODE_ENV=\"imoto\" next start",
+    "start:production": "NODE_ENV=\"production\" next start",
+    "ci-deploy:mino": "firebase deploy --non-interactive --force --project mino",
+    "ci-deploy:imoto": "firebase deploy --non-interactive --force --project imoto",
+    "ci-deploy:production": "firebase deploy --non-interactive --force --project production"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.9",

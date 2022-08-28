@@ -1,0 +1,45 @@
+steps:
+  - id: "Watch:slackbot"
+    name: "gcr.io/$PROJECT_ID/slackbot"
+    args:
+      [
+        "--build",
+        "$BUILD_ID",
+        "--webhook",
+        "https://hooks.slack.com/services/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",
+        "--copy-timeout",
+      ]
+  - id: "Install:npm_packages"
+    name: "gcr.io/$PROJECT_ID/maven-node-openjdk"
+    args: ["npm", "install"]
+    dir: "src"
+    waitFor: ["-"]
+  - id: "Install:functions_npm_packages"
+    name: "gcr.io/$PROJECT_ID/maven-node-openjdk"
+    args: ["npm", "install"]
+    dir: "functions"
+    waitFor: ["-"]
+  # - id: "Fetch:dotenv"
+  #   name: gcr.io/cloud-builders/gcloud
+  #   entrypoint: "bash"
+  #   args:
+  #     [
+  #       "-c",
+  #       "gcloud secrets versions access latest --secret=dotenv_file --format='get(payload.data)' --project $PROJECT_ID | tr '_-' '/+' | base64 -d > .env.${_FIREBASE_ENV}",
+  #     ]
+  #   dir: "src/config"
+  #   waitFor: ["Watch:slackbot"]
+  # - id: "Run:test"
+  #   name: "gcr.io/$PROJECT_ID/maven-node-openjdk"
+  #   args: ["npm", "run", "ci-test"]
+  #   dir: "src"
+  #   waitFor: ["Install:npm_packages", "Install:functions_npm_packages"]
+  - id: "Build:App"
+    name: "gcr.io/$PROJECT_ID/maven-node-openjdk"
+    args: ["npm", "run", "build-nuxt:${_FIREBASE_ENV}"]
+    dir: "src"
+  - id: "Deploy:Firebase"
+    name: "gcr.io/$PROJECT_ID/maven-node-openjdk"
+    args: ["npm", "run", "ci-deploy:${_FIREBASE_ENV}"]
+    dir: "src"
+timeout: 2500s
