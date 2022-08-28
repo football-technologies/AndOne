@@ -27,7 +27,7 @@ steps:
         "-c",
         "gcloud secrets versions access latest --secret=dotenv_file --format='get(payload.data)' --project $PROJECT_ID | tr '_-' '/+' | base64 -d > .env.${_FIREBASE_ENV}",
       ]
-    dir: "src/config"
+    dir: "src"
     waitFor: ["Watch:slackbot"]
   # - id: "Run:test"
   #   name: "gcr.io/$PROJECT_ID/maven-node-openjdk"
