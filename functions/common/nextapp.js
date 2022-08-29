@@ -20,6 +20,7 @@ module.exports = functions
   .runWith(runtimeOpts)
   .https.onRequest(async (req, res) => {
     // exports.nextjsFunc = https.onRequest((req, res) => {
+    res.set("Cache-Control", "public, max-age=600, s-maxage=1200");
     return nextjsServer.prepare().then(() => nextjsHandle(req, res));
   });
 
