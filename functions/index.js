@@ -17,7 +17,7 @@ loadInitFunctions(busketInitFunctions);
 const busketFunctions = {
   // SentryのError設定ファイル。消してはダメ
   sentryErrorWrapper: "./common/sentryErrorWrapper",
-  nextapp: "./common/nextapp",
+  // nextapp: "./common/nextapp",
 };
 
 const loadFunctions = (funcs) => {
