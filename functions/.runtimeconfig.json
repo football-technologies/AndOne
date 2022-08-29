@@ -1,0 +1,26 @@
+{
+  "service_account": {
+    "client_email": "firebase-adminsdk-4bua2@andone-imoto.iam.gserviceaccount.com",
+    "private_key_id": "b82758e2fc530e0692b730ddddf3168128b59ec5",
+    "client_id": "112114299070411940829",
+    "project_id": "andone-imoto",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-4bua2%40andone-imoto.iam.gserviceaccount.com",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDAfpW5OnH6fzcm\nPZ70iQgtWeydgW2CflbAX6oJUqczwg+LA3Z6nVvglxvwc2+kjAZBOslLp4DoHZy7\nOFrmxhikhIV4EkuVBeH/ehC9UoA2vMOWbXDWJ9tyvCO7ipbwbvZjw4Bj1kxqd1P4\nFvZ14mb3VyDYZ7PJXx/70VEygclg8B0G6UCYrh8uUXxfInCHfMQFfux56b3rk6ai\n1WZcEEqSnqLJ51RADzjVq9mJROZSgW7SG84ST7HVSiPBy7sxno6ZT8Jv/l7p+RzT\nPdXEde+eQBbpq4lE/ujmXq0KuPSAptoIMqq+QSlkRLFOTwDP5uqJX/tHSPSrooRU\nKMmREytnAgMBAAECggEAS5gqolBSfIZDGTBv4SaDYJQE+SHf6LRGy0uGUhz0br4S\nLoyQlbyAXWXaYgZjXKJkvm8gqCZC2GTwrRGHmUNIYCtu4uWEayShSRwdwMvKcDSX\nNtcJzgBfDOLXwYm+lvNsrWcUX6DD57eu8SnLZiYgO5gq3PF0yGsj+1eLZKNVe0yA\n4zQGQgWwh2u2hibknih2Y7wR13g5jM9AawOI3AxNgh+BD2WtRc90cGpFO80o3gwd\n3UvtpDPkFZ0vPf29ytpYhsjE8eSLdaHLGlHSVjRqOj5XWz7yVwBnCYYE/JThVYhV\ncEthWd7B2DNOaBjqsrBLGuh4ULiyk5W2QwCnWaaeKQKBgQD6vFT9Q8tCQbkk7V3g\nA5OcA6V7nbl+ZJqYWTKC/y15Mua/uceacdpeRUTyHl0O4en6PexrDBWGfAw791B/\nsvGqp1k9u9+/e++7ELbU3TKxD2FcRnWhUZY2BfIDKu/xA9nX4NwmN+g8+bSATLWX\n7QQgC7hUnNBAR4juetzRyFVG+wKBgQDEiTb/XWaxJboXbafZuRXcjxvcEis+ps30\nRjH2tqTfsWk3VT8kF4HFB9XxeRsPjrNd7Qqp+Sv48XwBKdTOIlaPAidCnuDeplU1\nb5oVuMEJb4/YX17e+CqFZpiLLCXbjA/9gJUJYZzkgk3/5SDd6ffUmEG79cS3A5+U\nbeRyyGnxhQKBgQCfFFYnyZdwFhrNXvwsYJiKZ5XadBt4IYQkHJN7oULMnorgIZKO\nXqXZIcG4i6MnChZU+mzBDg2qIZHxidu86V+CkmKAVG6FIrDa0qPtMdozlDqFPP7s\ntsLCy8rcT6WkGHliCfwjE115MkRfEkw0c+AmJMlyhXtrDPfHtpPbVWsleQKBgApO\nm+jGkDUoIltKL+xWLZRUmQRwm338p35xE/u5Vmo41qjFOrt81BxuLcUtMcMeG8AI\nR2/klm7G01cIR5XL7Tgwx7hRtr9Wf89+m9kZyF3jUOrrDYGqCCjY2ZUq6o1aChik\nXqyQRvcg8lBCRvf8ZjfrCD+AQyHJ+duB6+ItKok1AoGBAOE9unAEORG14QE9XR1G\ndEylgBymGsgGHNdb/Eag5Ylzoqn8U9+Ri0HdsCm11ZIDxpKlcTxRcbCZo0p7JcYf\n8Be6HUsWFgGr63Y+VE6QtN7VNXat2Sjp1tfSJqPT2MSgK28QPmO1OMtF1VbU4ICD\nr3z3NbiCVp9WWBB3F5gYaXEa\n-----END PRIVATE KEY-----\n",
+    "type": "service_account",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth"
+  },
+  "sentry": {
+    "dsn": "https://7c5d2c1ff2754d6d84c3817cea4cc202@o464783.ingest.sentry.io/6317582"
+  },
+  "basic": {
+    "env": "imoto",
+    "base_url": "https://andone-imoto.firebaseapp.com/"
+  },
+  "slack": {
+    "channel": {
+      "debug": "https://hooks.slack.com/services/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"
+    }
+  }
+}
