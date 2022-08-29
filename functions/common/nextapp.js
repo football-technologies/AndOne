@@ -11,9 +11,17 @@ const nextjsServer = next({
 });
 const nextjsHandle = nextjsServer.getRequestHandler();
 
-exports.nextjsFunc = https.onRequest((req, res) => {
-  return nextjsServer.prepare().then(() => nextjsHandle(req, res));
-});
+const runtimeOpts = {
+  timeoutSeconds: 540,
+  memory: "8GB",
+};
+
+module.exports = functions
+  .runWith(runtimeOpts)
+  .https.onRequest(async (req, res) => {
+    // exports.nextjsFunc = https.onRequest((req, res) => {
+    return nextjsServer.prepare().then(() => nextjsHandle(req, res));
+  });
 
 // const config = {
 //   ...nextConfig,
