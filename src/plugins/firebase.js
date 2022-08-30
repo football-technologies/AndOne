@@ -19,12 +19,12 @@ const config = {
 console.log(">>>>>>>>>> called firebase.js", config);
 
 const apps = getApps();
-let app = null;
 if (!apps.length) {
-  app = initializeApp(config);
+  initializeApp(config);
 }
 
-const functions = getFunctions(app, REGION_TOKYO);
+const functions = getFunctions();
+functions.region = REGION_TOKYO;
 const db = getFirestore();
 const auth = getAuth();
 

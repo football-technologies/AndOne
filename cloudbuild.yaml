@@ -6,16 +6,16 @@ steps:
         "--build",
         "$BUILD_ID",
         "--webhook",
-        "https://hooks.slack.com/services/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",
+        "https://hooks.slack.com/services/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",
         "--copy-timeout",
       ]
   - id: "Install:npm_packages"
-    name: "gcr.io/$PROJECT_ID/maven-node-openjdk"
+    name: node
     args: ["npm", "install"]
     dir: "src"
     waitFor: ["-"]
   - id: "Install:functions_npm_packages"
-    name: "gcr.io/$PROJECT_ID/maven-node-openjdk"
+    name: node
     args: ["npm", "install"]
     dir: "functions"
     waitFor: ["-"]
@@ -30,16 +30,17 @@ steps:
     dir: "src"
     waitFor: ["Watch:slackbot"]
   # - id: "Run:test"
-  #   name: "gcr.io/$PROJECT_ID/maven-node-openjdk"
+  #   name: node
   #   args: ["npm", "run", "ci-test"]
   #   dir: "src"
   #   waitFor: ["Install:npm_packages", "Install:functions_npm_packages"]
   - id: "Build:App"
-    name: "gcr.io/$PROJECT_ID/maven-node-openjdk"
+    # name: node
+    name: node
     args: ["npm", "run", "build-next:${_FIREBASE_ENV}"]
     dir: "src"
   - id: "Deploy:Firebase"
-    name: "gcr.io/$PROJECT_ID/maven-node-openjdk"
+    name: node
     args: ["npm", "run", "ci-deploy:${_FIREBASE_ENV}"]
     dir: "src"
 timeout: 2500s
