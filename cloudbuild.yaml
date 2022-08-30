@@ -40,7 +40,8 @@ steps:
     args: ["npm", "run", "build-next:${_FIREBASE_ENV}"]
     dir: "src"
   - id: "Deploy:Firebase"
-    name: node
+    # name: node
+    name: "gcr.io/$PROJECT_ID/maven-node-openjdk"
     args: ["npm", "run", "ci-deploy:${_FIREBASE_ENV}"]
     dir: "src"
 timeout: 2500s
