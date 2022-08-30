@@ -3,6 +3,8 @@ import { getDoc, doc } from "firebase/firestore";
 import { useState } from "react";
 import { useEffect } from "react";
 
+import { Button } from "@chakra-ui/react";
+
 export default function Home() {
   const [dummy, setDummy] = useState();
 
@@ -15,5 +17,5 @@ export default function Home() {
     });
   }, []);
 
-  return <h1>name: {dummy}</h1>;
+  return <Button>name: {dummy}</Button>;
 }
