@@ -29,3 +29,10 @@ const db = getFirestore();
 const auth = getAuth();
 
 export { db, auth, functions };
+
+if (process.env.NODE_ENV === "development") {
+  //emulator設定
+  connectFunctionsEmulator(functions, "localhost", 5001);
+  // connectFirestoreEmulator(db, "localhost", 8080);
+  // connectAuthEmulator(auth, "http://localhost:9099");
+}
