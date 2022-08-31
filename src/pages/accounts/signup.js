@@ -16,6 +16,8 @@ import {
   Icon,
   Heading,
 } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
+
 import { BiHide, BiShow } from "react-icons/bi";
 
 import { auth } from "@/plugins/firebase";
@@ -29,6 +31,7 @@ const Signup = () => {
 
   const dispatch = useDispatch();
   const router = useRouter();
+  const toast = useToast();
 
   const {
     register,
@@ -53,11 +56,27 @@ const Signup = () => {
           })
         );
 
+        toast({
+          position: "top",
+          title: "ログインが成功しました",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+
         console.log(">>>>>>>> Create User Done");
         router.push("/");
       })
       .catch((error) => {
         console.log(">>>>>>>>>>>>>> error", error.message);
+
+        toast({
+          position: "top",
+          title: error.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       });
   };
 

@@ -16,6 +16,8 @@ import {
   Heading,
   Icon,
 } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
+
 import { BiHide, BiShow } from "react-icons/bi";
 
 import { auth } from "@/plugins/firebase";
@@ -26,7 +28,9 @@ import { login } from "@/store/account";
 const Login = () => {
   const [show, setShow] = useState(false);
 
+  const dispatch = useDispatch();
   const router = useRouter();
+  const toast = useToast();
 
   const {
     register,
@@ -34,7 +38,6 @@ const Login = () => {
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const dispatch = useDispatch();
 
   const onSubmit = (data) => {
     console.log(">>>>>>>>>>>> data", data);
@@ -48,11 +51,28 @@ const Login = () => {
             name: auth.user.displayName,
           })
         );
+
+        toast({
+          position: "top",
+          title: "ログインが成功しました",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+
         console.log(">>>>>>>> Login User Done");
         router.push("/");
       })
       .catch((error) => {
         console.log(">>>>>>>>>>>>> error", error.message);
+
+        toast({
+          position: "top",
+          title: error.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       });
   };
 
