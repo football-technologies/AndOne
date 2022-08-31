@@ -1,14 +1,21 @@
 import SideNavWithoutLogin from "./SideNavWithoutLogin";
 import SideNavWithLogin from "./SideNavWithLogin";
 
-const SideNavBasic = () => {
-  return (
-    <>
-      <main>SideNavBasic</main>
+import useAuthentication from "@/components/layouts/Authentication";
 
-      <SideNavWithoutLogin></SideNavWithoutLogin>
-      <SideNavWithLogin></SideNavWithLogin>
-    </>
+import { Box } from "@chakra-ui/react";
+
+const SideNavBasic = () => {
+  const { currentUser } = useAuthentication();
+
+  return (
+    <Box w={"80%"} m={"20px auto"}>
+      {currentUser.id ? (
+        <SideNavWithLogin></SideNavWithLogin>
+      ) : (
+        <SideNavWithoutLogin></SideNavWithoutLogin>
+      )}
+    </Box>
   );
 };
 

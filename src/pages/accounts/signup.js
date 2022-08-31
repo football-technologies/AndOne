@@ -104,15 +104,16 @@ const Signup = () => {
   };
 
   return (
-    <Box>
+    <Box bg='white' h={"100vh"} w={"90%"} mx={"auto"}>
       <form onSubmit={handleSubmit(onSubmit)} style={form}>
-        <Heading as="h3" size="lg" textAlign={"center"}>
-          会員登録
+        <Heading py={"50px"} as="h3" size="lg">
+          Signup
         </Heading>
         <FormControl isInvalid={errors.email} mt={"45px"}>
           <FormLabel>Email</FormLabel>
           <Input
             type="email"
+            variant='filled'
             {...register("email", {
               required: "メールアドレスは必須入力です",
               pattern: {
@@ -130,6 +131,7 @@ const Signup = () => {
           <InputGroup>
             <Input
               type={show ? "text" : "password"}
+              variant='filled'
               {...register("password", {
                 required: "パスワードは必須入力です",
                 onBlur: () => {
@@ -159,6 +161,7 @@ const Signup = () => {
           <InputGroup>
             <Input
               type={showConfirm ? "text" : "password"}
+              variant='filled'
               {...register("confirmPassword", {
                 required: "確認のためパスワードを再入力してください",
                 validate: (value) => {
@@ -194,7 +197,7 @@ const Signup = () => {
             isLoading={isSubmitting}
             mt={"20px"}
           >
-            送信する
+            アカウントを作成
           </Button>
         </VStack>
       </form>

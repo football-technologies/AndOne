@@ -5,10 +5,10 @@ const DefaultLayout = ({ children }) => {
   return (
     <>
       <HStack>
-        <Stack w="30%" h="100vh" bgColor="gray.200">
+        <Stack w="30%" h="100vh" bgColor="white">
           <SideNavBasic></SideNavBasic>
         </Stack>
-        <Stack w="70%" h="100vh" bgColor="gray.400">
+        <Stack w="70%" h="100vh" bgColor="gray.300">
           <main>{children}</main>
         </Stack>
       </HStack>
