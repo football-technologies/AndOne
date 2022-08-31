@@ -3,7 +3,7 @@ import { getDoc, doc } from "firebase/firestore";
 import { useState } from "react";
 import { useEffect } from "react";
 
-import { Button } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 
 export default function Home() {
   const [dummy, setDummy] = useState();
@@ -17,5 +17,10 @@ export default function Home() {
     });
   }, []);
 
-  return <Button>name: {dummy}</Button>;
+  return (
+    <>
+      <Box bg="black">aaa</Box>
+      <Button colorScheme="red">name: {dummy}</Button>
+    </>
+  );
 }
