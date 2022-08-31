@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <>
       <Box bg="black">aaa</Box>
-      <Button colorScheme="red">name: {dummy}</Button>
+      <Button>name: {dummy}</Button>
     </>
   );
 }

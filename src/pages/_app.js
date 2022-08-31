@@ -2,7 +2,7 @@ import "../styles/globals.css";
 import { Provider } from "react-redux";
 import store from "@/store";
 
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, color } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/react";
 const colors = {
   primary: "#EA4D72",
@@ -16,7 +16,25 @@ const colors = {
   paleGray: "#EEEEEE",
   white: "#fff",
 };
-const theme = extendTheme({ colors });
+const theme = extendTheme({
+  colors,
+  // components: {
+  // Button: {
+  //   variants: {
+  //     big: {
+  //       bg: colors.primary,
+  //       color: colors.white,
+  //       borderStyle: "solid",
+  //       borderWidth: "2px",
+  //       rounded: "full",
+  //       px: 10,
+  //       py: 5,
+  //       letterSpacing: "0.1em",
+  //     },
+  //   },
+  // },
+  // },
+});
 
 import DefaultLayout from "@/layouts";
 
