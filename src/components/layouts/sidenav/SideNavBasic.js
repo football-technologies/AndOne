@@ -1,4 +1,5 @@
 import SideNavWithoutLogin from "./SideNavWithoutLogin";
+import SideNavWithLogin from "./SideNavWithLogin";
 
 const SideNavBasic = () => {
   return (
@@ -6,6 +7,7 @@ const SideNavBasic = () => {
       <main>SideNavBasic</main>
 
       <SideNavWithoutLogin></SideNavWithoutLogin>
+      <SideNavWithLogin></SideNavWithLogin>
     </>
   );
 };
