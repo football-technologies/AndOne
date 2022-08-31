@@ -12,14 +12,8 @@ const user = createSlice({
   },
   reducers: {
     create(state, { type, payload }) {
-      const user = {
-        id: payload.id ? payload.id : uuidv4(),
-        name: payload.name,
-        email: payload.email,
-        createdAt: serverTimestamp(),
-      };
-
-      setDoc(doc(db, `users/${user.id}`), user, { merge: true });
+      payload["createdAt"] = serverTimestamp();
+      setDoc(doc(db, `users/${payload.id}`), payload, { merge: true });
     },
 
     read(state, { type, payload }) {

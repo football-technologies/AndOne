@@ -17,13 +17,16 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
-
 import { BiHide, BiShow } from "react-icons/bi";
 
 import { auth } from "@/plugins/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 import { signup } from "@/store/account";
+import { create } from "@/store/user";
+import { createSecret } from "@/store/secret";
+import _ from "lodash";
+import scheme from "@/helpers/scheme";
 
 const Signup = () => {
   const [show, setShow] = useState(false);
@@ -41,12 +44,19 @@ const Signup = () => {
     trigger,
   } = useForm();
 
+  const user = _.cloneDeep(scheme.users);
+  const secret = _.cloneDeep(scheme.secrets);
+
   const onSubmit = (data) => {
     console.log(">>>>>>>>>>>>>> data", data);
 
     createUserWithEmailAndPassword(auth, data.email, data.password)
       .then((auth) => {
         console.log(">>>>>>>>>>> auth.user", auth.user);
+
+        user.id = auth.user.uid;
+        secret.id = auth.user.uid;
+        secret.email = auth.user.email;
 
         dispatch(
           signup({
@@ -55,6 +65,10 @@ const Signup = () => {
             name: auth.user.displayName,
           })
         );
+
+        dispatch(create(user));
+
+        dispatch(createSecret(secret));
 
         toast({
           position: "top",
