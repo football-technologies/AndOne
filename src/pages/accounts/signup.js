@@ -52,7 +52,7 @@ const Signup = () => {
           signup({
             id: auth.user.uid,
             email: auth.user.email,
-            name: auth.user.name,
+            name: auth.user.displayName,
           })
         );
 
