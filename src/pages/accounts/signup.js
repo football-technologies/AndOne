@@ -25,8 +25,10 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { signup } from "@/store/account";
 import { create } from "@/store/user";
 import { createSecret } from "@/store/secret";
+
 import _ from "lodash";
 import scheme from "@/helpers/scheme";
+import mixin from "@/plugins/mixin";
 
 const Signup = () => {
   const [show, setShow] = useState(false);
@@ -54,8 +56,9 @@ const Signup = () => {
       .then((auth) => {
         console.log(">>>>>>>>>>> auth.user", auth.user);
 
-        user.id = auth.user.uid;
-        secret.id = auth.user.uid;
+        const userId = mixin.ftCreateId("user");
+
+        user.id = secret.id = userId;
         secret.email = auth.user.email;
 
         dispatch(
