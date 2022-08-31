@@ -29,6 +29,7 @@ import { createSecret } from "@/store/secret";
 import _ from "lodash";
 import scheme from "@/helpers/scheme";
 import mixin from "@/plugins/mixin";
+import rules from "@/plugins/validation";
 
 const Signup = () => {
   const [show, setShow] = useState(false);
@@ -115,8 +116,7 @@ const Signup = () => {
             {...register("email", {
               required: "メールアドレスは必須入力です",
               pattern: {
-                value:
-                  /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                value: rules.email,
                 message: "メールアドレスの形式が異なります",
               },
             })}
@@ -137,9 +137,9 @@ const Signup = () => {
                     trigger("confirmPassword");
                   }
                 },
-                minLength: {
-                  value: 6,
-                  message: "6文字以上の入力が必要です",
+                pattern: {
+                  value: rules.password,
+                  message: "半角英数字で6文字以上の入力が必要です",
                 },
               })}
             />
