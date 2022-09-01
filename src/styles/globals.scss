@@ -1,0 +1,81 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+
+  img {
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+
+* {
+  color: #333;
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    color: white;
+    background: black;
+  }
+}
+
+$primary: #ea4d72;
+$secondary: #842d57;
+$teritiary: #ffc107;
+$link: #436bf8;
+$hover: #ff9900;
+$black: #333;
+$darkGray: #777777;
+$lightGray: #cccccc;
+$paleGray: #eeeeee;
+$white: #fff;
+
+/////////////////
+////// Layout
+/////////////////
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+JP&display=swap");
+
+$HEADER_WIDTH: 256px;
+$MAIN_CONTAINER_PADDING: 50px;
+
+body {
+  background-color: orange;
+}
+
+#ftHeader {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: $HEADER_WIDTH;
+  height: 100vh;
+  padding: 20px;
+  background-color: #fff;
+  overflow: scroll;
+}
+
+#ftMain {
+  width: 100%;
+  min-height: 100vh;
+  padding: $MAIN_CONTAINER_PADDING;
+  padding-left: $HEADER_WIDTH + $MAIN_CONTAINER_PADDING;
+  background-color: $paleGray;
+}
+
+#ftMainContainer {
+  background-color: $white;
+  min-height: 100vh;
+}

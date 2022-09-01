@@ -1,8 +1,11 @@
-import "../styles/globals.css";
+import "@/styles/globals.scss";
 import { Provider } from "react-redux";
 import store from "@/store";
 
 import { ChakraProvider, color } from "@chakra-ui/react";
+import "@fontsource/noto-sans-jp/400.css";
+import "@fontsource/noto-sans-jp/700.css";
+
 import { extendTheme } from "@chakra-ui/react";
 const colors = {
   primary: "#EA4D72",
@@ -18,6 +21,11 @@ const colors = {
 };
 const theme = extendTheme({
   colors,
+  fonts: {
+    heading: `'Noto Sans JP"', sans-serif`,
+    body: `'Noto Sans JP"', sans-serif`,
+  },
+
   // components: {
   // Button: {
   //   variants: {
