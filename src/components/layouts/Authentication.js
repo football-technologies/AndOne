@@ -16,6 +16,8 @@ const useAuthentication = () => {
       if (user) {
         console.log(">>>>>>>>> login user", user);
 
+        await user.reload();
+
         const userToken = await user.getIdTokenResult(true);
         const claims = userToken.claims;
 
