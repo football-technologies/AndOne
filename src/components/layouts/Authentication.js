@@ -16,9 +16,12 @@ const useAuthentication = () => {
       if (user) {
         console.log(">>>>>>>>> login user", user);
 
+        const userToken = await user.getIdTokenResult(true);
+        const claims = userToken.claims;
+
         dispatch(
           login({
-            id: user.uid,
+            id: claims.userId,
             email: user.email,
             name: user.displayName,
           })

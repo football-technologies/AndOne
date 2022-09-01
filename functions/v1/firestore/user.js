@@ -13,20 +13,5 @@ exports.onCreate = functions
   .onCreate(
     sentryErrorWrapper(async (snapshot, context) => {
       console.log(">>>>>>>>>>> called user.onCreate");
-
-      await admin
-        .auth()
-        .createUser({
-          uid: snapshot.get("id"),
-          email: snapshot.get("email"),
-          emailVerified: true,
-          displayName: snapshot.get("screenName"),
-        })
-        .then((userRecord) => {
-          console.log(">>>>>> Successfully created new user:", userRecord.uid);
-        })
-        .catch((error) => {
-          console.log(">>>>>> Error creating new user:", error);
-        });
     })
   );
