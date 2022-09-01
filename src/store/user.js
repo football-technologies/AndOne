@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
 
 import { db } from "@/plugins/firebase";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
@@ -12,14 +11,8 @@ const user = createSlice({
   },
   reducers: {
     create(state, { type, payload }) {
-      const user = {
-        id: payload.id ? payload.id : uuidv4(),
-        name: payload.name,
-        email: payload.email,
-        createdAt: serverTimestamp(),
-      };
-
-      setDoc(doc(db, `users/${user.id}`), user, { merge: true });
+      payload["createdAt"] = serverTimestamp();
+      setDoc(doc(db, `users/${payload.id}`), payload, { merge: true });
     },
 
     read(state, { type, payload }) {
