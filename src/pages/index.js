@@ -1,7 +1,7 @@
 import { db } from "@/plugins/firebase";
 import { getDoc, doc } from "firebase/firestore";
-import { useState } from "react";
-import { useEffect } from "react";
+
+import { useState, useEffect } from "react";
 
 import { Box, Button } from "@chakra-ui/react";
 

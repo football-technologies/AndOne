@@ -3,7 +3,12 @@ import { functions } from "@/plugins/firebase";
 import { httpsCallable } from "firebase/functions";
 import FtUiPallet from "@/components/ui/FtUiPallet";
 
+import { useToast } from "@chakra-ui/react";
+
 const DummyIndex = () => {
+  const toast = useToast();
+  const id = "test";
+
   const helloOnCall = async () => {
     const hello = httpsCallable(functions, "v1-callable-hello");
     console.log(">>>>>> Start");
