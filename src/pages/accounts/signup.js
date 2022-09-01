@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 
 import {
@@ -22,20 +21,13 @@ import { BiHide, BiShow } from "react-icons/bi";
 import { auth } from "@/plugins/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
-import { signup } from "@/store/account";
-import { create } from "@/store/user";
-import { createSecret } from "@/store/secret";
-
 import _ from "lodash";
-import scheme from "@/helpers/scheme";
-import mixin from "@/plugins/mixin";
 import rules from "@/plugins/validation";
 
 const Signup = () => {
   const [show, setShow] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const dispatch = useDispatch();
   const router = useRouter();
   const toast = useToast();
 
@@ -47,9 +39,6 @@ const Signup = () => {
     trigger,
   } = useForm();
 
-  const user = _.cloneDeep(scheme.users);
-  const secret = _.cloneDeep(scheme.secrets);
-
   const onSubmit = (data) => {
     console.log(">>>>>>>>>>>>>> data", data);
 
@@ -57,27 +46,9 @@ const Signup = () => {
       .then(async (auth) => {
         console.log(">>>>>>>>>>> auth.user", auth.user);
 
-        const userId = mixin.ftCreateId("user");
-
-        user.id = secret.id = userId;
-        secret.email = auth.user.email;
-
-        // displayNameの初期値はscreenNameにする
         await updateProfile(auth.user, {
           displayName: data.name,
         });
-
-        await dispatch(
-          signup({
-            id: auth.user.uid,
-            email: auth.user.email,
-            name: auth.user.displayName,
-          })
-        );
-
-        await dispatch(create(user));
-
-        await dispatch(createSecret(secret));
 
         toast({
           position: "top",

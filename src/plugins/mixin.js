@@ -1,10 +1,12 @@
 // 共通化したい処理
-const moment = require("moment");
-const { v4: uuidv4 } = require("uuid");
+import moment from "moment";
+import { v4 as uuidv4 } from "uuid";
 
-exports.ftCreateId = function (idName) {
+const ftCreateId = (idName) => {
   const now = moment();
   const uuid = uuidv4().split("-")[0];
   const id = idName + "-" + now.format("YYYYMMDDHH") + "-" + uuid;
   return id;
 };
+
+export { ftCreateId };
