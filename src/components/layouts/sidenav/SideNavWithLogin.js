@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import useAuthentication from "../Authentication";
 import useLogout from "../Logout";
 
@@ -27,10 +28,12 @@ import {
 } from "react-icons/md";
 import { FaRegHourglass } from "react-icons/fa";
 import { RiHeartAddLine } from "react-icons/ri";
+import UserIcon from "@/components/ui/UserIcon";
 
 const SideNavWithoutLogin = () => {
   const { currentUser } = useAuthentication();
   const { logoutAuth } = useLogout();
+  const router = useRouter();
 
   const items = [
     { id: 1, name: "My Collections", icon: MdOutlineCollections },
@@ -63,21 +66,12 @@ const SideNavWithoutLogin = () => {
 
   return (
     <Stack>
-      <HStack mb={"40px"}>
-        <Image
-          boxSize="150px"
-          align={"center"}
-          src="https://post.healthline.com/wp-content/uploads/2020/09/healthy-eating-ingredients-732x549-thumbnail.jpg"
-        />
-      </HStack>
-
       <HStack spacing={14}>
         <Box>
-          {currentUser.name ? (
-            <Avatar name={currentUser.name} />
+          {currentUser.iconUrl ? (
+            <UserIcon url={currentUser.iconUrl} size="md" />
           ) : (
-            <Avatar src="https://s.hs-data.com/bilder/spieler/gross/150720.jpg?fallback=png" />
-            // <Avatar />
+            <UserIcon name={currentUser.name} size="md" />
           )}
         </Box>
         <Box>
@@ -93,7 +87,13 @@ const SideNavWithoutLogin = () => {
               <Icon as={MdOutlineMoreVert} w={6} h={6}></Icon>
             </MenuButton>
             <MenuList>
-              <MenuItem>プロフィール編集をする</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  router.push(`/users/${currentUser.id}/edit`);
+                }}
+              >
+                プロフィール編集する
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   logoutAuth();
