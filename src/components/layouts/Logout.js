@@ -1,13 +1,12 @@
 import { useDispatch } from "react-redux";
-import { Button } from "@chakra-ui/react";
 import { logout } from "@/store/account";
 import { useToast } from "@chakra-ui/react";
 
-const Logout = () => {
+const useLogout = () => {
   const dispatch = useDispatch();
   const toast = useToast();
 
-  const onClick = () => {
+  const logoutAuth = () => {
     dispatch(logout());
     toast({
       position: "top",
@@ -17,13 +16,9 @@ const Logout = () => {
       isClosable: true,
     });
   };
-  return (
-    <>
-      <Button colorScheme="pink" onClick={onClick}>
-        ログアウト
-      </Button>
-    </>
-  );
+  return {
+    logoutAuth,
+  };
 };
 
-export default Logout;
+export default useLogout;

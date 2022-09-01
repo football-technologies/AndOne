@@ -1,4 +1,5 @@
 import useAuthentication from "../Authentication";
+import useLogout from "../Logout";
 
 import {
   Box,
@@ -26,10 +27,10 @@ import {
 } from "react-icons/md";
 import { FaRegHourglass } from "react-icons/fa";
 import { RiHeartAddLine } from "react-icons/ri";
-import Logout from "../logout";
 
 const SideNavWithoutLogin = () => {
   const { currentUser } = useAuthentication();
+  const { logoutAuth } = useLogout();
 
   const items = [
     { id: 1, name: "My Collections", icon: MdOutlineCollections },
@@ -76,6 +77,7 @@ const SideNavWithoutLogin = () => {
             <Avatar name={currentUser.name} />
           ) : (
             <Avatar src="https://s.hs-data.com/bilder/spieler/gross/150720.jpg?fallback=png" />
+            // <Avatar />
           )}
         </Box>
         <Box>
@@ -86,7 +88,21 @@ const SideNavWithoutLogin = () => {
           )}
         </Box>
         <Box>
-          <Icon as={MdOutlineMoreVert} w={6} h={6}></Icon>
+          <Menu>
+            <MenuButton>
+              <Icon as={MdOutlineMoreVert} w={6} h={6}></Icon>
+            </MenuButton>
+            <MenuList>
+              <MenuItem>プロフィール編集をする</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  logoutAuth();
+                }}
+              >
+                ログアウトする
+              </MenuItem>
+            </MenuList>
+          </Menu>
         </Box>
       </HStack>
 
