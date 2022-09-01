@@ -89,11 +89,12 @@ const Login = () => {
         <Heading py={"50px"} as="h3" size="lg">
           Login
         </Heading>
-        <FormControl isInvalid={errors.email} mt={"45px"}>
+        <FormControl isInvalid={errors.email}>
           <FormLabel>Email</FormLabel>
           <Input
             type="email"
             variant='filled'
+            placeholder="steve@apple.com"
             {...register("email", {
               required: "メールアドレスは必須入力です",
               pattern: {

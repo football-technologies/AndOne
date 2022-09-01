@@ -20,7 +20,7 @@ import { useToast } from "@chakra-ui/react";
 import { BiHide, BiShow } from "react-icons/bi";
 
 import { auth } from "@/plugins/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 import { signup } from "@/store/account";
 import { create } from "@/store/user";
@@ -54,7 +54,7 @@ const Signup = () => {
     console.log(">>>>>>>>>>>>>> data", data);
 
     createUserWithEmailAndPassword(auth, data.email, data.password)
-      .then((auth) => {
+      .then(async (auth) => {
         console.log(">>>>>>>>>>> auth.user", auth.user);
 
         const userId = mixin.ftCreateId("user");
@@ -62,7 +62,12 @@ const Signup = () => {
         user.id = secret.id = userId;
         secret.email = auth.user.email;
 
-        dispatch(
+        // displayNameの初期値はscreenNameにする
+        await updateProfile(auth.user, {
+          displayName: data.name,
+        });
+
+        await dispatch(
           signup({
             id: auth.user.uid,
             email: auth.user.email,
@@ -70,9 +75,9 @@ const Signup = () => {
           })
         );
 
-        dispatch(create(user));
+        await dispatch(create(user));
 
-        dispatch(createSecret(secret));
+        await dispatch(createSecret(secret));
 
         toast({
           position: "top",
@@ -104,16 +109,35 @@ const Signup = () => {
   };
 
   return (
-    <Box bg='white' h={"100vh"} w={"90%"} mx={"auto"}>
+    <Box bg="white" h={"100vh"} w={"90%"} mx={"auto"}>
       <form onSubmit={handleSubmit(onSubmit)} style={form}>
         <Heading py={"50px"} as="h3" size="lg">
           Signup
         </Heading>
+        <FormControl isInvalid={errors.name}>
+          <FormLabel>User Name</FormLabel>
+          <Input
+            type="name"
+            variant="filled"
+            placeholder="johndoe"
+            {...register("name", {
+              required: "User Nameは必須入力です",
+              pattern: {
+                value: rules.name,
+                message: "半角英数字のみがご利用できます",
+              },
+            })}
+          />
+          <FormErrorMessage>
+            {errors.name && errors.name.message}
+          </FormErrorMessage>
+        </FormControl>
         <FormControl isInvalid={errors.email} mt={"45px"}>
           <FormLabel>Email</FormLabel>
           <Input
             type="email"
-            variant='filled'
+            variant="filled"
+            placeholder="steve@apple.com"
             {...register("email", {
               required: "メールアドレスは必須入力です",
               pattern: {
@@ -131,7 +155,7 @@ const Signup = () => {
           <InputGroup>
             <Input
               type={show ? "text" : "password"}
-              variant='filled'
+              variant="filled"
               {...register("password", {
                 required: "パスワードは必須入力です",
                 onBlur: () => {
@@ -161,7 +185,7 @@ const Signup = () => {
           <InputGroup>
             <Input
               type={showConfirm ? "text" : "password"}
-              variant='filled'
+              variant="filled"
               {...register("confirmPassword", {
                 required: "確認のためパスワードを再入力してください",
                 validate: (value) => {
