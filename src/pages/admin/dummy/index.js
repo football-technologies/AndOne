@@ -1,6 +1,7 @@
-import { Button } from "@chakra-ui/react";
+import { Box, Button, Container, Stack } from "@chakra-ui/react";
 import { functions } from "@/plugins/firebase";
 import { httpsCallable } from "firebase/functions";
+import FtUiPallet from "@/components/ui/FtUiPallet";
 
 import { useToast } from "@chakra-ui/react";
 
@@ -17,26 +18,18 @@ const DummyIndex = () => {
 
   return (
     <>
-      <Button
-        onClick={() => {
-          console.log(toast.isActive(id));
-          if (toast.isActive(id)) {
-            return false;
-          }
-          toast({
-            id: id,
-            position: "top",
-            title: "Account created.",
-            description: "We've created your account for you.",
-            status: "success",
-            duration: 2000,
-            isClosable: true,
-          });
-        }}
-      >
-        Show Toast
-      </Button>
-      <Button onClick={helloOnCall}>Hello On Call</Button>;
+      <Box p="10" bg="paleGray">
+        <Box>
+          <h3>functions</h3>
+          <Button colorScheme="red" onClick={helloOnCall}>
+            Hello On Call
+          </Button>
+        </Box>
+
+        <Box>
+          <FtUiPallet></FtUiPallet>
+        </Box>
+      </Box>
     </>
   );
 };
