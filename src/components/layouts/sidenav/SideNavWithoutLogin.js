@@ -33,14 +33,6 @@ const SideNavWithoutLogin = () => {
   return (
     <Stack>
       <HStack>
-        <Image
-          boxSize="150px"
-          align={"center"}
-          src="https://post.healthline.com/wp-content/uploads/2020/09/healthy-eating-ingredients-732x549-thumbnail.jpg"
-        />
-      </HStack>
-
-      <HStack>
         <Box>
           <Text my={"30px"}>好きなものに囲まれて生活する</Text>
 
