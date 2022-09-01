@@ -28,7 +28,7 @@ import { createSecret } from "@/store/secret";
 
 import _ from "lodash";
 import scheme from "@/helpers/scheme";
-import mixin from "@/plugins/mixin";
+import { ftCreateId } from "@/plugins/mixin";
 import rules from "@/plugins/validation";
 
 const Signup = () => {
@@ -57,15 +57,10 @@ const Signup = () => {
       .then(async (auth) => {
         console.log(">>>>>>>>>>> auth.user", auth.user);
 
-        const userId = mixin.ftCreateId("user");
+        const userId = ftCreateId("user");
 
         user.id = secret.id = userId;
         secret.email = auth.user.email;
-
-        // displayNameの初期値はscreenNameにする
-        await updateProfile(auth.user, {
-          displayName: data.name,
-        });
 
         await dispatch(
           signup({
