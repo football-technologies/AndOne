@@ -7,6 +7,7 @@ import logo from "@/assets/logo/large.png";
 
 const SideNavBasic = () => {
   const { currentUser } = useAuthentication();
+  console.log(">>>>>>>> currentUser.id:", currentUser.id)
 
   return (
     <>
