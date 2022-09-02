@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
 
 import {
   FormControl,
@@ -21,8 +22,14 @@ import { BiHide, BiShow } from "react-icons/bi";
 import { auth } from "@/plugins/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
+import { create } from "@/store/user";
+import { createSecret } from "@/store/secret";
+import { signup } from "@/store/account";
+
 import _ from "lodash";
 import rules from "@/plugins/validation";
+import scheme from "@/helpers/scheme";
+import { ftCreateId } from "@/plugins/mixin";
 
 const Signup = () => {
   const [show, setShow] = useState(false);
@@ -30,6 +37,10 @@ const Signup = () => {
 
   const router = useRouter();
   const toast = useToast();
+  const dispatch = useDispatch();
+
+  const user = _.cloneDeep(scheme.users);
+  const secret = _.cloneDeep(scheme.secrets);
 
   const {
     register,
@@ -49,6 +60,24 @@ const Signup = () => {
         await updateProfile(auth.user, {
           displayName: data.name,
         });
+
+        user.id = secret.id = ftCreateId("user");
+        user.authId = auth.user.uid;
+        user.displayName = user.screenName = data.name;
+        secret.email = data.email;
+
+        dispatch(
+          signup({
+            id: user.id,
+            authId: user.authId,
+            email: secret.email,
+            name: user.displayName,
+            icon: null,
+          })
+        );
+
+        dispatch(create(user));
+        dispatch(createSecret(secret));
 
         toast({
           position: "top",

@@ -1,13 +1,13 @@
 import SideNavWithoutLogin from "./SideNavWithoutLogin";
 import SideNavWithLogin from "./SideNavWithLogin";
-import useAuthentication from "@/components/layouts/Authentication";
+import { useSelector } from "react-redux";
 
 import { Image, Link } from "@chakra-ui/react";
 import logo from "@/assets/logo/large.png";
 
 const SideNavBasic = () => {
-  const { currentUser } = useAuthentication();
-  console.log(">>>>>>>> currentUser.id:", currentUser.id)
+  const currentUser = useSelector((state) => state.account);
+  console.log(">>>>>>>> currentUser:", currentUser);
 
   return (
     <>

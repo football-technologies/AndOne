@@ -1,4 +1,3 @@
-import useAuthentication from "../Authentication";
 import useLogout from "../Logout";
 
 import {
@@ -27,9 +26,10 @@ import {
 } from "react-icons/md";
 import { FaRegHourglass } from "react-icons/fa";
 import { RiHeartAddLine } from "react-icons/ri";
+import { useSelector } from "react-redux";
 
 const SideNavWithoutLogin = () => {
-  const { currentUser } = useAuthentication();
+  const currentUser = useSelector((state) => state.account);
   const { logoutAuth } = useLogout();
 
   const items = [
