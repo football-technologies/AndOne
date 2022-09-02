@@ -5,6 +5,16 @@ const scheme = {
   users: {
     id: null,
     status: 1,
+    authId: null,
+    userType: 10,
+    displayName: null,
+    screenName: null,
+    description: null,
+    icon: null,
+    shop: {
+      id: null,
+      ref: null,
+    },
     createdAt: null,
     updatedAt: null,
   },
