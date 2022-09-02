@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 
 import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
 import ItemSmallCard from "@/components/cards/ItemSmallCard";
+import ItemExtraSmallCard from "@/components/cards/ItemExtraSmallCard";
 import { Box, Button, Wrap, Stack, Text, Divider } from "@chakra-ui/react";
 
 import { ToFullDate, ToAgo } from "@/plugins/filter";
@@ -22,6 +23,14 @@ export default function Home() {
 
   return (
     <>
+      {[...Array(3)].map((_) => {
+        return (
+          <Stack px="10">
+            <ItemExtraSmallCard></ItemExtraSmallCard>;
+          </Stack>
+        );
+      })}
+
       {[...Array(3)].map((_) => {
         return (
           <Stack px="10">
