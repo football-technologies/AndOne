@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/react";
 import { forwardRef } from "@chakra-ui/react";
 
-const FtButton = forwardRef((props, ref) => {
+const FtLargeButton = forwardRef((props, ref) => {
   return (
     <Button
       bg="primary"
@@ -21,27 +21,7 @@ const FtButton = forwardRef((props, ref) => {
   );
 });
 
-const FtButtonSmall = forwardRef((props, ref) => {
-  return (
-    <Button
-      bg="primary"
-      color="white"
-      borderStyle="solid"
-      borderWidth="2px"
-      borderColor="primary"
-      fontSize="12px"
-      rounded="full"
-      ref={ref}
-      px={5}
-      py={2}
-      _hover={{ bg: "hover", borderColor: "hover" }}
-      letterSpacing="0.1em"
-      {...props}
-    />
-  );
-});
-
-const FtButtonOutlined = forwardRef((props, ref) => {
+const FtLargeButtonOutlined = forwardRef((props, ref) => {
   return (
     <Button
       variant="outline"
@@ -61,7 +41,27 @@ const FtButtonOutlined = forwardRef((props, ref) => {
   );
 });
 
-const FtButtonOutlinedSmall = forwardRef((props, ref) => {
+const FtMiddleButton = forwardRef((props, ref) => {
+  return (
+    <Button
+      bg="primary"
+      color="white"
+      borderStyle="solid"
+      borderWidth="2px"
+      borderColor="primary"
+      fontSize="14px"
+      rounded="full"
+      ref={ref}
+      px={10}
+      py={2}
+      _hover={{ bg: "hover", borderColor: "hover" }}
+      letterSpacing="0.1em"
+      {...props}
+    />
+  );
+});
+
+const FtMiddleButtonOutlined = forwardRef((props, ref) => {
   return (
     <Button
       variant="outline"
@@ -69,10 +69,10 @@ const FtButtonOutlinedSmall = forwardRef((props, ref) => {
       borderWidth="2px"
       borderColor="primary"
       color="primary"
-      fontSize="12px"
+      fontSize="14px"
       rounded="full"
       ref={ref}
-      px={5}
+      px={10}
       py={2}
       _hover={{ bg: "hover", color: "white", borderColor: "hover" }}
       letterSpacing="0.1em"
@@ -81,4 +81,53 @@ const FtButtonOutlinedSmall = forwardRef((props, ref) => {
   );
 });
 
-export { FtButton, FtButtonSmall, FtButtonOutlined, FtButtonOutlinedSmall };
+const FtSmallButton = forwardRef((props, ref) => {
+  return (
+    <Button
+      bg="primary"
+      color="white"
+      borderStyle="solid"
+      borderWidth="1px"
+      borderColor="primary"
+      fontSize="10px"
+      rounded="full"
+      ref={ref}
+      px={4}
+      py={0}
+      height="2.5em"
+      _hover={{ bg: "hover", borderColor: "hover" }}
+      letterSpacing="0.1em"
+      {...props}
+    />
+  );
+});
+
+const FtSmallButtonOutlined = forwardRef((props, ref) => {
+  return (
+    <Button
+      variant="outline"
+      borderStyle="solid"
+      borderWidth="1px"
+      borderColor="primary"
+      color="primary"
+      fontSize="10px"
+      rounded="full"
+      ref={ref}
+      px={4}
+      py={0}
+      height="2.5em"
+      _hover={{ bg: "hover", color: "white", borderColor: "hover" }}
+      letterSpacing="0.1em"
+      {...props}
+    />
+  );
+});
+
+export {
+  FtLargeButton,
+  FtLargeButtonOutlined,
+  FtMiddleButton,
+  FtMiddleButtonOutlined,
+  FtSmallButton,
+  FtSmallButtonOutlined,
+};

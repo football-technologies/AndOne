@@ -16,7 +16,7 @@ const ToAgo = ({ seconds }) => {
     const diffDay = Math.floor(diffMins / (60 * 24));
     return `${diffDay} days ago`;
   } else {
-    return moment(value.toMillis()).format("YYYY/MM/DD");
+    return moment.unix(seconds).format("YYYY/MM/DD");
   }
 };
 
@@ -36,4 +36,15 @@ const ToFullDate = ({ seconds }) => {
   return seconds ? moment.unix(seconds).format("YYYY/MM/DD HH:mm") : "";
 };
 
-export { ToFullDate, ToDateTime, ToDate, ToTime, ToAgo };
+const ToPrice = (number) => {
+  if (number) {
+    // 四捨五入は切り捨て
+    return `${Math.floor(number).toLocaleString()}円`;
+  } else if (number === 0) {
+    return "0円";
+  } else {
+    return "";
+  }
+};
+
+export { ToFullDate, ToDateTime, ToDate, ToTime, ToAgo, ToPrice };
