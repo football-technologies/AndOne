@@ -60,10 +60,9 @@ const Signup = () => {
           displayName: data.name,
         });
 
-        user.authId = secret.authId = auth.user.uid;
         user.id = secret.id = ftCreateId("user");
+        user.authId = auth.user.uid;
         user.displayName = user.screenName = data.name;
-        user.id = secret.id = ftCreateId("user");
 
         dispatch(create(user));
         dispatch(createSecret(secret));

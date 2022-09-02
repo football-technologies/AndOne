@@ -15,7 +15,7 @@ const SideNavBasic = () => {
         <Image align={"center"} src="logo.png" p="5" />
       </Link>
 
-      {currentUser ? (
+      {currentUser.email ? (
         <SideNavWithLogin></SideNavWithLogin>
       ) : (
         <SideNavWithoutLogin></SideNavWithoutLogin>
