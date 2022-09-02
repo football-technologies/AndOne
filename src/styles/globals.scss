@@ -1,3 +1,14 @@
+$primary: #ea4d72;
+$secondary: #842d57;
+$teritiary: #ffc107;
+$link: #436bf8;
+$hover: #ff9900;
+$black: #333;
+$darkGray: #777777;
+$lightGray: #cccccc;
+$paleGray: #eeeeee;
+$white: #fff;
+
 html,
 body {
   padding: 0;
@@ -21,6 +32,10 @@ a {
   }
 }
 
+img {
+  border: 1px solid $lightGray;
+}
+
 * {
   color: #333;
   box-sizing: border-box;
@@ -35,17 +50,6 @@ a {
     background: black;
   }
 }
-
-$primary: #ea4d72;
-$secondary: #842d57;
-$teritiary: #ffc107;
-$link: #436bf8;
-$hover: #ff9900;
-$black: #333;
-$darkGray: #777777;
-$lightGray: #cccccc;
-$paleGray: #eeeeee;
-$white: #fff;
 
 /////////////////
 ////// Layout
