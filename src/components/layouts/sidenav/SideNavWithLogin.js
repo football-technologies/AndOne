@@ -1,3 +1,5 @@
+import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 import useLogout from "../Logout";
 
 import {
@@ -26,10 +28,10 @@ import {
 } from "react-icons/md";
 import { FaRegHourglass } from "react-icons/fa";
 import { RiHeartAddLine } from "react-icons/ri";
-import { useSelector } from "react-redux";
 
 const SideNavWithoutLogin = () => {
   const currentUser = useSelector((state) => state.account);
+  const router = useRouter();
   const { logoutAuth } = useLogout();
 
   const items = [
@@ -73,18 +75,13 @@ const SideNavWithoutLogin = () => {
 
       <HStack spacing={14}>
         <Box>
-          {currentUser.name ? (
-            <Avatar name={currentUser.name} />
-          ) : (
-            <Avatar src="https://s.hs-data.com/bilder/spieler/gross/150720.jpg?fallback=png" />
-            // <Avatar />
-          )}
+          {currentUser.name ? <Avatar name={currentUser.name} /> : <Avatar />}
         </Box>
         <Box>
           {currentUser.name ? (
             <Text>{currentUser.name}</Text>
           ) : (
-            <Text>User Name</Text>
+            <Text>no name</Text>
           )}
         </Box>
         <Box>
@@ -93,7 +90,13 @@ const SideNavWithoutLogin = () => {
               <Icon as={MdOutlineMoreVert} w={6} h={6}></Icon>
             </MenuButton>
             <MenuList>
-              <MenuItem>プロフィール編集をする</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  router.push(`/users/${currentUser.id}/edit`);
+                }}
+              >
+                プロフィール編集をする
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   logoutAuth();
