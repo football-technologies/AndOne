@@ -16,6 +16,7 @@ const ItemMiddleCard = () => {
         w="100%"
         borderWidth="1px"
         borderRadius="10px"
+        overflow="hidden"
         _hover={{ bg: "paleGray", borderColor: "darkGrey" }}
       >
         <Link href="/" _hover={{ textDecoration: "none" }}>
