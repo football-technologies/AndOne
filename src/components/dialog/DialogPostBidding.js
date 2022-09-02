@@ -1,21 +1,18 @@
 import { useState } from "react";
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, useImperativeHandle } from "react";
 import { ToPrice } from "@/plugins/filter";
 
 import {
   Input,
-  Button,
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
   ModalFooter,
   ModalBody,
   ModalCloseButton,
   Stack,
   Box,
   Text,
-  Link,
   AspectRatio,
   Image,
   Spacer,
@@ -34,10 +31,12 @@ const DialogPostBidding = forwardRef((props, ref) => {
     },
   }));
 
-  const onClose = () => setDialog(false);
+  const onClose = () => {
+    setDialog(false);
+    setText("");
+  };
 
   const submit = () => {
-    // dispatch(create({ text, id: currentUser.id }));
     setText("");
     onClose();
   };
@@ -90,6 +89,7 @@ const DialogPostBidding = forwardRef((props, ref) => {
                 <InputGroup>
                   <Input
                     value={text}
+                    autoFocus="true"
                     type="number"
                     valiant="filled"
                     onChange={(ev) => setText(ev.target.value)}

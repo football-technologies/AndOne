@@ -1,3 +1,5 @@
+import { useRouter } from "next/router";
+import { useRef } from "react";
 import DialogPostBidding from "@/components/dialog/DialogPostBidding";
 
 import {
@@ -18,8 +20,6 @@ import {
   Center,
   Spacer,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { useRef } from "react";
 
 const ItemShow = () => {
   const router = useRouter();
@@ -39,9 +39,15 @@ const ItemShow = () => {
         <Stack width="70%">
           <Stack direction="row">
             <Box width="100px">
-              <AspectRatio ratio={1}>
-                <Image src="https://d17x1wu3749i2y.cloudfront.net/2021/02/15/23/44/16/274ac8e2-9729-4223-9c34-4e336cacf00f/file.jpg"></Image>
-              </AspectRatio>
+              {[...Array(8)].map((_, index) => {
+                return (
+                  <Box key={index} pb="2">
+                    <AspectRatio ratio={1}>
+                      <Image src="https://d17x1wu3749i2y.cloudfront.net/2021/02/15/23/44/16/274ac8e2-9729-4223-9c34-4e336cacf00f/file.jpg"></Image>
+                    </AspectRatio>
+                  </Box>
+                );
+              })}
             </Box>
             <Box>
               <Image src="https://d17x1wu3749i2y.cloudfront.net/2021/02/15/23/44/16/274ac8e2-9729-4223-9c34-4e336cacf00f/file.jpg"></Image>
