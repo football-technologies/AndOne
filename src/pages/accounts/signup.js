@@ -24,6 +24,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 import { create } from "@/store/user";
 import { createSecret } from "@/store/secret";
+import { signup } from "@/store/account";
 
 import _ from "lodash";
 import rules from "@/plugins/validation";
@@ -63,6 +64,17 @@ const Signup = () => {
         user.id = secret.id = ftCreateId("user");
         user.authId = auth.user.uid;
         user.displayName = user.screenName = data.name;
+        secret.email = data.email;
+
+        dispatch(
+          signup({
+            id: user.id,
+            authId: user.authId,
+            email: secret.email,
+            name: user.displayName,
+            icon: null,
+          })
+        );
 
         dispatch(create(user));
         dispatch(createSecret(secret));
