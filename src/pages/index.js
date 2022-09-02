@@ -4,7 +4,9 @@ import { getDoc, doc } from "firebase/firestore";
 import { useState, useEffect } from "react";
 
 import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
-import { Box, Button, Wrap, Stack, Text } from "@chakra-ui/react";
+import ItemSmallCard from "@/components/cards/ItemSmallCard";
+import ItemExtraSmallCard from "@/components/cards/ItemExtraSmallCard";
+import { Box, Button, Wrap, Stack, Text, Divider } from "@chakra-ui/react";
 
 import { ToFullDate, ToAgo } from "@/plugins/filter";
 
@@ -21,6 +23,22 @@ export default function Home() {
 
   return (
     <>
+      {[...Array(3)].map((_) => {
+        return (
+          <Stack px="10">
+            <ItemExtraSmallCard></ItemExtraSmallCard>;
+          </Stack>
+        );
+      })}
+
+      {[...Array(3)].map((_) => {
+        return (
+          <Stack px="10">
+            <ItemSmallCard></ItemSmallCard>;
+          </Stack>
+        );
+      })}
+
       <Wrap p="5">
         {[...Array(10)].map((_) => {
           return (
