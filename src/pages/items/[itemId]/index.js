@@ -1,3 +1,5 @@
+import DialogPostBidding from "@/components/dialog/DialogPostBidding";
+
 import {
   FtMiddleButton,
   FtSmallButtonOutlined,
@@ -17,12 +19,19 @@ import {
   Spacer,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { useRef } from "react";
 
 const ItemShow = () => {
   const router = useRouter();
   const { itemId } = router.query;
 
+  const dialogPostBidding = useRef(null);
+
   console.log(">>>>>>>> itemId", itemId);
+
+  const openDialogBidding = () => {
+    dialogPostBidding.current.openDialog();
+  };
 
   return (
     <>
@@ -66,7 +75,9 @@ const ItemShow = () => {
           </Stack>
 
           <Center pt="2">
-            <FtMiddleButton>入札する</FtMiddleButton>
+            <FtMiddleButton onClick={openDialogBidding}>
+              入札する
+            </FtMiddleButton>
           </Center>
 
           <Box pt="10">
@@ -163,9 +174,9 @@ const ItemShow = () => {
           また現在では、最上位モデルのシューズでない所謂廉価版シューズであってもエアマックスと冠するシューズが存在するなど、その呼称に関しては当時ほど厳格ではない。
         </Text>
 
-        {[...Array(3)].map((_) => {
+        {[...Array(3)].map((_, index) => {
           return (
-            <Box pt="5">
+            <Box pt="5" key={index}>
               <Link>
                 <Stack
                   direction="row"
@@ -190,6 +201,8 @@ const ItemShow = () => {
           );
         })}
       </Box>
+      {/* dialog */}
+      <DialogPostBidding ref={dialogPostBidding}></DialogPostBidding>
     </>
   );
 };

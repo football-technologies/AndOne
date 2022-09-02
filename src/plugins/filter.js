@@ -36,4 +36,17 @@ const ToFullDate = ({ seconds }) => {
   return seconds ? moment.unix(seconds).format("YYYY/MM/DD HH:mm") : "";
 };
 
-export { ToFullDate, ToDateTime, ToDate, ToTime, ToAgo };
+const ToPrice = ({ value }) => {
+  console.log(">>>>>>> ToPrice", value);
+
+  if (value) {
+    // 四捨五入は切り捨て
+    return `${Math.floor(value).toLocaleString()}円`;
+  } else if (value === 0) {
+    return "0円";
+  } else {
+    return "";
+  }
+};
+
+export { ToFullDate, ToDateTime, ToDate, ToTime, ToAgo, ToPrice };
