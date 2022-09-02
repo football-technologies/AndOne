@@ -2,8 +2,9 @@ import { useForm } from "react-hook-form";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchUser } from "@/store/user";
-import { fetchSecret } from "@/store/secret";
+import { fetchUser, update } from "@/store/user";
+import { fetchSecret, updateSecret } from "@/store/secret";
+import { updateAccount } from "@/store/account";
 
 import {
   FormControl,
@@ -27,9 +28,11 @@ import _ from "lodash";
 import rules from "@/plugins/validation";
 
 const Edit = ({ query }) => {
-  const currentUser = useSelector((state) => state.account);
+  const [url, setUrl] = useState(null);
+
   const bindUser = useSelector((state) => state.user.user);
   const bindSecret = useSelector((state) => state.secret.secret);
+
   const router = useRouter();
   const toast = useToast();
   const inputRef = useRef();
@@ -82,10 +85,42 @@ const Edit = ({ query }) => {
 
   const upload = (url) => {
     console.log(">>>>>>> return url", url);
+    setUrl(url);
   };
 
   const onSubmit = (data) => {
     console.log(">>>>>>>>>>>>>> data", data);
+
+    user.displayName = data.displayName;
+    user.screenName = data.screenName;
+    user.description = data.description;
+    secret.email = data.email;
+    secret.address = data.address;
+
+    if (url) {
+      user.icon = url;
+    }
+
+    dispatch(updateAccount({
+      id: user.id,
+      authId: user.authId,
+      email: data.email,
+      name: data.displayName,
+      icon: user.icon,
+    }))
+
+    dispatch(update(user));
+    dispatch(updateSecret(secret));
+
+    toast({
+      position: "top",
+      title: "プロフィールの更新が完了しました",
+      status: "success",
+      duration: 2000,
+      isClosable: true,
+    });
+
+    router.push("/");
   };
 
   const form = {
@@ -99,7 +134,9 @@ const Edit = ({ query }) => {
         <form onSubmit={handleSubmit(onSubmit)} style={form}>
           <HStack>
             <Box>
-              {user.icon ? (
+              {url ? (
+                <Avatar src={url} size="xl" />
+              ) : user.icon ? (
                 <Avatar src={user.icon} size="xl" />
               ) : (
                 <Avatar name={user.displayName} size="xl" />
@@ -119,7 +156,13 @@ const Edit = ({ query }) => {
 
           <FormControl mt={"45px"}>
             <FormLabel>Display Name</FormLabel>
-            <Input type="displayName" variant="filled" placeholder="山下俊朗" />
+            <Input
+              type="displayName"
+              variant="filled"
+              placeholder="山下俊朗"
+              defaultValue={user.displayName}
+              {...register("displayName")}
+            />
             <FormHelperText>他の人に表示されます</FormHelperText>
           </FormControl>
 
@@ -128,15 +171,12 @@ const Edit = ({ query }) => {
             <Input
               type="screenName"
               variant="filled"
-              value={user.screenName}
+              defaultValue={user.screenName}
               placeholder="footballworld"
-              {...register("secretName", {
+              {...register("screenName", {
                 pattern: {
                   value: rules.name,
-                  message: "半角英数字のみがご利用できます",
-                },
-                onChange: (e) => {
-                  console.log(e.target.value);
+                  message: "スペースなしの半角英数字のみがご利用できます",
                 },
               })}
             />
@@ -148,7 +188,13 @@ const Edit = ({ query }) => {
 
           <FormControl isInvalid={errors.bio} mt={"45px"}>
             <FormLabel>Bio</FormLabel>
-            <Textarea type="bio" variant="filled" placeholder="bio"></Textarea>
+            <Textarea
+              type="bio"
+              variant="filled"
+              placeholder="bio"
+              defaultValue={user.description}
+              {...register("description")}
+            ></Textarea>
             <FormHelperText>他の人に表示されます</FormHelperText>
             <FormErrorMessage>
               {errors.bio && errors.bio.message}
@@ -161,6 +207,7 @@ const Edit = ({ query }) => {
               type="email"
               variant="filled"
               placeholder="steve@apple.com"
+              defaultValue={secret.email}
               {...register("email", {
                 required: "メールアドレスは必須入力です",
                 pattern: {
@@ -184,9 +231,8 @@ const Edit = ({ query }) => {
               type="address"
               variant="filled"
               placeholder="東京都千代田区1-11-1"
-              {...register("address", {
-                required: "住所は必須入力です",
-              })}
+              defaultValue={secret.address}
+              {...register("address")}
             ></Textarea>
             <FormHelperText>
               他の人に表示されません <br />

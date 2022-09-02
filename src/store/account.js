@@ -35,8 +35,15 @@ const account = createSlice({
       state.name = null;
       state.icon = null;
     },
+    updateAccount: (state, { payload }) => {
+      state.id = payload.id;
+      state.authId = payload.authId;
+      state.email = payload.email;
+      state.name = payload.name;
+      state.icon = payload.icon;
+    },
   },
 });
 
-export const { signup, login, logout } = account.actions;
+export const { signup, login, logout, updateAccount } = account.actions;
 export default account;

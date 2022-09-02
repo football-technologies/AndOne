@@ -1,6 +1,8 @@
 import { useSelector } from "react-redux";
-import { useRouter } from "next/router";
+import { useRouter, useDispatch } from "next/router";
 import useLogout from "../Logout";
+import { fetchUser } from "@/store/user";
+import { fetchSecret } from "@/store/secret";
 
 import {
   Box,
@@ -31,6 +33,7 @@ import { RiHeartAddLine } from "react-icons/ri";
 
 const SideNavWithoutLogin = () => {
   const currentUser = useSelector((state) => state.account);
+
   const router = useRouter();
   const { logoutAuth } = useLogout();
 
@@ -65,17 +68,13 @@ const SideNavWithoutLogin = () => {
 
   return (
     <Stack>
-      <HStack mb={"40px"}>
-        <Image
-          boxSize="150px"
-          align={"center"}
-          src="https://post.healthline.com/wp-content/uploads/2020/09/healthy-eating-ingredients-732x549-thumbnail.jpg"
-        />
-      </HStack>
-
-      <HStack spacing={2}>
+      <HStack spacing={6}>
         <Box>
-          {currentUser.name ? <Avatar name={currentUser.name} /> : <Avatar />}
+          {currentUser.icon ? (
+            <Avatar src={currentUser.icon} />
+          ) : (
+            <Avatar name={currentUser.name} />
+          )}
         </Box>
         <Box>
           {currentUser.name ? (

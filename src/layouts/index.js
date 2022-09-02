@@ -13,7 +13,7 @@ const DefaultLayout = ({ children }) => {
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        console.log(">>>>>>>>> login user", user);
+        console.log(">>>>>>>>> login user", user.uid);
 
         const q = query(
           collection(db, "users"),
@@ -27,8 +27,8 @@ const DefaultLayout = ({ children }) => {
                 login({
                   id: doc.data().id,
                   authId: user.uid,
-                  email: user.email,
-                  name: user.displayName,
+                  email: doc.data().email,
+                  name: doc.data().displayName,
                   icon: doc.data().icon,
                 })
               );

@@ -17,6 +17,14 @@ const secret = createSlice({
         merge: true,
       });
     },
+
+    updateSecret(state, { type, payload }) {
+      payload["updatedAt"] = serverTimestamp();
+      setDoc(doc(db, `users/${payload.id}/secrets/${payload.id}`), payload, {
+        merge: true,
+      });
+    },
+
     readSecret(state, { type, payload }) {
       state.secret = { ...payload };
     },
@@ -42,7 +50,7 @@ const fetchSecret = (payload) => {
   };
 };
 
-export const { createSecret, readSecret } = secret.actions;
+export const { createSecret, updateSecret, readSecret } = secret.actions;
 
 export { fetchSecret };
 export default secret;

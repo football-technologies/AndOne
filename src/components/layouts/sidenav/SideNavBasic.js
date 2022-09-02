@@ -7,7 +7,6 @@ import logo from "@/assets/logo/large.png";
 
 const SideNavBasic = () => {
   const currentUser = useSelector((state) => state.account);
-  console.log(">>>>>>>> currentUser:", currentUser);
 
   return (
     <>

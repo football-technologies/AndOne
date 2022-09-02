@@ -59,8 +59,8 @@ const Login = () => {
                 login({
                   id: doc.data().id,
                   authId: auth.user.uid,
-                  email: auth.user.email,
-                  name: auth.user.displayName,
+                  email: doc.data().email,
+                  name: doc.data().displayName,
                   icon: doc.data().icon,
                 })
               );
