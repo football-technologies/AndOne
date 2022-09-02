@@ -4,11 +4,7 @@ import { httpsCallable } from "firebase/functions";
 import FtUiPallet from "@/components/ui/FtUiPallet";
 import { useRef, useState } from "react";
 import { storage } from "@/plugins/firebase";
-import {
-  getDownloadURL,
-  ref,
-  uploadString,
-} from "@firebase/storage";
+import { getDownloadURL, ref, uploadString } from "@firebase/storage";
 
 const DummyIndex = ({ folderPath, newVersion }) => {
   const [url, setUrl] = useState(null);
@@ -24,18 +20,18 @@ const DummyIndex = ({ folderPath, newVersion }) => {
 
     const reader = new FileReader();
 
-    setUrl("");
+    // setUrl("");
     reader.readAsDataURL(file);
     reader.onload = (e) => {
       // console.log(">>>>>>> アップロード処理", e.target.result);
       // setUrl(e.target.result);
-      const storageRef = ref(storage, "images/original");
+      const storageRef = ref(storage, "images/original2");
       uploadString(storageRef, e.target.result, "data_url")
         .then((snapshot) => {
           console.log("OK");
           getDownloadURL(snapshot.ref).then((downloadURL) => {
             console.log(">>>>>>> downloadURL", downloadURL);
-            // this.imageURL = downloadURL;
+            setUrl(downloadURL);
           });
         })
         .catch((err) => {
@@ -76,9 +72,10 @@ const DummyIndex = ({ folderPath, newVersion }) => {
 
         <Box>
           <Avatar
-            src={
-              "https://firebasestorage.googleapis.com/v0/b/andone-mino.appspot.com/o/images%2Foriginal?alt=media&token=e5fdd447-9a22-48bf-a520-8b69be29cd35"
-            }
+            src={url}
+            // src={
+            //   "https://firebasestorage.googleapis.com/v0/b/andone-mino.appspot.com/o/images%2Foriginal?alt=media&token=e5fdd447-9a22-48bf-a520-8b69be29cd35"
+            // }
           ></Avatar>
           <form onSubmit={onSubmit}>
             <Input

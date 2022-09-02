@@ -73,7 +73,7 @@ const SideNavWithoutLogin = () => {
         />
       </HStack>
 
-      <HStack spacing={14}>
+      <HStack spacing={2}>
         <Box>
           {currentUser.name ? <Avatar name={currentUser.name} /> : <Avatar />}
         </Box>

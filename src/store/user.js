@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { db } from "@/plugins/firebase";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp, onSnapshot } from "firebase/firestore";
 
 const user = createSlice({
   name: "user",
@@ -17,6 +17,10 @@ const user = createSlice({
 
     read(state, { type, payload }) {
       state.users = [...payload];
+    },
+
+    readUser(state, { type, payload }) {
+      state.user = { ...payload };
     },
   },
 });
@@ -52,7 +56,25 @@ const fetch = (payload) => {
   };
 };
 
-const { create, read } = user.actions;
+const fetchUser = (payload) => {
+  return async (dispatch, getState) => {
+    console.log(">>>>>>>>> called fetchUser");
 
-export { create, read, fetch };
+    const unsubscribe = await onSnapshot(
+      doc(db, "users", payload.query),
+      async (doc) => {
+        if (doc.id) {
+          dispatch(readUser(doc.data()));
+        }
+      }
+    );
+
+    if (payload.type === "delete") {
+      unsubscribe();
+    }
+  };
+};
+
+export const { create, read, readUser } = user.actions;
+export { fetch, fetchUser };
 export default user;
