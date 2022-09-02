@@ -19,7 +19,7 @@ const ItemSmallCard = () => {
         borderColor="lightGray"
         _hover={{ bg: "paleGray", borderColor: "darkGrey" }}
       >
-        <Link href="/" _hover={{ textDecoration: "none" }}>
+        <Link href="/items/123" _hover={{ textDecoration: "none" }}>
           <Stack direction={["column", "row"]} align="center">
             <Box w="100px">
               <AspectRatio ratio={1}>
@@ -31,10 +31,10 @@ const ItemSmallCard = () => {
             </Box>
 
             <Box w="40%" px="5">
-              <Heading as="h3" fontSize="md">
+              <Heading as="h3" fontSize="md" noOfLines={2}>
                 Nike International 2012 Black Edition ああああああああああああ
               </Heading>
-              <Text fontSize="xs" maxHeight="5em" overflow="hidden" pt="2">
+              <Text fontSize="xs" noOfLines={4} pt="2">
                 ミッドソールに開けたウインドウから適度な圧が解放されるようになり、エアバッグにより多量のエアを充填できることとなった。このことから、エアマックスに搭載されているエアバッグは「マキシマムエア」や「マックスエア」と呼称されることとなる。この「エアマックス」という製品名に関してかなり厳格であり、舗装路用ランニングシューズでビジブルエア搭載かつ最大容量のエア搭載の最上位モデルにその名が冠せられることとなった。ただしこのネーミングに関しては、当時からエア・スタブやエア180、エアクラシックBWなどの例外も存在し、エアマックスCB34やエアノモマックスなどランニングシューズ以外にも適応されるようになっている。また現在では、最上位モデルのシューズでない所謂廉価版シューズであってもエアマックスと冠するシューズが存在するなど、その呼称に関しては当時ほど厳格ではない。
               </Text>
             </Box>
@@ -46,7 +46,9 @@ const ItemSmallCard = () => {
                   name="imoto"
                   src="https://bit.ly/broken-link"
                 />
-                <Text fontSize="xs">芝浦World National Grally ３号点</Text>
+                <Text fontSize="xs" noOfLines={2}>
+                  芝浦World National Grally ３号点
+                </Text>
               </Stack>
             </Box>
             <Box w="20%">

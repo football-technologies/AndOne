@@ -19,19 +19,21 @@ const ItemMiddleCard = () => {
         overflow="hidden"
         _hover={{ bg: "paleGray", borderColor: "darkGrey" }}
       >
-        <Link href="/" _hover={{ textDecoration: "none" }}>
+        <Link href="/items/123" _hover={{ textDecoration: "none" }}>
           <AspectRatio ratio={1}>
             <Image src="https://d17x1wu3749i2y.cloudfront.net/2021/02/15/23/44/16/274ac8e2-9729-4223-9c34-4e336cacf00f/file.jpg"></Image>
           </AspectRatio>
 
           <Box p="5" pb="2">
-            <Heading as="h3" fontSize="md" height="2.4em" overflow="hidden">
+            <Heading as="h3" fontSize="md" noOfLines={2}>
               Nike International 2012 Black Edition ああああああああああああ
             </Heading>
 
             <Stack direction="row" align="center" pt="5">
               <Avatar size="sm" name="imoto" src="https://bit.ly/broken-link" />
-              <Text fontSize="xs">芝浦World National Grally ３号点</Text>
+              <Text fontSize="xs" noOfLines={2}>
+                芝浦World National Grally ３号点
+              </Text>
             </Stack>
 
             <Stack

@@ -19,7 +19,7 @@ const ItemExtraSmallCard = () => {
         borderColor="lightGray"
         _hover={{ bg: "paleGray", borderColor: "darkGrey" }}
       >
-        <Link href="/" _hover={{ textDecoration: "none" }}>
+        <Link href="/items/123" _hover={{ textDecoration: "none" }}>
           <Stack direction={["column", "row"]} align="center">
             <Box w="50px">
               <AspectRatio ratio={1}>
@@ -35,7 +35,7 @@ const ItemExtraSmallCard = () => {
                 7,800円
               </Text>
 
-              <Text fontSize="small" maxHeight="3em" overflow="hidden">
+              <Text fontSize="small" noOfLines={2}>
                 Nike International 2012 Black Edition ああああああああああああ
                 Nike International 2012 Black Edition ああああああああああああ
               </Text>

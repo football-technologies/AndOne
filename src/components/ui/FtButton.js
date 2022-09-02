@@ -87,7 +87,7 @@ const FtSmallButton = forwardRef((props, ref) => {
       bg="primary"
       color="white"
       borderStyle="solid"
-      borderWidth="2px"
+      borderWidth="1px"
       borderColor="primary"
       fontSize="10px"
       rounded="full"
@@ -107,7 +107,7 @@ const FtSmallButtonOutlined = forwardRef((props, ref) => {
     <Button
       variant="outline"
       borderStyle="solid"
-      borderWidth="2px"
+      borderWidth="1px"
       borderColor="primary"
       color="primary"
       fontSize="10px"
