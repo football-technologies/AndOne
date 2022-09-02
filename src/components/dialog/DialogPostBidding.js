@@ -26,7 +26,7 @@ import { FtMiddleButton } from "../ui/FtButton";
 
 const DialogPostBidding = forwardRef((props, ref) => {
   const [dialog, setDialog] = useState(false);
-  const [text, setText] = useState(345000);
+  const [text, setText] = useState();
 
   useImperativeHandle(ref, () => ({
     openDialog() {
@@ -83,37 +83,37 @@ const DialogPostBidding = forwardRef((props, ref) => {
             </Stack>
 
             <Box pt="10">
-              <Text fontSize="sm" fontWeight="700" px="10" mx="5">
-                新しい入札価格
-              </Text>
-              <InputGroup px="10" mx="5">
-                <Input
-                  value={text}
-                  type="number"
-                  valiant="filled"
-                  onChange={(ev) => setText(ev.target.value)}
-                  placeholder="e.g 15000"
-                  bg="paleGray"
-                />
-                <InputRightAddon
-                  children="円"
-                  bg="darkGray"
-                  color="white"
-                ></InputRightAddon>
-              </InputGroup>
-
-              <Text>ToPrice: {ToPrice(text)}</Text>
-              <Text>text: {text}</Text>
+              <Box w="200px" mx="auto">
+                <Text fontSize="sm" fontWeight="700">
+                  新しい入札価格
+                </Text>
+                <InputGroup>
+                  <Input
+                    value={text}
+                    type="number"
+                    valiant="filled"
+                    onChange={(ev) => setText(ev.target.value)}
+                    placeholder="e.g 15000"
+                    bg="paleGray"
+                  />
+                  <InputRightAddon
+                    children="円"
+                    bg="darkGray"
+                    color="white"
+                  ></InputRightAddon>
+                </InputGroup>
+              </Box>
 
               {text && (
-                <Text fontSize="sm" fontWeight="700" pt="10" align="center">
-                  送信ボタンを押す前に確認してください！
-                  <br />
-                  {text}
-                  {ToPrice(text)}
-                  <br />
-                  の入札をしようとしています。
-                </Text>
+                <Box bg="paleGray" p="3" mt="10">
+                  <Text fontSize="sm" fontWeight="700" align="center">
+                    送信ボタンを押す前に確認してください！
+                    <br />
+                    {ToPrice(text)}
+                    <br />
+                    の入札をしようとしています。
+                  </Text>
+                </Box>
               )}
             </Box>
           </Box>
