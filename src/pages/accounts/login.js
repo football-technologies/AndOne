@@ -22,6 +22,8 @@ import { BiHide, BiShow } from "react-icons/bi";
 
 import { auth } from "@/plugins/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { db } from "@/plugins/firebase";
+import { getDocs, where, collection, query } from "firebase/firestore";
 
 import { login } from "@/store/account";
 
@@ -40,19 +42,31 @@ const Login = () => {
     formState: { errors, isSubmitting },
   } = useForm();
 
-
   const onSubmit = (data) => {
     console.log(">>>>>>>>>>>> data", data);
 
     signInWithEmailAndPassword(auth, data.email, data.password)
-      .then((auth) => {
-        dispatch(
-          login({
-            id: auth.user.uid,
-            email: auth.user.email,
-            name: auth.user.displayName,
-          })
+      .then(async (auth) => {
+        const q = query(
+          collection(db, "users"),
+          where("authId", "==", auth.user.uid)
         );
+
+        await getDocs(q).then((snapshot) => {
+          snapshot.forEach(async (doc) => {
+            if (doc.id) {
+              dispatch(
+                login({
+                  id: doc.data().id,
+                  authId: auth.user.uid,
+                  email: auth.user.email,
+                  name: auth.user.displayName,
+                  icon: doc.data().icon,
+                })
+              );
+            }
+          });
+        });
 
         toast({
           position: "top",
@@ -84,7 +98,7 @@ const Login = () => {
   };
 
   return (
-    <Box bg='white' h={"100vh"} w={"90%"} mx={"auto"}>
+    <Box bg="white" h={"100vh"} w={"90%"} mx={"auto"}>
       <form onSubmit={handleSubmit(onSubmit)} style={form}>
         <Heading py={"50px"} as="h3" size="lg">
           Login
@@ -93,7 +107,7 @@ const Login = () => {
           <FormLabel>Email</FormLabel>
           <Input
             type="email"
-            variant='filled'
+            variant="filled"
             placeholder="steve@apple.com"
             {...register("email", {
               required: "メールアドレスは必須入力です",
@@ -112,7 +126,7 @@ const Login = () => {
           <InputGroup>
             <Input
               type={show ? "text" : "password"}
-              variant='filled'
+              variant="filled"
               {...register("password", {
                 required: "パスワードは必須入力です",
                 pattern: {
