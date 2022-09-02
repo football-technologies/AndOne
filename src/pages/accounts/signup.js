@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
 
 import {
   FormControl,
@@ -21,8 +22,13 @@ import { BiHide, BiShow } from "react-icons/bi";
 import { auth } from "@/plugins/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
+import { create } from "@/store/user";
+import { createSecret } from "@/store/secret";
+
 import _ from "lodash";
 import rules from "@/plugins/validation";
+import scheme from "@/helpers/scheme";
+import { ftCreateId } from "@/plugins/mixin";
 
 const Signup = () => {
   const [show, setShow] = useState(false);
@@ -30,6 +36,10 @@ const Signup = () => {
 
   const router = useRouter();
   const toast = useToast();
+  const dispatch = useDispatch();
+
+  const user = _.cloneDeep(scheme.users);
+  const secret = _.cloneDeep(scheme.secrets);
 
   const {
     register,
@@ -49,6 +59,14 @@ const Signup = () => {
         await updateProfile(auth.user, {
           displayName: data.name,
         });
+
+        user.authId = secret.authId = auth.user.uid;
+        user.id = secret.id = ftCreateId("user");
+        user.displayName = user.screenName = data.name;
+        user.id = secret.id = ftCreateId("user");
+
+        dispatch(create(user));
+        dispatch(createSecret(secret));
 
         toast({
           position: "top",
