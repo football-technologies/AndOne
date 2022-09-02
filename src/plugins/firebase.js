@@ -2,6 +2,7 @@ import { initializeApp, getApps } from "firebase/app";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
+import { getStorage } from "firebase/storage";
 
 const REGION_TOKYO = "asia-northeast1";
 
@@ -26,8 +27,9 @@ const functions = getFunctions();
 functions.region = REGION_TOKYO;
 const db = getFirestore();
 const auth = getAuth();
+const storage = getStorage();
 
-export { db, auth, functions };
+export { db, auth, functions, storage };
 
 if (process.env.NODE_ENV === "development") {
   //emulator設定
