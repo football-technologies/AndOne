@@ -1,16 +1,11 @@
-import { Box, Button, Container, Stack } from "@chakra-ui/react";
+import { Box, Button, Text, Stack } from "@chakra-ui/react";
 import { functions } from "@/plugins/firebase";
 import { httpsCallable } from "firebase/functions";
 import FtUiPallet from "@/components/ui/FtUiPallet";
 
-import { useToast } from "@chakra-ui/react";
-
 import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
 
 const DummyIndex = () => {
-  const toast = useToast();
-  const id = "test";
-
   const helloOnCall = async () => {
     const hello = httpsCallable(functions, "v1-callable-hello");
     console.log(">>>>>> Start");

@@ -7,7 +7,6 @@ import NextLink from "next/link";
 
 const SideNavBasic = () => {
   const currentUser = useSelector((state) => state.account);
-  console.log(">>>>>>>> currentUser:", currentUser);
 
   return (
     <>

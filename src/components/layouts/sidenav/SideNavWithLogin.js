@@ -1,4 +1,8 @@
+import { useSelector } from "react-redux";
+import { useRouter, useDispatch } from "next/router";
 import useLogout from "../Logout";
+import { fetchUser } from "@/store/user";
+import { fetchSecret } from "@/store/secret";
 
 import {
   Box,
@@ -26,7 +30,6 @@ import {
 } from "react-icons/md";
 import { FaRegHourglass } from "react-icons/fa";
 import { RiHeartAddLine } from "react-icons/ri";
-import { useSelector } from "react-redux";
 
 import ItemExtraSmallCard from "@/components/cards/ItemExtraSmallCard";
 import NextLink from "next/link";
@@ -67,12 +70,18 @@ const SideNavWithoutLogin = () => {
   return (
     <Stack>
       <HStack justify="space-between">
-        {/* <Box> */}
-        {currentUser.name ? (
+        {currentUser.icon ? (
+          <Stack direction="row" align="center">
+            <Avatar src={currentUser.icon} />
+            <Text w="130px" pl="2">
+              {currentUser.name}
+            </Text>
+          </Stack>
+        ) : currentUser.name ? (
           <Stack direction="row" align="center">
             <Avatar name={currentUser.name} />
             <Text w="130px" pl="2">
-              {currentUser.name}fsfsdfsjfsdfjsdfsdfjs
+              {currentUser.name}
             </Text>
           </Stack>
         ) : (
@@ -89,7 +98,7 @@ const SideNavWithoutLogin = () => {
             </MenuButton>
             <MenuList>
               <MenuItem p="5">
-                <NextLink href="/" passHref>
+                <NextLink href={`/users/${currentUser.id}/edit`} passHref>
                   <a>
                     <Text fontSize="sm">プロフィール編集をする</Text>
                   </a>

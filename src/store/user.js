@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { db } from "@/plugins/firebase";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp, onSnapshot } from "firebase/firestore";
 
 const user = createSlice({
   name: "user",
@@ -15,8 +15,17 @@ const user = createSlice({
       setDoc(doc(db, `users/${payload.id}`), payload, { merge: true });
     },
 
-    read(state, { type, payload }) {
+    update(state, { type, payload }) {
+      payload["updatedAt"] = serverTimestamp();
+      setDoc(doc(db, `users/${payload.id}`), payload, { merge: true });
+    },
+
+    readUsers(state, { type, payload }) {
       state.users = [...payload];
+    },
+
+    readUser(state, { type, payload }) {
+      state.user = { ...payload };
     },
   },
 });
@@ -47,12 +56,30 @@ const fetch = (payload) => {
         });
       }
 
-      dispatch(read(newUsers));
+      dispatch(readUsers(newUsers));
     });
   };
 };
 
-const { create, read } = user.actions;
+const fetchUser = (payload) => {
+  return async (dispatch, getState) => {
+    console.log(">>>>>>>>> called fetchUser");
 
-export { create, read, fetch };
+    const unsubscribe = await onSnapshot(
+      doc(db, "users", payload.query),
+      async (doc) => {
+        if (doc.id) {
+          dispatch(readUser(doc.data()));
+        }
+      }
+    );
+
+    if (payload.type === "delete") {
+      unsubscribe();
+    }
+  };
+};
+
+export const { create, update, readUsers, readUser } = user.actions;
+export { fetch, fetchUser };
 export default user;

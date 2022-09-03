@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 
 import { db } from "@/plugins/firebase";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp, onSnapshot } from "firebase/firestore";
 
 const secret = createSlice({
   name: "secret",
@@ -17,10 +17,40 @@ const secret = createSlice({
         merge: true,
       });
     },
+
+    updateSecret(state, { type, payload }) {
+      payload["updatedAt"] = serverTimestamp();
+      setDoc(doc(db, `users/${payload.id}/secrets/${payload.id}`), payload, {
+        merge: true,
+      });
+    },
+
+    readSecret(state, { type, payload }) {
+      state.secret = { ...payload };
+    },
   },
 });
 
-const { createSecret } = secret.actions;
+const fetchSecret = (payload) => {
+  return async (dispatch, getState) => {
+    console.log(">>>>>>>>> called fetchSecret");
 
-export { createSecret };
+    const unsubscribe = await onSnapshot(
+      doc(db, `users/${payload.query}/secrets`, payload.query),
+      async (doc) => {
+        if (doc.id) {
+          dispatch(readSecret(doc.data()));
+        }
+      }
+    );
+
+    if (payload.type === "delete") {
+      unsubscribe();
+    }
+  };
+};
+
+export const { createSecret, updateSecret, readSecret } = secret.actions;
+
+export { fetchSecret };
 export default secret;
