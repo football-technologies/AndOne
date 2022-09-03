@@ -1,8 +1,10 @@
 import {
-  FtButton,
-  FtButtonOutlined,
-  FtButtonSmall,
-  FtButtonOutlinedSmall,
+  FtLargeButton,
+  FtLargeButtonOutlined,
+  FtMiddleButton,
+  FtMiddleButtonOutlined,
+  FtSmallButton,
+  FtSmallButtonOutlined,
 } from "@/components/ui/FtButton";
 import { Divider, VStack, Stack, Box, Text } from "@chakra-ui/react";
 
@@ -10,23 +12,40 @@ const FtUiPallet = () => {
   return (
     <>
       <Text pt="10">Button</Text>
-      <Box bg="grey.400">
+      <Box bg="gray.400" p="10">
         <Box pt="5">
-          <FtButton>送信する</FtButton>
-          <small>{"<FtButton>送信する</FtButton>"}</small>
+          <FtLargeButton>送信する</FtLargeButton>
+          <small>{"<FtLargeButton>送信する</FtLargeButton>"}</small>
         </Box>
+
         <Box pt="5">
-          <FtButtonSmall>送信する</FtButtonSmall>
-          <small>{"<FtButtonSmall>送信する</FtButtonSmall>"}</small>
-        </Box>
-        <Box pt="5">
-          <FtButtonOutlined>送信する</FtButtonOutlined>
-          <small>{"<FtButtonOutlined>送信する</FtButtonOutlined>"}</small>
-        </Box>
-        <Box pt="5">
-          <FtButtonOutlinedSmall>送信する</FtButtonOutlinedSmall>
+          <FtLargeButtonOutlined>送信する</FtLargeButtonOutlined>
           <small>
-            {"<FtButtonOutlinedSmall>送信する</FtButtonOutlinedSmall>"}
+            {"<FtLargeButtonOutlined>送信する</FtLargeButtonOutlined>"}
+          </small>
+        </Box>
+
+        <Box pt="5">
+          <FtMiddleButton>送信する</FtMiddleButton>
+          <small>{"<FtMiddleButton>送信する</FtMiddleButton>"}</small>
+        </Box>
+
+        <Box pt="5">
+          <FtMiddleButtonOutlined>送信する</FtMiddleButtonOutlined>
+          <small>
+            {"<FtMiddleButtonOutlined>送信する</FtMiddleButtonOutlined>"}
+          </small>
+        </Box>
+
+        <Box pt="5">
+          <FtSmallButton>送信する</FtSmallButton>
+          <small>{"<FtSmallButton>送信する</FtSmallButton>"}</small>
+        </Box>
+
+        <Box pt="5">
+          <FtSmallButtonOutlined>送信する</FtSmallButtonOutlined>
+          <small>
+            {"<FtSmallButtonOutlined>送信する</FtSmallButtonOutlined>"}
           </small>
         </Box>
       </Box>

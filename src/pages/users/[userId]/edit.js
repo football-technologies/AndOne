@@ -18,9 +18,10 @@ import {
   Textarea,
   HStack,
   Avatar,
+  Stack,
 } from "@chakra-ui/react";
 import useFtToast from "@/components/ui/FtToast";
-import { FtButtonOutlinedSmall } from "@/components/ui/FtButton";
+import { FtSmallButtonOutlined } from "@/components/ui/FtButton";
 
 import ImageUpload from "@/components/ui/ImageUpload";
 
@@ -138,14 +139,18 @@ const Edit = ({ query }) => {
               )}
             </Box>
             <Box pl={"10px"}>
-              <ImageUpload
-                ref={inputRef}
-                folderPath={`users/${user.id}/icon`}
-                upload={upload}
-              ></ImageUpload>
-              <FtButtonOutlinedSmall onClick={openInputRef}>
-                iconを変更する
-              </FtButtonOutlinedSmall>
+              <HStack mb={"5px"}>
+                <ImageUpload
+                  ref={inputRef}
+                  folderPath={`users/${user.id}/icon`}
+                  upload={upload}
+                ></ImageUpload>
+              </HStack>
+              <HStack>
+                <FtSmallButtonOutlined onClick={openInputRef}>
+                  iconを変更する
+                </FtSmallButtonOutlined>
+              </HStack>
             </Box>
           </HStack>
 
@@ -169,10 +174,7 @@ const Edit = ({ query }) => {
               defaultValue={user.screenName}
               placeholder="footballworld"
               {...register("screenName", {
-                pattern: {
-                  value: rules.name,
-                  message: "スペースなしの半角英数字のみがご利用できます",
-                },
+                pattern: rules.name,
               })}
             />
             <FormHelperText>他の人に表示されます</FormHelperText>
@@ -205,10 +207,7 @@ const Edit = ({ query }) => {
               defaultValue={secret.email}
               {...register("email", {
                 required: "メールアドレスは必須入力です",
-                pattern: {
-                  value: rules.email,
-                  message: "メールアドレスの形式が異なります",
-                },
+                pattern: rules.email,
               })}
             />
             <FormHelperText>

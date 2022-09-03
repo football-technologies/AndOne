@@ -7,7 +7,6 @@ import { fetchSecret } from "@/store/secret";
 import {
   Box,
   Text,
-  Image,
   List,
   ListItem,
   ListIcon,
@@ -21,6 +20,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  MenuDivider,
 } from "@chakra-ui/react";
 import {
   MdOutlineCollections,
@@ -31,10 +31,11 @@ import {
 import { FaRegHourglass } from "react-icons/fa";
 import { RiHeartAddLine } from "react-icons/ri";
 
+import ItemExtraSmallCard from "@/components/cards/ItemExtraSmallCard";
+import NextLink from "next/link";
+
 const SideNavWithoutLogin = () => {
   const currentUser = useSelector((state) => state.account);
-
-  const router = useRouter();
   const { logoutAuth } = useLogout();
 
   const items = [
@@ -68,40 +69,49 @@ const SideNavWithoutLogin = () => {
 
   return (
     <Stack>
-      <HStack spacing={6}>
-        <Box>
-          {currentUser.icon ? (
+      <HStack justify="space-between">
+        {currentUser.icon ? (
+          <Stack direction="row" align="center">
             <Avatar src={currentUser.icon} />
-          ) : (
+            <Text w="130px" pl="2">
+              {currentUser.name}
+            </Text>
+          </Stack>
+        ) : currentUser.name ? (
+          <Stack direction="row" align="center">
             <Avatar name={currentUser.name} />
-          )}
-        </Box>
-        <Box>
-          {currentUser.name ? (
-            <Text>{currentUser.name}</Text>
-          ) : (
-            <Text>no name</Text>
-          )}
-        </Box>
+            <Text w="130px" pl="2">
+              {currentUser.name}
+            </Text>
+          </Stack>
+        ) : (
+          <Stack direction="row" align="center">
+            <Avatar src="https://s.hs-data.com/bilder/spieler/gross/150720.jpg?fallback=png" />
+            <Text pl="2">User Name</Text>
+          </Stack>
+        )}
+
         <Box>
           <Menu>
-            <MenuButton>
+            <MenuButton className="ftHover">
               <Icon as={MdOutlineMoreVert} w={6} h={6}></Icon>
             </MenuButton>
             <MenuList>
-              <MenuItem
-                onClick={() => {
-                  router.push(`/users/${currentUser.id}/edit`);
-                }}
-              >
-                プロフィール編集をする
+              <MenuItem p="5">
+                <NextLink href={`/users/${currentUser.id}/edit`} passHref>
+                  <a>
+                    <Text fontSize="sm">プロフィール編集をする</Text>
+                  </a>
+                </NextLink>
               </MenuItem>
+              <MenuDivider />
               <MenuItem
+                p="5"
                 onClick={() => {
                   logoutAuth();
                 }}
               >
-                ログアウトする
+                <Text fontSize="sm">ログアウトする</Text>
               </MenuItem>
             </MenuList>
           </Menu>
@@ -109,34 +119,32 @@ const SideNavWithoutLogin = () => {
       </HStack>
 
       <Divider />
-      <HStack py={"30px"}>
+
+      <Box py="10" px="3">
         <List spacing={5}>
           {items.map((item) => (
             <ListItem key={item.id}>
-              <Text>
-                <ListIcon as={item.icon} />
-                {item.name}
-              </Text>
+              <NextLink href="/" passHref>
+                <a>
+                  <Text class="ftTextLink">
+                    <ListIcon as={item.icon} mr="5" />
+                    {item.name}
+                  </Text>
+                </a>
+              </NextLink>
             </ListItem>
           ))}
         </List>
-      </HStack>
+      </Box>
+
       <Divider />
 
-      <Stack>
+      <Stack spacing="0">
         <Heading my={"10px"} size="sm">
           Bidding Items
         </Heading>
         {biddingItems.map((item) => (
-          <HStack key={item.id}>
-            <Box w={"50%"}>
-              <Image borderRadius="lg" boxSize="100px" src={item.url} />
-            </Box>
-            <Box w={"50%"}>
-              <Text>{item.price}</Text>
-              <Text>{item.name}</Text>
-            </Box>
-          </HStack>
+          <ItemExtraSmallCard></ItemExtraSmallCard>
         ))}
       </Stack>
     </Stack>

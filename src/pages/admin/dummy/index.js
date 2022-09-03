@@ -1,7 +1,9 @@
-import { Box, Button, useToast, Text, Stack } from "@chakra-ui/react";
+import { Box, Button, Text, Stack } from "@chakra-ui/react";
 import { functions } from "@/plugins/firebase";
 import { httpsCallable } from "firebase/functions";
 import FtUiPallet from "@/components/ui/FtUiPallet";
+
+import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
 
 const DummyIndex = () => {
   const helloOnCall = async () => {
@@ -11,25 +13,6 @@ const DummyIndex = () => {
     console.log(">>>>>> Return: ->", result);
   };
 
-  const toast = useToast();
-  const click = () => {
-    toast({
-      position: "top",
-      duration: 6000,
-      // isClosable: true,
-      render: ({ id, onClose }) => (
-        <Box
-          display={"inline-block"}
-          color="white"
-          p={3}
-          bg="black"
-          rounded="full"
-        >
-          sssssssss
-        </Box>
-      ),
-    });
-  };
   return (
     <>
       <Box p="10" bg="paleGray">
@@ -43,10 +26,9 @@ const DummyIndex = () => {
         <Box>
           <FtUiPallet></FtUiPallet>
         </Box>
-        <Box>
-          <Button onClick={click}>toast</Button>
-        </Box>
       </Box>
+
+      <ItemMiddleCard></ItemMiddleCard>
     </>
   );
 };

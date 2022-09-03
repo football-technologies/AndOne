@@ -100,10 +100,7 @@ const Login = () => {
             placeholder="steve@apple.com"
             {...register("email", {
               required: "メールアドレスは必須入力です",
-              pattern: {
-                value: rules.email,
-                message: "メールアドレスの形式が異なります",
-              },
+              pattern: rules.email,
             })}
           />
           <FormErrorMessage>
@@ -118,10 +115,7 @@ const Login = () => {
               variant="filled"
               {...register("password", {
                 required: "パスワードは必須入力です",
-                pattern: {
-                  value: rules.password,
-                  message: "半角英数字で6文字以上の入力が必要です",
-                },
+                pattern: rules.password,
               })}
             />
             <InputRightElement width="4.5rem">
