@@ -19,7 +19,7 @@ import {
   HStack,
   Avatar,
 } from "@chakra-ui/react";
-import { useToast } from "@chakra-ui/react";
+import useFtToast from "@/components/ui/ftToast";
 import { FtButtonOutlinedSmall } from "@/components/ui/FtButton";
 
 import ImageUpload from "@/components/ui/ImageUpload";
@@ -29,12 +29,13 @@ import rules from "@/plugins/validation";
 
 const Edit = ({ query }) => {
   const [url, setUrl] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const bindUser = useSelector((state) => state.user.user);
   const bindSecret = useSelector((state) => state.secret.secret);
 
   const router = useRouter();
-  const toast = useToast();
+  const { ftToast } = useFtToast();
   const inputRef = useRef();
   const dispatch = useDispatch();
 
@@ -101,25 +102,20 @@ const Edit = ({ query }) => {
       user.icon = url;
     }
 
-    dispatch(updateAccount({
-      id: user.id,
-      authId: user.authId,
-      email: data.email,
-      name: data.displayName,
-      icon: user.icon,
-    }))
+    dispatch(
+      updateAccount({
+        id: user.id,
+        authId: user.authId,
+        email: data.email,
+        name: data.displayName,
+        icon: user.icon,
+      })
+    );
 
     dispatch(update(user));
     dispatch(updateSecret(secret));
 
-    toast({
-      position: "top",
-      title: "プロフィールの更新が完了しました",
-      status: "success",
-      duration: 2000,
-      isClosable: true,
-    });
-
+    ftToast("プロフィールの更新が完了しました");
     router.push("/");
   };
 

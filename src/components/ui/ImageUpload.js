@@ -1,12 +1,12 @@
 import { Input } from "@chakra-ui/react";
 import { forwardRef } from "react";
-import { useToast } from "@chakra-ui/react";
+import useFtToast from "@/components/ui/ftToast";
 import { storage } from "@/plugins/firebase";
 import { getDownloadURL, ref, uploadString } from "@firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 
 const ImageUpload = forwardRef(({ folderPath, upload }, inputRef) => {
-  const toast = useToast();
+  const { ftToast } = useFtToast();
 
   const onChange = (e) => {
     const maxSize = 10000000; // 10MB未満
@@ -15,28 +15,15 @@ const ImageUpload = forwardRef(({ folderPath, upload }, inputRef) => {
 
     // 1. アップロードされるファイルが画像であること
     if (!file.type.includes("image")) {
-      toast({
-        position: "top",
-        title: "画像ファイルのみアップロード可能です",
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-      });
+      ftToast("画像ファイルのみアップロード可能です");
       return false;
     }
 
     // 2. 画像のサイズが10MB未満であること
     if (!(parseInt(file.size) < maxSize)) {
-      toast({
-        position: "top",
-        title:
-          "画像サイズが" +
-          maxSize / 1000000 +
-          "メガ以下のみアップロード可能です",
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-      });
+      ftToast("画像サイズが" +
+      maxSize / 1000000 +
+      "メガ以下のみアップロード可能です");
       return false;
     }
 

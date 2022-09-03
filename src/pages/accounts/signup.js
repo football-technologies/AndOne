@@ -16,8 +16,8 @@ import {
   Icon,
   Heading,
 } from "@chakra-ui/react";
-import { useToast } from "@chakra-ui/react";
 import { BiHide, BiShow } from "react-icons/bi";
+import useFtToast from "@/components/ui/ftToast";
 
 import { auth } from "@/plugins/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
@@ -34,10 +34,11 @@ import { ftCreateId } from "@/plugins/mixin";
 const Signup = () => {
   const [show, setShow] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
-  const toast = useToast();
   const dispatch = useDispatch();
+  const { ftToast } = useFtToast();
 
   const user = _.cloneDeep(scheme.users);
   const secret = _.cloneDeep(scheme.secrets);
@@ -52,7 +53,7 @@ const Signup = () => {
 
   const onSubmit = (data) => {
     console.log(">>>>>>>>>>>>>> data", data);
-
+    setIsLoading(true);
     createUserWithEmailAndPassword(auth, data.email, data.password)
       .then(async (auth) => {
         console.log(">>>>>>>>>>> auth.user", auth.user);
@@ -79,13 +80,9 @@ const Signup = () => {
         dispatch(create(user));
         dispatch(createSecret(secret));
 
-        toast({
-          position: "top",
-          title: "ログインが成功しました",
-          status: "success",
-          duration: 2000,
-          isClosable: true,
-        });
+        ftToast("アカウントを作成しました");
+
+        setIsLoading(false);
 
         console.log(">>>>>>>> Create User Done");
         router.push("/");
@@ -93,13 +90,8 @@ const Signup = () => {
       .catch((error) => {
         console.log(">>>>>>>>>>>>>> error", error.message);
 
-        toast({
-          position: "top",
-          title: error.message,
-          status: "error",
-          duration: 2000,
-          isClosable: true,
-        });
+        ftToast(error.message);
+        setIsLoading(false);
       });
   };
 
@@ -218,7 +210,7 @@ const Signup = () => {
           <Button
             colorScheme="pink"
             type="submit"
-            isLoading={isSubmitting}
+            isLoading={isLoading}
             mt={"20px"}
           >
             アカウントを作成

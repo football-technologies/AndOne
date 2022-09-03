@@ -1,22 +1,16 @@
 import { useDispatch } from "react-redux";
 import { logout } from "@/store/account";
-import { useToast } from "@chakra-ui/react";
+import useFtToast from "@/components/ui/ftToast";
 import { useRouter } from "next/router";
 
 const useLogout = () => {
   const dispatch = useDispatch();
-  const toast = useToast();
+  const { ftToast } = useFtToast();
   const router = useRouter();
 
   const logoutAuth = () => {
     dispatch(logout());
-    toast({
-      position: "top",
-      title: "ログアウトしました",
-      status: "success",
-      duration: 2000,
-      isClosable: true,
-    });
+    ftToast("ログアウトしました");
     router.push("/accounts/logout");
   };
   return {

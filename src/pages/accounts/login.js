@@ -16,7 +16,7 @@ import {
   Heading,
   Icon,
 } from "@chakra-ui/react";
-import { useToast } from "@chakra-ui/react";
+import useFtToast from "@/components/ui/ftToast";
 
 import { BiHide, BiShow } from "react-icons/bi";
 
@@ -31,10 +31,11 @@ import rules from "@/plugins/validation";
 
 const Login = () => {
   const [show, setShow] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
   const router = useRouter();
-  const toast = useToast();
+  const { ftToast } = useFtToast();
 
   const {
     register,
@@ -44,7 +45,7 @@ const Login = () => {
 
   const onSubmit = (data) => {
     console.log(">>>>>>>>>>>> data", data);
-
+    setIsLoading(true);
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(async (auth) => {
         const q = query(
@@ -68,27 +69,15 @@ const Login = () => {
           });
         });
 
-        toast({
-          position: "top",
-          title: "ログインが成功しました",
-          status: "success",
-          duration: 2000,
-          isClosable: true,
-        });
-
+        ftToast("ログインが成功しました");
+        setIsLoading(false);
         console.log(">>>>>>>> Login User Done");
         router.push("/");
       })
       .catch((error) => {
         console.log(">>>>>>>>>>>>> error", error.message);
-
-        toast({
-          position: "top",
-          title: error.message,
-          status: "error",
-          duration: 2000,
-          isClosable: true,
-        });
+        setIsLoading(false);
+        ftToast(error.message);
       });
   };
 
@@ -150,7 +139,7 @@ const Login = () => {
           <Button
             colorScheme="pink"
             type="submit"
-            isLoading={isSubmitting}
+            isLoading={isLoading}
             mt={"20px"}
           >
             ログインする
