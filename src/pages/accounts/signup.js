@@ -122,10 +122,7 @@ const Signup = () => {
             placeholder="johndoe"
             {...register("name", {
               required: "User Nameは必須入力です",
-              pattern: {
-                value: rules.name,
-                message: "半角英数字のみがご利用できます",
-              },
+              pattern: rules.name,
             })}
           />
           <FormErrorMessage>
@@ -140,10 +137,7 @@ const Signup = () => {
             placeholder="steve@apple.com"
             {...register("email", {
               required: "メールアドレスは必須入力です",
-              pattern: {
-                value: rules.email,
-                message: "メールアドレスの形式が異なります",
-              },
+              pattern: rules.email,
             })}
           />
           <FormErrorMessage>
