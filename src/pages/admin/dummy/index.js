@@ -2,6 +2,7 @@ import { Box, Button } from "@chakra-ui/react";
 import { functions } from "@/plugins/firebase";
 import { httpsCallable } from "firebase/functions";
 import FtUiPallet from "@/components/ui/FtUiPallet";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 const DummyIndex = () => {
   const helloOnCall = async () => {
@@ -24,6 +25,7 @@ const DummyIndex = () => {
         <Box>
           <FtUiPallet></FtUiPallet>
         </Box>
+        <LoadingSpinner size={"xl"} isLoading={true}></LoadingSpinner>
       </Box>
     </>
   );

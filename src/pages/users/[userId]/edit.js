@@ -29,7 +29,6 @@ import rules from "@/plugins/validation";
 
 const Edit = ({ query }) => {
   const [url, setUrl] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const bindUser = useSelector((state) => state.user.user);
   const bindSecret = useSelector((state) => state.secret.secret);

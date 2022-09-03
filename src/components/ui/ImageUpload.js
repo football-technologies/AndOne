@@ -1,14 +1,19 @@
 import { Input } from "@chakra-ui/react";
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import useFtToast from "@/components/ui/ftToast";
 import { storage } from "@/plugins/firebase";
 import { getDownloadURL, ref, uploadString } from "@firebase/storage";
 import { v4 as uuidv4 } from "uuid";
+import LoadingSpinner from "./LoadingSpinner";
 
 const ImageUpload = forwardRef(({ folderPath, upload }, inputRef) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const { ftToast } = useFtToast();
 
   const onChange = (e) => {
+    setIsLoading(true);
+
     const maxSize = 10000000; // 10MB未満
 
     const file = e.target.files[0];
@@ -16,14 +21,16 @@ const ImageUpload = forwardRef(({ folderPath, upload }, inputRef) => {
     // 1. アップロードされるファイルが画像であること
     if (!file.type.includes("image")) {
       ftToast("画像ファイルのみアップロード可能です");
+      setIsLoading(false);
       return false;
     }
 
     // 2. 画像のサイズが10MB未満であること
     if (!(parseInt(file.size) < maxSize)) {
-      ftToast("画像サイズが" +
-      maxSize / 1000000 +
-      "メガ以下のみアップロード可能です");
+      ftToast(
+        "画像サイズが" + maxSize / 1000000 + "メガ以下のみアップロード可能です"
+      );
+      setIsLoading(false);
       return false;
     }
 
@@ -41,16 +48,12 @@ const ImageUpload = forwardRef(({ folderPath, upload }, inputRef) => {
             console.log(">>>>>>>>>>>> downloadURL", downloadURL);
             upload(downloadURL);
           });
+          setIsLoading(false);
         })
         .catch((err) => {
           console.log(">>>>>>>>>> err", err.message);
-          toast({
-            position: "top",
-            title: err.message,
-            status: "error",
-            duration: 2000,
-            isClosable: true,
-          });
+          ftToast(err.message);
+          setIsLoading(false);
         });
     };
   };
@@ -64,6 +67,7 @@ const ImageUpload = forwardRef(({ folderPath, upload }, inputRef) => {
         name="image"
         onChange={onChange}
       ></Input>
+      <LoadingSpinner size={"xl"} isLoading={isLoading}></LoadingSpinner>
     </>
   );
 });
