@@ -5,6 +5,8 @@ import FtUiPallet from "@/components/ui/FtUiPallet";
 
 import { useToast } from "@chakra-ui/react";
 
+import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
+
 const DummyIndex = () => {
   const toast = useToast();
   const id = "test";
@@ -30,6 +32,8 @@ const DummyIndex = () => {
           <FtUiPallet></FtUiPallet>
         </Box>
       </Box>
+
+      <ItemMiddleCard></ItemMiddleCard>
     </>
   );
 };

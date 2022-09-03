@@ -63,14 +63,6 @@ const SideNavWithoutLogin = () => {
 
   return (
     <Stack>
-      <HStack mb={"40px"}>
-        <Image
-          boxSize="150px"
-          align={"center"}
-          src="https://post.healthline.com/wp-content/uploads/2020/09/healthy-eating-ingredients-732x549-thumbnail.jpg"
-        />
-      </HStack>
-
       <HStack spacing={14}>
         <Box>
           {currentUser.name ? (
