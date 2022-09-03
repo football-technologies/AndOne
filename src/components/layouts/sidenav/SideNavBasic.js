@@ -2,8 +2,8 @@ import SideNavWithoutLogin from "./SideNavWithoutLogin";
 import SideNavWithLogin from "./SideNavWithLogin";
 import { useSelector } from "react-redux";
 
-import { Image, Link } from "@chakra-ui/react";
-import logo from "@/assets/logo/large.png";
+import { Image } from "@chakra-ui/react";
+import NextLink from "next/link";
 
 const SideNavBasic = () => {
   const currentUser = useSelector((state) => state.account);
@@ -11,9 +11,9 @@ const SideNavBasic = () => {
 
   return (
     <>
-      <Link href="/">
+      <NextLink href="/" passHref>
         <Image align={"center"} src="logo.png" p="5" />
-      </Link>
+      </NextLink>
 
       {currentUser.id ? (
         <SideNavWithLogin></SideNavWithLogin>

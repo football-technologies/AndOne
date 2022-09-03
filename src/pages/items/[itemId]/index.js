@@ -20,6 +20,7 @@ import {
   Center,
   Spacer,
 } from "@chakra-ui/react";
+import NextLink from "next/link";
 
 const ItemShow = () => {
   const router = useRouter();
@@ -117,7 +118,7 @@ const ItemShow = () => {
           </Box>
 
           <Box pt="5">
-            <Link href="/shops/123/artists/123">
+            <NextLink href="/shops/123/artists/123" passHref>
               <Stack direction="row" align="center" bg="paleGray" p="2">
                 <Box width="50px">
                   <AspectRatio ratio={1}>
@@ -139,11 +140,11 @@ const ItemShow = () => {
                   </Text>
                 </Box>
               </Stack>
-            </Link>
+            </NextLink>
           </Box>
 
           <Box pt="5">
-            <Link href="/shops/123/artists/123">
+            <NextLink href="/shops/123" passHref>
               <Stack direction="row" align="center" bg="paleGray" p="2">
                 <Box width="50px">
                   <AspectRatio ratio={1}>
@@ -165,7 +166,7 @@ const ItemShow = () => {
                   </Text>
                 </Box>
               </Stack>
-            </Link>
+            </NextLink>
           </Box>
         </Box>
       </HStack>
