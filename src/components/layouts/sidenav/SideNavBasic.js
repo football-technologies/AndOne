@@ -12,7 +12,9 @@ const SideNavBasic = () => {
   return (
     <>
       <NextLink href="/" passHref>
-        <Image align={"center"} src="logo.png" p="5" />
+        <a>
+          <Image align={"center"} src="logo.png" p="5" />
+        </a>
       </NextLink>
 
       {currentUser.id ? (

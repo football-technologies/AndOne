@@ -119,53 +119,63 @@ const ItemShow = () => {
 
           <Box pt="5">
             <NextLink href="/shops/123/artists/123" passHref>
-              <Stack direction="row" align="center" bg="paleGray" p="2">
-                <Box width="50px">
-                  <AspectRatio ratio={1}>
-                    <Image
-                      src="https://d17x1wu3749i2y.cloudfront.net/2021/02/15/23/44/16/274ac8e2-9729-4223-9c34-4e336cacf00f/file.jpg"
-                      borderRadius="5px"
-                    ></Image>
-                  </AspectRatio>
-                </Box>
-                <Box>
-                  <Text fontSize="xs">作者情報</Text>
-                  <Text
-                    fontWeight="700"
-                    fontSize="xs"
-                    maxHeight="2.8em"
-                    overflow="hidden"
-                  >
-                    ティンカー・ハットフィールド
-                  </Text>
-                </Box>
-              </Stack>
+              <a>
+                <Stack direction="row" align="center" bg="paleGray" p="2">
+                  <Box width="50px">
+                    <AspectRatio ratio={1}>
+                      <Image
+                        src="https://d17x1wu3749i2y.cloudfront.net/2021/02/15/23/44/16/274ac8e2-9729-4223-9c34-4e336cacf00f/file.jpg"
+                        borderRadius="5px"
+                      ></Image>
+                    </AspectRatio>
+                  </Box>
+                  <Box>
+                    <Text fontSize="xs">作者情報</Text>
+                    <Text
+                      fontWeight="700"
+                      fontSize="xs"
+                      maxHeight="2.8em"
+                      overflow="hidden"
+                    >
+                      ティンカー・ハットフィールド
+                    </Text>
+                  </Box>
+                </Stack>
+              </a>
             </NextLink>
           </Box>
 
           <Box pt="5">
             <NextLink href="/shops/123" passHref>
-              <Stack direction="row" align="center" bg="paleGray" p="2">
-                <Box width="50px">
-                  <AspectRatio ratio={1}>
-                    <Image
-                      src="https://d17x1wu3749i2y.cloudfront.net/2021/02/15/23/44/16/274ac8e2-9729-4223-9c34-4e336cacf00f/file.jpg"
-                      borderRadius="5px"
-                    ></Image>
-                  </AspectRatio>
-                </Box>
-                <Box>
-                  <Text fontSize="xs">販売ショップ</Text>
-                  <Text
-                    fontWeight="700"
-                    fontSize="xs"
-                    maxHeight="2.8em"
-                    overflow="hidden"
-                  >
-                    芝浦Football World Garally
-                  </Text>
-                </Box>
-              </Stack>
+              <a>
+                <Stack
+                  direction="row"
+                  align="center"
+                  bg="paleGray"
+                  p="2"
+                  className="ftHover"
+                >
+                  <Box width="50px">
+                    <AspectRatio ratio={1}>
+                      <Image
+                        src="https://d17x1wu3749i2y.cloudfront.net/2021/02/15/23/44/16/274ac8e2-9729-4223-9c34-4e336cacf00f/file.jpg"
+                        borderRadius="5px"
+                      ></Image>
+                    </AspectRatio>
+                  </Box>
+                  <Box>
+                    <Text fontSize="xs">販売ショップ</Text>
+                    <Text
+                      fontWeight="700"
+                      fontSize="xs"
+                      maxHeight="2.8em"
+                      overflow="hidden"
+                    >
+                      芝浦Football World Garally
+                    </Text>
+                  </Box>
+                </Stack>
+              </a>
             </NextLink>
           </Box>
         </Box>

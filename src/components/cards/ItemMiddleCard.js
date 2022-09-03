@@ -24,7 +24,7 @@ const ItemMiddleCard = () => {
           passHref
           _hover={{ textDecoration: "none" }}
         >
-          <>
+          <a>
             <AspectRatio ratio={1}>
               <Image src="https://d17x1wu3749i2y.cloudfront.net/2021/02/15/23/44/16/274ac8e2-9729-4223-9c34-4e336cacf00f/file.jpg"></Image>
             </AspectRatio>
@@ -57,7 +57,7 @@ const ItemMiddleCard = () => {
                 <Text fontSize="xs">残り 23時間42分</Text>
               </Stack>
             </Box>
-          </>
+          </a>
         </NextLink>
       </Stack>
     </>

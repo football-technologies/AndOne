@@ -16,7 +16,7 @@ const ItemExtraSmallCard = () => {
           passHref
           _hover={{ textDecoration: "none" }}
         >
-          <>
+          <a>
             <Stack direction={["column", "row"]} align="center">
               <Box w="50px">
                 <AspectRatio ratio={1}>
@@ -38,7 +38,7 @@ const ItemExtraSmallCard = () => {
                 </Text>
               </Box>
             </Stack>
-          </>
+          </a>
         </NextLink>
       </Stack>
     </>
