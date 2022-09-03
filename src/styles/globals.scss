@@ -21,9 +21,12 @@ a {
   color: inherit;
   text-decoration: none;
 
-  &:hover {
-    text-decoration: none;
-  }
+  // p {
+  //   &:hover {
+  //     text-decoration: none;
+  //     color: $hover;
+  //   }
+  // }
 
   svg {
     &:hover {
@@ -45,6 +48,13 @@ img {
 .ftHover {
   &:hover {
     opacity: 0.8;
+    cursor: pointer;
+  }
+}
+
+.ftTextLink {
+  &:hover {
+    color: $hover;
     cursor: pointer;
   }
 }

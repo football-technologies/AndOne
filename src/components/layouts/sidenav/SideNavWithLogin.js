@@ -3,7 +3,6 @@ import useLogout from "../Logout";
 import {
   Box,
   Text,
-  Image,
   List,
   ListItem,
   ListIcon,
@@ -17,6 +16,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  MenuDivider,
 } from "@chakra-ui/react";
 import {
   MdOutlineCollections,
@@ -27,6 +27,9 @@ import {
 import { FaRegHourglass } from "react-icons/fa";
 import { RiHeartAddLine } from "react-icons/ri";
 import { useSelector } from "react-redux";
+
+import ItemExtraSmallCard from "@/components/cards/ItemExtraSmallCard";
+import NextLink from "next/link";
 
 const SideNavWithoutLogin = () => {
   const currentUser = useSelector((state) => state.account);
@@ -63,35 +66,43 @@ const SideNavWithoutLogin = () => {
 
   return (
     <Stack>
-      <HStack spacing={14}>
-        <Box>
-          {currentUser.name ? (
+      <HStack justify="space-between">
+        {/* <Box> */}
+        {currentUser.name ? (
+          <Stack direction="row" align="center">
             <Avatar name={currentUser.name} />
-          ) : (
+            <Text w="130px" pl="2">
+              {currentUser.name}fsfsdfsjfsdfjsdfsdfjs
+            </Text>
+          </Stack>
+        ) : (
+          <Stack direction="row" align="center">
             <Avatar src="https://s.hs-data.com/bilder/spieler/gross/150720.jpg?fallback=png" />
-            // <Avatar />
-          )}
-        </Box>
-        <Box>
-          {currentUser.name ? (
-            <Text>{currentUser.name}</Text>
-          ) : (
-            <Text>User Name</Text>
-          )}
-        </Box>
+            <Text pl="2">User Name</Text>
+          </Stack>
+        )}
+
         <Box>
           <Menu>
-            <MenuButton>
+            <MenuButton className="ftHover">
               <Icon as={MdOutlineMoreVert} w={6} h={6}></Icon>
             </MenuButton>
             <MenuList>
-              <MenuItem>プロフィール編集をする</MenuItem>
+              <MenuItem p="5">
+                <NextLink href="/" passHref>
+                  <a>
+                    <Text fontSize="sm">プロフィール編集をする</Text>
+                  </a>
+                </NextLink>
+              </MenuItem>
+              <MenuDivider />
               <MenuItem
+                p="5"
                 onClick={() => {
                   logoutAuth();
                 }}
               >
-                ログアウトする
+                <Text fontSize="sm">ログアウトする</Text>
               </MenuItem>
             </MenuList>
           </Menu>
@@ -99,34 +110,32 @@ const SideNavWithoutLogin = () => {
       </HStack>
 
       <Divider />
-      <HStack py={"30px"}>
+
+      <Box py="10" px="3">
         <List spacing={5}>
           {items.map((item) => (
             <ListItem key={item.id}>
-              <Text>
-                <ListIcon as={item.icon} />
-                {item.name}
-              </Text>
+              <NextLink href="/" passHref>
+                <a>
+                  <Text class="ftTextLink">
+                    <ListIcon as={item.icon} mr="5" />
+                    {item.name}
+                  </Text>
+                </a>
+              </NextLink>
             </ListItem>
           ))}
         </List>
-      </HStack>
+      </Box>
+
       <Divider />
 
-      <Stack>
+      <Stack spacing="0">
         <Heading my={"10px"} size="sm">
           Bidding Items
         </Heading>
         {biddingItems.map((item) => (
-          <HStack key={item.id}>
-            <Box w={"50%"}>
-              <Image borderRadius="lg" boxSize="100px" src={item.url} />
-            </Box>
-            <Box w={"50%"}>
-              <Text>{item.price}</Text>
-              <Text>{item.name}</Text>
-            </Box>
-          </HStack>
+          <ItemExtraSmallCard></ItemExtraSmallCard>
         ))}
       </Stack>
     </Stack>

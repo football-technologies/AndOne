@@ -17,7 +17,7 @@ const ItemExtraSmallCard = () => {
           _hover={{ textDecoration: "none" }}
         >
           <a>
-            <Stack direction={["column", "row"]} align="center">
+            <Stack direction={"row"} align="center">
               <Box w="50px">
                 <AspectRatio ratio={1}>
                   <Image
@@ -27,7 +27,7 @@ const ItemExtraSmallCard = () => {
                 </AspectRatio>
               </Box>
 
-              <Box w="40%" px="2">
+              <Box w="100%" px="2">
                 <Text fontSize="small" fontWeight="bold" color="primary">
                   7,800円
                 </Text>

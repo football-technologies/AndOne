@@ -13,7 +13,7 @@ const SideNavBasic = () => {
     <>
       <NextLink href="/" passHref>
         <a>
-          <Image align={"center"} src="logo.png" p="5" />
+          <Image align={"center"} src="/logo.png" p="5" />
         </a>
       </NextLink>
 
