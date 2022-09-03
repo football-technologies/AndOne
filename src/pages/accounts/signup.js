@@ -17,7 +17,7 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { BiHide, BiShow } from "react-icons/bi";
-import useFtToast from "@/components/ui/ftToast";
+import useFtToast from "@/components/ui/FtToast";
 
 import { auth } from "@/plugins/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";

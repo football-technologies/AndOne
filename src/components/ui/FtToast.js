@@ -9,7 +9,13 @@ const useFtToast = () => {
       duration: 6000,
       // isClosable: true,
       render: ({ id, onClose }) => (
-        <Box color="white" p={3} bg="black" rounded="full">
+        <Box
+          display={"inline-block"}
+          color="white"
+          p={3}
+          bg="black"
+          rounded="full"
+        >
           {message}
         </Box>
       ),

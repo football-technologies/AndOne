@@ -1,6 +1,6 @@
 import { Input } from "@chakra-ui/react";
 import { forwardRef, useState } from "react";
-import useFtToast from "@/components/ui/ftToast";
+import useFtToast from "@/components/ui/FtToast";
 import { storage } from "@/plugins/firebase";
 import { getDownloadURL, ref, uploadString } from "@firebase/storage";
 import { v4 as uuidv4 } from "uuid";

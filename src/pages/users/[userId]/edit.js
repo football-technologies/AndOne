@@ -19,7 +19,7 @@ import {
   HStack,
   Avatar,
 } from "@chakra-ui/react";
-import useFtToast from "@/components/ui/ftToast";
+import useFtToast from "@/components/ui/FtToast";
 import { FtButtonOutlinedSmall } from "@/components/ui/FtButton";
 
 import ImageUpload from "@/components/ui/ImageUpload";

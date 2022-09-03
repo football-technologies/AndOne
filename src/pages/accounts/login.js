@@ -16,7 +16,7 @@ import {
   Heading,
   Icon,
 } from "@chakra-ui/react";
-import useFtToast from "@/components/ui/ftToast";
+import useFtToast from "@/components/ui/FtToast";
 
 import { BiHide, BiShow } from "react-icons/bi";
 
