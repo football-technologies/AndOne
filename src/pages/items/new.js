@@ -76,10 +76,7 @@ const ItemNew = () => {
                   placeholder="johndoe"
                   {...register("name", {
                     required: "User Nameは必須入力です",
-                    pattern: {
-                      value: rules.name,
-                      message: "半角英数字のみがご利用できます",
-                    },
+                    pattern: rules.name,
                   })}
                 />
                 <FormErrorMessage>
