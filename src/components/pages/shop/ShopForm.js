@@ -13,13 +13,16 @@ import {
   VStack,
   Textarea,
   HStack,
-  Avatar,
   Stack,
   Text,
+  Image,
+  Wrap,
+  WrapItem,
+  AspectRatio,
 } from "@chakra-ui/react";
 
 import useFtToast from "@/components/ui/FtToast";
-import { FtSmallButtonOutlined } from "@/components/ui/FtButton";
+import { FtMiddleButtonOutlined } from "@/components/ui/FtButton";
 
 import ImageUpload from "@/components/ui/ImageUpload";
 
@@ -27,8 +30,8 @@ import _ from "lodash";
 import rules from "@/plugins/validation";
 
 const ShopForm = () => {
+  const [url, setUrl] = useState(null);
   const inputRef = useRef();
-
   const {
     register,
     handleSubmit,
@@ -45,28 +48,72 @@ const ShopForm = () => {
     { id: 7, name: "Others", type: "others" },
   ];
 
+  const openInputRef = () => {
+    inputRef.current.click();
+  };
+
+  const upload = (url) => {
+    console.log(">>>>>>>>>>>>> return URL", url);
+    setUrl(url);
+  };
+
   const onSubmit = (data) => {
     console.log(data);
   };
 
-  const form = {
-    width: "100%",
-    margin: "45px 0px",
-  };
-
   return (
     <>
-      <Stack w={"100%"} h={"50vh"} bg={"lightGray"}>
-        <h1>カバー画像</h1>
-      </Stack>
-      <HStack>
-        <Stack w={"30%"}>
-          <h1>Ok</h1>
-        </Stack>
-        <Stack w={"40%"}>
+      <HStack bg={"lightGray"} onClick={openInputRef} upload={upload}>
+        {url ? (
+          <AspectRatio w={"100%"} h={"300px"} ratio={1}>
+            <Image src={url}></Image>
+          </AspectRatio>
+        ) : (
+          <AspectRatio w={"100%"} h={"300px"} ratio={16 / 9}>
+            <Image src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"></Image>
+          </AspectRatio>
+        )}
+      </HStack>
+      <HStack mt={"50px"}>
+        <Stack w={"30%"} h={"200vh"}>
           <VStack>
-            <form onSubmit={handleSubmit(onSubmit)} style={form}>
-              <FormControl mt={"10px"}>
+            <Text mb={"15px"}>Shop Icon Image</Text>
+            <Box>
+              {url ? (
+                <Image src={url} boxSize={"120px"} rounded={"xl"}></Image>
+              ) : (
+                <Image
+                  boxSize={"120px"}
+                  rounded={"xl"}
+                  src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
+                ></Image>
+              )}
+            </Box>
+            <Box>
+              <VStack mb={"50px"}>
+                <ImageUpload
+                  ref={inputRef}
+                  folderPath={`shops/icon`}
+                  upload={upload}
+                ></ImageUpload>
+                <FtMiddleButtonOutlined onClick={openInputRef}>
+                  iconを変更する
+                </FtMiddleButtonOutlined>
+              </VStack>
+            </Box>
+          </VStack>
+          <VStack>
+            <Text>Tags</Text>
+            <Textarea w={"80%"} variant={"filled"}></Textarea>
+            <Text w={"80%"}>
+              カンマを入れて、最大10個まで作成するこができます。
+            </Text>
+          </VStack>
+        </Stack>
+        <Stack w={"40%"} h={"200vh"}>
+          <VStack>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <FormControl>
                 <FormLabel>Shop Name</FormLabel>
                 <Input
                   type="ShopName"
@@ -194,8 +241,23 @@ const ShopForm = () => {
             </form>
           </VStack>
         </Stack>
-        <Stack w={"30%"}>
-          <h1>OK</h1>
+        <Stack w={"30%"} h={"200vh"}>
+          <VStack mt={"30px"}>
+            <Wrap>
+              {[...Array(9)].map((_) => {
+                return (
+                  <WrapItem>
+                    <Image
+                      boxSize={"60px"}
+                      rounded={"xl"}
+                      src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
+                    ></Image>
+                  </WrapItem>
+                );
+              })}
+            </Wrap>
+            <Text>お店の紹介画像は最大で9枚まで表示できます</Text>
+          </VStack>
         </Stack>
       </HStack>
     </>
