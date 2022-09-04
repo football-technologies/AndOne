@@ -65,11 +65,11 @@ const ShopForm = () => {
     <>
       <HStack bg={"lightGray"}>
         {url ? (
-          <AspectRatio w={"100%"} h={"300px"} ratio={16 / 9}>
+          <AspectRatio w={"100%"} h={"350px"} ratio={2.5}>
             <Image className="ftHover" onClick={openInputRef} src={url}></Image>
           </AspectRatio>
         ) : (
-          <AspectRatio w={"100%"} h={"300px"} ratio={16 / 9}>
+          <AspectRatio w={"100%"} h={"350px"} ratio={2.5}>
             <Image
               className="ftHover"
               onClick={openInputRef}

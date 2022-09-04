@@ -63,6 +63,7 @@ const ImageUpload = forwardRef(({ folderPath, upload }, inputRef) => {
       <Input
         ref={inputRef}
         type={"file"}
+        accept=".jpg, .png"
         hidden
         name="image"
         onChange={onChange}
