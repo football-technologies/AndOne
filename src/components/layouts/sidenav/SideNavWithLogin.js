@@ -105,6 +105,14 @@ const SideNavWithoutLogin = () => {
                 </NextLink>
               </MenuItem>
               <MenuDivider />
+              <MenuItem p="5">
+                <NextLink href="/shops/new" passHref>
+                  <a>
+                    <Text fontSize="sm">shopを作成する</Text>
+                  </a>
+                </NextLink>
+              </MenuItem>
+              <MenuDivider />
               <MenuItem
                 p="5"
                 onClick={() => {
