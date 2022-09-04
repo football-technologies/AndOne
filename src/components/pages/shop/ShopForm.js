@@ -63,14 +63,18 @@ const ShopForm = () => {
 
   return (
     <>
-      <HStack bg={"lightGray"} onClick={openInputRef} upload={upload}>
+      <HStack bg={"lightGray"}>
         {url ? (
-          <AspectRatio w={"100%"} h={"300px"} ratio={1}>
-            <Image src={url}></Image>
+          <AspectRatio w={"100%"} h={"300px"} ratio={16 / 9}>
+            <Image className="ftHover" onClick={openInputRef} src={url}></Image>
           </AspectRatio>
         ) : (
           <AspectRatio w={"100%"} h={"300px"} ratio={16 / 9}>
-            <Image src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"></Image>
+            <Image
+              className="ftHover"
+              onClick={openInputRef}
+              src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
+            ></Image>
           </AspectRatio>
         )}
       </HStack>
