@@ -106,19 +106,20 @@ const ShopForm = () => {
   const createTags = (tags) => {
     for (const tag of tags) {
       const tagId = ftCreateId("tag");
-      const editTag = {
+      const editTag = _.cloneDeep(scheme.tags);
+
+      editTag.id = tagId;
+      editTag.name = tag;
+
+      const tagToSaveShopsCollection = {
         id: tagId,
         ref: doc(db, "tags", tagId),
         name: tag,
       };
 
-      editShop.tags.push(editTag);
-      dispatch(
-        createTag({
-          id: editTag.id,
-          name: editTag.name,
-        })
-      );
+      editShop.tags.push(tagToSaveShopsCollection);
+
+      dispatch(createTag(editTag));
     }
   };
 
