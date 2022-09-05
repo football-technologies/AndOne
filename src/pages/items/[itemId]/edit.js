@@ -1,6 +1,6 @@
 import ItemForm from "@/components/pages/item/ItemForm";
 
-const NewItem = () => {
+const EditItem = () => {
   return (
     <>
       <ItemForm></ItemForm>
@@ -8,4 +8,4 @@ const NewItem = () => {
   );
 };
 
-export default NewItem;
+export default EditItem;

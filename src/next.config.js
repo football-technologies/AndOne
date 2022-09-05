@@ -11,7 +11,8 @@ if (functions.config().basic) {
 console.log(">>>>>>>  CURRENT_ENV", CURRENT_ENV);
 
 const nextConfig = {
-  reactStrictMode: true,
+  // reactStrictMode: true,
+  reactStrictMode: false,
   swcMinify: true,
 
   env: CURRENT_ENV,
