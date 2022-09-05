@@ -23,20 +23,41 @@ import {
 
 import useFtToast from "@/components/ui/FtToast";
 import { FtMiddleButtonOutlined } from "@/components/ui/FtButton";
+import { ftCreateId } from "@/plugins/mixin";
+import { createShop } from "@/store/shop";
 
 import ImageUpload from "@/components/ui/ImageUpload";
 
 import _ from "lodash";
 import rules from "@/plugins/validation";
+import scheme from "@/helpers/scheme";
 
 const ShopForm = () => {
   const [url, setUrl] = useState(null);
+  const [shopId, setShopId] = useState(null);
+  const [editShop, setEditShop] = useState(null);
+  const dispatch = useDispatch();
+  const { ftToast } = useFtToast();
+  const router = useRouter();
   const inputRef = useRef();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
+
+  useEffect(() => {
+    const shopId = ftCreateId("shop");
+    setShopId(shopId);
+
+    const shop = _.cloneDeep(scheme.shops);
+    setEditShop(shop);
+
+    return () => {
+      setShopId(null);
+      setEditShop(null);
+    };
+  }, []);
 
   const snsList = [
     { id: 1, name: "Twitter", type: "twitter" },
@@ -58,18 +79,35 @@ const ShopForm = () => {
   };
 
   const onSubmit = (data) => {
-    console.log(data);
+    editShop.id = shopId;
+    editShop.name = data.shopName;
+    editShop.address = data.address;
+    editShop.email = data.email;
+    editShop.description = data.description;
+    editShop.delegate = data.originalUrl;
+    editShop.phone = data.phone;
+    editShop.links.twitter = data.twitter;
+    editShop.links.instagram = data.instagram;
+    editShop.links.facebook = data.facebook;
+    editShop.links.tiktok = data.tiktok;
+    editShop.links.blogs = data.blogs;
+    editShop.links.homepage = data.homepage;
+    editShop.links.others = data.others;
+    // updateUserする
+    dispatch(createShop(editShop));
+    ftToast("shopが作成されました");
+    router.push("/");
   };
 
   return (
     <>
       <HStack bg={"lightGray"}>
         {url ? (
-          <AspectRatio w={"100%"} h={"350px"} ratio={2.5}>
+          <AspectRatio w={"100%"} h={"auto"} ratio={2.5}>
             <Image className="ftHover" onClick={openInputRef} src={url}></Image>
           </AspectRatio>
         ) : (
-          <AspectRatio w={"100%"} h={"350px"} ratio={2.5}>
+          <AspectRatio w={"100%"} h={"auto"} ratio={2.5}>
             <Image
               className="ftHover"
               onClick={openInputRef}
@@ -117,14 +155,20 @@ const ShopForm = () => {
         <Stack w={"40%"} h={"200vh"}>
           <VStack>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <FormControl>
+              <FormControl isInvalid={errors.shopName}>
                 <FormLabel>Shop Name</FormLabel>
                 <Input
-                  type="ShopName"
+                  type="shopName"
                   variant="filled"
                   placeholder="芝浦World Football Gallery"
-                  {...register("ShopName")}
+                  // defaultValue={editShop?.name}
+                  {...register("shopName", {
+                    required: "お店の名前は必須入力です",
+                  })}
                 />
+                <FormErrorMessage>
+                  {errors.shopName && errors.shopName.message}
+                </FormErrorMessage>
               </FormControl>
 
               <FormControl isInvalid={errors.originalUrl} mt={"10px"}>
