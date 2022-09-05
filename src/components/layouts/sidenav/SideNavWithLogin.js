@@ -134,7 +134,7 @@ const SideNavWithoutLogin = () => {
             <ListItem key={item.id}>
               <NextLink href="/" passHref>
                 <a>
-                  <Text class="ftTextLink">
+                  <Text className="ftTextLink">
                     <ListIcon as={item.icon} mr="5" />
                     {item.name}
                   </Text>
@@ -152,7 +152,7 @@ const SideNavWithoutLogin = () => {
           Bidding Items
         </Heading>
         {biddingItems.map((item) => (
-          <ItemExtraSmallCard></ItemExtraSmallCard>
+          <ItemExtraSmallCard key={item.id}></ItemExtraSmallCard>
         ))}
       </Stack>
     </Stack>
