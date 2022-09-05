@@ -213,6 +213,8 @@ const scheme = {
     phone: null,
     openHour: null,
     holidays: null,
+    icon: null,
+    cover: null,
     links: {
       homepage: null,
       blogs: null,

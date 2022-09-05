@@ -135,6 +135,14 @@ const ShopForm = () => {
       }
     }
 
+    if (mainUrl) {
+      editShop.cover = mainUrl;
+    }
+
+    if (iconUrl) {
+      editShop.icon = iconUrl;
+    }
+
     editShop.id = shopId;
     editShop.name = data.shopName;
     editShop.address = data.address;
