@@ -23,7 +23,7 @@ import { BiHide, BiShow } from "react-icons/bi";
 import { auth } from "@/plugins/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { db } from "@/plugins/firebase";
-import { getDocs, where, collection, query } from "firebase/firestore";
+import { getDocs, where, collection, query, doc, getDoc } from "firebase/firestore";
 
 import { login } from "@/store/account";
 
@@ -53,21 +53,36 @@ const Login = () => {
           where("authId", "==", auth.user.uid)
         );
 
+        const user = null;
         await getDocs(q).then((snapshot) => {
           snapshot.forEach(async (doc) => {
             if (doc.id) {
-              dispatch(
-                login({
-                  id: doc.data().id,
-                  authId: auth.user.uid,
-                  email: doc.data().email,
-                  name: doc.data().displayName,
-                  icon: doc.data().icon,
-                })
-              );
+              user = doc.data();
             }
           });
         });
+
+        const secret = null;
+        await getDoc(doc(db, `users/${user.id}/secrets`, user.id)).then(
+          async (doc) => {
+            if (doc.id) {
+              secret = doc.data();
+            }
+          }
+        );
+
+        if (user && secret) {
+          dispatch(
+            login({
+              id: user.id,
+              authId: user.authId,
+              email: secret.email,
+              name: user.displayName,
+              icon: user.icon,
+              shopId: user.shop.id,
+            })
+          );
+        }
 
         ftToast("ログインが成功しました");
         setIsLoading(false);

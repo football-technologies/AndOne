@@ -23,7 +23,7 @@ import {
 import useFtToast from "@/components/ui/FtToast";
 import { FtSmallButtonOutlined } from "@/components/ui/FtButton";
 
-import ImageUpload from "@/components/ui/ImageUpload";
+import { UploadIcon } from "@/components/ui/ImageUpload";
 
 import _ from "lodash";
 import rules from "@/plugins/validation";
@@ -36,7 +36,7 @@ const Edit = ({ query }) => {
 
   const router = useRouter();
   const { ftToast } = useFtToast();
-  const inputRef = useRef();
+  const iconRef = useRef();
   const dispatch = useDispatch();
 
   const user = _.cloneDeep(bindUser);
@@ -80,11 +80,11 @@ const Edit = ({ query }) => {
     };
   }, [dispatch]);
 
-  const openInputRef = () => {
-    inputRef.current.click();
+  const openIconRef = () => {
+    iconRef.current.click();
   };
 
-  const upload = (url) => {
+  const uploadIcon = (url) => {
     console.log(">>>>>>> return url", url);
     setUrl(url);
   };
@@ -109,6 +109,7 @@ const Edit = ({ query }) => {
         email: data.email,
         name: data.displayName,
         icon: user.icon,
+        shopId: user.shopId,
       })
     );
 
@@ -140,14 +141,14 @@ const Edit = ({ query }) => {
             </Box>
             <Box pl={"10px"}>
               <HStack mb={"5px"}>
-                <ImageUpload
-                  ref={inputRef}
+                <UploadIcon
+                  ref={iconRef}
                   folderPath={`users/${user.id}/icon`}
-                  upload={upload}
-                ></ImageUpload>
+                  uploadIcon={uploadIcon}
+                ></UploadIcon>
               </HStack>
               <HStack>
-                <FtSmallButtonOutlined onClick={openInputRef}>
+                <FtSmallButtonOutlined onClick={openIconRef}>
                   iconを変更する
                 </FtSmallButtonOutlined>
               </HStack>

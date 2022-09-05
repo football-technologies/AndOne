@@ -1,4 +1,4 @@
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
@@ -25,26 +25,52 @@ import useFtToast from "@/components/ui/FtToast";
 import { FtMiddleButtonOutlined } from "@/components/ui/FtButton";
 import { ftCreateId } from "@/plugins/mixin";
 import { createShop } from "@/store/shop";
+import { updateUser } from "@/store/user";
+import { createTag } from "@/store/tag";
+import { updateAccount } from "@/store/account";
 
-import ImageUpload from "@/components/ui/ImageUpload";
+import { UploadIcon, UploadMain, UploadSub } from "@/components/ui/ImageUpload";
+
+import { db } from "@/plugins/firebase";
+import { doc } from "firebase/firestore";
 
 import _ from "lodash";
 import rules from "@/plugins/validation";
 import scheme from "@/helpers/scheme";
+import { createRef } from "react";
 
 const ShopForm = () => {
-  const [url, setUrl] = useState(null);
+  const [iconUrl, setIconUrl] = useState(null);
+  const [subUrls, setSubUrl] = useState([
+    { key: 0, url: null, caption: null },
+    { key: 1, url: null, caption: null },
+    { key: 2, url: null, caption: null },
+    { key: 3, url: null, caption: null },
+    { key: 4, url: null, caption: null },
+    { key: 5, url: null, caption: null },
+    { key: 6, url: null, caption: null },
+    { key: 7, url: null, caption: null },
+    { key: 8, url: null, caption: null },
+  ]);
+  const [mainUrl, setMainUrl] = useState(null);
   const [shopId, setShopId] = useState(null);
   const [editShop, setEditShop] = useState(null);
+  const [tags, setTags] = useState(null);
+
   const dispatch = useDispatch();
   const { ftToast } = useFtToast();
   const router = useRouter();
-  const inputRef = useRef();
+  const iconRef = useRef();
+  const mainRef = useRef();
+  const subRefs = useRef([]);
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
+
+  const currentUser = useSelector((state) => state.account);
 
   useEffect(() => {
     const shopId = ftCreateId("shop");
@@ -65,27 +91,95 @@ const ShopForm = () => {
     { id: 3, name: "Instagram", type: "instagram" },
     { id: 4, name: "Tiktok", type: "tiktok" },
     { id: 5, name: "Homepage", type: "homepage" },
-    { id: 6, name: "Blog", type: "blog" },
+    { id: 6, name: "Blogs", type: "blogs" },
     { id: 7, name: "Others", type: "others" },
   ];
 
-  const openInputRef = () => {
-    inputRef.current.click();
+  const openIconRef = () => {
+    iconRef.current.click();
   };
 
-  const upload = (url) => {
-    console.log(">>>>>>>>>>>>> return URL", url);
-    setUrl(url);
+  const openMainRef = () => {
+    mainRef.current.click();
+  };
+
+  const uploadIcon = (url) => {
+    console.log(">>>>>>>>>>>>> return icon URL", url);
+    setIconUrl(url);
+  };
+
+  const uploadMain = (url) => {
+    console.log(">>>>>>>>>>>>> return main URL", url);
+    setMainUrl(url);
+  };
+
+  const uploadSub = (obj) => {
+    console.log(">>>>>>>>>>>>> return sub URL", obj.url);
+    const newSubUrls = [...subUrls];
+
+    const editSubUrl = _.find(newSubUrls, function (subUrl) {
+      return subUrl.key === obj.index;
+    });
+
+    newSubUrls[editSubUrl.key].url = obj.url;
+
+    setSubUrl(newSubUrls);
+  };
+
+  const onChangeSetTags = (e) => {
+    setTags(e.target.value);
+  };
+
+  const createTags = (tags) => {
+    for (const tag of tags) {
+      const tagId = ftCreateId("tag");
+      const editTag = _.cloneDeep(scheme.tags);
+
+      editTag.id = tagId;
+      editTag.name = tag;
+
+      const tagToSaveShopsCollection = {
+        id: tagId,
+        ref: doc(db, "tags", tagId),
+        name: tag,
+      };
+
+      editShop.tags.push(tagToSaveShopsCollection);
+
+      dispatch(createTag(editTag));
+    }
   };
 
   const onSubmit = (data) => {
+    if (tags) {
+      const tagsDividedByComma = tags.split(",");
+
+      if (tagsDividedByComma.length > 10) {
+        ftToast("タグは10個以上設定することができません");
+        return false;
+      } else {
+        createTags(tagsDividedByComma);
+      }
+    }
+
+    if (mainUrl) {
+      editShop.cover = mainUrl;
+    }
+
+    if (iconUrl) {
+      editShop.icon = iconUrl;
+    }
+
     editShop.id = shopId;
+    editShop.images = subUrls;
     editShop.name = data.shopName;
     editShop.address = data.address;
     editShop.email = data.email;
     editShop.description = data.description;
     editShop.delegate = data.originalUrl;
     editShop.phone = data.phone;
+    editShop.openHour = data.openHour;
+    editShop.holidays = data.holidays;
     editShop.links.twitter = data.twitter;
     editShop.links.instagram = data.instagram;
     editShop.links.facebook = data.facebook;
@@ -93,7 +187,28 @@ const ShopForm = () => {
     editShop.links.blogs = data.blogs;
     editShop.links.homepage = data.homepage;
     editShop.links.others = data.others;
-    // updateUserする
+
+    dispatch(
+      updateUser({
+        id: currentUser.id,
+        shop: {
+          id: shopId,
+          ref: doc(db, "shops", shopId),
+        },
+      })
+    );
+
+    dispatch(
+      updateAccount({
+        id: currentUser.id,
+        authId: currentUser.authId,
+        email: currentUser.email,
+        name: currentUser.name,
+        icon: currentUser.icon,
+        shopId: shopId,
+      })
+    );
+
     dispatch(createShop(editShop));
     ftToast("shopが作成されました");
     router.push("/");
@@ -101,28 +216,29 @@ const ShopForm = () => {
 
   return (
     <>
-      <HStack bg={"lightGray"}>
-        {url ? (
+      <HStack bg={"lightGray"} className="ftHover" onClick={openMainRef}>
+        {mainUrl ? (
           <AspectRatio w={"100%"} h={"auto"} ratio={2.5}>
-            <Image className="ftHover" onClick={openInputRef} src={url}></Image>
+            <Image src={mainUrl}></Image>
           </AspectRatio>
         ) : (
           <AspectRatio w={"100%"} h={"auto"} ratio={2.5}>
-            <Image
-              className="ftHover"
-              onClick={openInputRef}
-              src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
-            ></Image>
+            <Image src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"></Image>
           </AspectRatio>
         )}
+        <UploadMain
+          ref={mainRef}
+          folderPath={`shops/${shopId}/main`}
+          uploadMain={uploadMain}
+        ></UploadMain>
       </HStack>
       <HStack mt={"50px"}>
-        <Stack w={"30%"} h={"200vh"}>
+        <Stack w={"30%"} h={"220vh"}>
           <VStack>
             <Text mb={"15px"}>Shop Icon Image</Text>
             <Box>
-              {url ? (
-                <Image src={url} boxSize={"120px"} rounded={"xl"}></Image>
+              {iconUrl ? (
+                <Image src={iconUrl} boxSize={"120px"} rounded={"xl"}></Image>
               ) : (
                 <Image
                   boxSize={"120px"}
@@ -133,12 +249,12 @@ const ShopForm = () => {
             </Box>
             <Box>
               <VStack mb={"50px"}>
-                <ImageUpload
-                  ref={inputRef}
-                  folderPath={`shops/icon`}
-                  upload={upload}
-                ></ImageUpload>
-                <FtMiddleButtonOutlined onClick={openInputRef}>
+                <UploadIcon
+                  ref={iconRef}
+                  folderPath={`shops/${shopId}/icon`}
+                  uploadIcon={uploadIcon}
+                ></UploadIcon>
+                <FtMiddleButtonOutlined onClick={openIconRef}>
                   iconを変更する
                 </FtMiddleButtonOutlined>
               </VStack>
@@ -146,19 +262,22 @@ const ShopForm = () => {
           </VStack>
           <VStack>
             <Text>Tags</Text>
-            <Textarea w={"80%"} variant={"filled"}></Textarea>
+            <Textarea
+              w={"80%"}
+              variant={"filled"}
+              onChange={onChangeSetTags}
+            ></Textarea>
             <Text w={"80%"}>
               カンマを入れて、最大10個まで作成するこができます。
             </Text>
           </VStack>
         </Stack>
-        <Stack w={"40%"} h={"200vh"}>
+        <Stack w={"40%"} h={"220vh"}>
           <VStack>
             <form onSubmit={handleSubmit(onSubmit)}>
               <FormControl isInvalid={errors.shopName}>
                 <FormLabel>Shop Name</FormLabel>
                 <Input
-                  type="shopName"
                   variant="filled"
                   placeholder="芝浦World Football Gallery"
                   // defaultValue={editShop?.name}
@@ -174,7 +293,6 @@ const ShopForm = () => {
               <FormControl isInvalid={errors.originalUrl} mt={"10px"}>
                 <FormLabel>Original URL</FormLabel>
                 <Input
-                  type="originalUrl"
                   variant="filled"
                   placeholder="shibaura-world-football-gallery"
                   {...register("originalUrl", {
@@ -194,7 +312,6 @@ const ShopForm = () => {
               <FormControl mt={"10px"}>
                 <FormLabel>Bio</FormLabel>
                 <Textarea
-                  type="bio"
                   variant="filled"
                   placeholder="bio"
                   {...register("description")}
@@ -204,7 +321,6 @@ const ShopForm = () => {
               <FormControl mt={"10px"}>
                 <FormLabel>Address</FormLabel>
                 <Textarea
-                  type="address"
                   variant="filled"
                   placeholder="東京都港区芝浦1-11-1"
                   {...register("address")}
@@ -244,7 +360,6 @@ const ShopForm = () => {
               <FormControl mt={"10px"}>
                 <FormLabel>Open Hour</FormLabel>
                 <Input
-                  type="openHour"
                   variant="filled"
                   placeholder="10時 - 20時"
                   {...register("openHour")}
@@ -254,7 +369,6 @@ const ShopForm = () => {
               <FormControl mt={"10px"}>
                 <FormLabel>Holidays</FormLabel>
                 <Input
-                  type="holidays"
                   variant="filled"
                   placeholder="月曜日"
                   {...register("holidays")}
@@ -277,31 +391,58 @@ const ShopForm = () => {
               </Stack>
 
               <VStack mt={"20px"}>
-                <Button
-                  colorScheme="pink"
-                  type="submit"
-                  isLoading={isSubmitting}
-                  mt={"20px"}
-                >
-                  更新する
+                <Button colorScheme="pink" type="submit" mt={"20px"}>
+                  作成する
                 </Button>
               </VStack>
             </form>
           </VStack>
         </Stack>
-        <Stack w={"30%"} h={"200vh"}>
+        <Stack w={"30%"} h={"220vh"}>
           <VStack mt={"30px"}>
             <Wrap>
-              {[...Array(9)].map((_) => {
-                return (
-                  <WrapItem>
-                    <Image
-                      boxSize={"60px"}
-                      rounded={"xl"}
-                      src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
-                    ></Image>
-                  </WrapItem>
-                );
+              {[...Array(9)].map((_, index) => {
+                subRefs.current[index] = createRef();
+                if (subUrls[index].url) {
+                  return (
+                    <WrapItem key={index}>
+                      <Image
+                        boxSize={"80px"}
+                        rounded={"xl"}
+                        className="ftHover"
+                        onClick={() => {
+                          subRefs.current[index].current?.click();
+                        }}
+                        src={subUrls[index].url}
+                      ></Image>
+                      <UploadSub
+                        ref={subRefs.current[index]}
+                        folderPath={`shops/${shopId}/sub/${index}`}
+                        uploadSub={uploadSub}
+                      ></UploadSub>
+                    </WrapItem>
+                  );
+                } else {
+                  return (
+                    <WrapItem key={index}>
+                      <Image
+                        boxSize={"80px"}
+                        rounded={"xl"}
+                        className="ftHover"
+                        onClick={() => {
+                          subRefs.current[index].current?.click();
+                        }}
+                        src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
+                      ></Image>
+                      <UploadSub
+                        ref={subRefs.current[index]}
+                        folderPath={`shops/${shopId}/sub/${index}`}
+                        index={index}
+                        uploadSub={uploadSub}
+                      ></UploadSub>
+                    </WrapItem>
+                  );
+                }
               })}
             </Wrap>
             <Text>お店の紹介画像は最大で9枚まで表示できます</Text>

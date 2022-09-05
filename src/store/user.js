@@ -15,7 +15,7 @@ const user = createSlice({
       setDoc(doc(db, `users/${payload.id}`), payload, { merge: true });
     },
 
-    update(state, { type, payload }) {
+    updateUser(state, { type, payload }) {
       payload["updatedAt"] = serverTimestamp();
       setDoc(doc(db, `users/${payload.id}`), payload, { merge: true });
     },
@@ -80,6 +80,6 @@ const fetchUser = (payload) => {
   };
 };
 
-export const { create, update, readUsers, readUser } = user.actions;
+export const { create, updateUser, readUsers, readUser } = user.actions;
 export { fetch, fetchUser };
 export default user;

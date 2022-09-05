@@ -11,7 +11,7 @@ const shop = createSlice({
   },
   reducers: {
     createShop(state, { type, payload }) {
-      payload["ShopdAt"] = serverTimestamp();
+      payload["createdAt"] = serverTimestamp();
       setDoc(doc(db, `shops/${payload.id}`), payload, { merge: true });
     },
 
