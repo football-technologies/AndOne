@@ -42,15 +42,15 @@ import { createRef } from "react";
 const ShopForm = () => {
   const [iconUrl, setIconUrl] = useState(null);
   const [subUrls, setSubUrl] = useState([
-    { key: 0, url: null },
-    { key: 1, url: null },
-    { key: 2, url: null },
-    { key: 3, url: null },
-    { key: 4, url: null },
-    { key: 5, url: null },
-    { key: 6, url: null },
-    { key: 7, url: null },
-    { key: 8, url: null },
+    { key: 0, url: null, caption: null },
+    { key: 1, url: null, caption: null },
+    { key: 2, url: null, caption: null },
+    { key: 3, url: null, caption: null },
+    { key: 4, url: null, caption: null },
+    { key: 5, url: null, caption: null },
+    { key: 6, url: null, caption: null },
+    { key: 7, url: null, caption: null },
+    { key: 8, url: null, caption: null },
   ]);
   const [mainUrl, setMainUrl] = useState(null);
   const [shopId, setShopId] = useState(null);
@@ -116,7 +116,13 @@ const ShopForm = () => {
   const uploadSub = (obj) => {
     console.log(">>>>>>>>>>>>> return sub URL", obj.url);
     const newSubUrls = [...subUrls];
-    newSubUrls[obj.index].url = obj.url;
+
+    const editSubUrl = _.find(newSubUrls, function (subUrl) {
+      return subUrl.key === obj.index;
+    });
+
+    newSubUrls[editSubUrl.key].url = obj.url;
+
     setSubUrl(newSubUrls);
   };
 
@@ -147,13 +153,6 @@ const ShopForm = () => {
   const onSubmit = (data) => {
     if (tags) {
       const tagsDividedByComma = tags.split(",");
-
-      if (tagsDividedByComma.length > 10) {
-        ftToast("タグは10個以上設定することができません");
-        return false;
-      } else {
-        createTags(tagsDividedByComma);
-      }
     }
 
     if (mainUrl) {
@@ -165,6 +164,7 @@ const ShopForm = () => {
     }
 
     editShop.id = shopId;
+    editShop.images = subUrls;
     editShop.name = data.shopName;
     editShop.address = data.address;
     editShop.email = data.email;
