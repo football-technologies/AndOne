@@ -103,9 +103,8 @@ const ShopForm = () => {
     setTags(e.target.value);
   };
 
-  const createTags = () => {
-    const tagsDividedByComma = tags.split(",");
-    for (const tag of tagsDividedByComma) {
+  const createTags = (tags) => {
+    for (const tag of tags) {
       const tagId = ftCreateId("tag");
       const editTag = {
         id: tagId,
@@ -125,7 +124,14 @@ const ShopForm = () => {
 
   const onSubmit = (data) => {
     if (tags) {
-      createTags();
+      const tagsDividedByComma = tags.split(",");
+
+      if (tagsDividedByComma.length > 10) {
+        ftToast("タグは10個以上設定することができません");
+        return false;
+      } else {
+        createTags(tagsDividedByComma);
+      }
     }
 
     editShop.id = shopId;
@@ -235,7 +241,6 @@ const ShopForm = () => {
               <FormControl isInvalid={errors.shopName}>
                 <FormLabel>Shop Name</FormLabel>
                 <Input
-                  type="shopName"
                   variant="filled"
                   placeholder="芝浦World Football Gallery"
                   // defaultValue={editShop?.name}
@@ -251,7 +256,6 @@ const ShopForm = () => {
               <FormControl isInvalid={errors.originalUrl} mt={"10px"}>
                 <FormLabel>Original URL</FormLabel>
                 <Input
-                  type="originalUrl"
                   variant="filled"
                   placeholder="shibaura-world-football-gallery"
                   {...register("originalUrl", {
@@ -271,7 +275,6 @@ const ShopForm = () => {
               <FormControl mt={"10px"}>
                 <FormLabel>Bio</FormLabel>
                 <Textarea
-                  type="bio"
                   variant="filled"
                   placeholder="bio"
                   {...register("description")}
@@ -281,7 +284,6 @@ const ShopForm = () => {
               <FormControl mt={"10px"}>
                 <FormLabel>Address</FormLabel>
                 <Textarea
-                  type="address"
                   variant="filled"
                   placeholder="東京都港区芝浦1-11-1"
                   {...register("address")}
@@ -321,7 +323,6 @@ const ShopForm = () => {
               <FormControl mt={"10px"}>
                 <FormLabel>Open Hour</FormLabel>
                 <Input
-                  type="openHour"
                   variant="filled"
                   placeholder="10時 - 20時"
                   {...register("openHour")}
@@ -331,7 +332,6 @@ const ShopForm = () => {
               <FormControl mt={"10px"}>
                 <FormLabel>Holidays</FormLabel>
                 <Input
-                  type="holidays"
                   variant="filled"
                   placeholder="月曜日"
                   {...register("holidays")}
@@ -354,13 +354,8 @@ const ShopForm = () => {
               </Stack>
 
               <VStack mt={"20px"}>
-                <Button
-                  colorScheme="pink"
-                  type="submit"
-                  isLoading={isSubmitting}
-                  mt={"20px"}
-                >
-                  更新する
+                <Button colorScheme="pink" type="submit" mt={"20px"}>
+                  作成する
                 </Button>
               </VStack>
             </form>
