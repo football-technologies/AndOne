@@ -97,7 +97,7 @@ const scheme = {
   },
 
   // items/xxxxx
-  item: {
+  items: {
     id: null,
     status: 1,
     itemStatus: 1,
@@ -185,7 +185,7 @@ const scheme = {
   },
 
   // items/xxxxx/ratings/xxxx
-  items: {
+  ratings: {
     id: null,
     status: 1,
     rate: null,
