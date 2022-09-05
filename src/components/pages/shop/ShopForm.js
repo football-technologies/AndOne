@@ -153,6 +153,13 @@ const ShopForm = () => {
   const onSubmit = (data) => {
     if (tags) {
       const tagsDividedByComma = tags.split(",");
+
+      if (tagsDividedByComma.length > 10) {
+        ftToast("タグは10個以上設定することができません");
+        return false;
+      } else {
+        createTags(tagsDividedByComma);
+      }
     }
 
     if (mainUrl) {
