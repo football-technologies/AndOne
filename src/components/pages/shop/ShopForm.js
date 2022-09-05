@@ -1,4 +1,4 @@
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
@@ -25,9 +25,13 @@ import useFtToast from "@/components/ui/FtToast";
 import { FtMiddleButtonOutlined } from "@/components/ui/FtButton";
 import { ftCreateId } from "@/plugins/mixin";
 import { createShop } from "@/store/shop";
+import { updateUser } from "@/store/user";
+import { createTag } from "@/store/tag";
 
 import { UploadIcon, UploadMain } from "@/components/ui/ImageUpload";
-// import ImageUpload from "@/components/ui/ImageUpload";
+
+import { db } from "@/plugins/firebase";
+import { doc } from "firebase/firestore";
 
 import _ from "lodash";
 import rules from "@/plugins/validation";
@@ -38,6 +42,8 @@ const ShopForm = () => {
   const [mainUrl, setMainUrl] = useState(null);
   const [shopId, setShopId] = useState(null);
   const [editShop, setEditShop] = useState(null);
+  const [tags, setTags] = useState(null);
+
   const dispatch = useDispatch();
   const { ftToast } = useFtToast();
   const router = useRouter();
@@ -48,6 +54,8 @@ const ShopForm = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
+
+  const currentUser = useSelector((state) => state.account);
 
   useEffect(() => {
     const shopId = ftCreateId("shop");
@@ -68,7 +76,7 @@ const ShopForm = () => {
     { id: 3, name: "Instagram", type: "instagram" },
     { id: 4, name: "Tiktok", type: "tiktok" },
     { id: 5, name: "Homepage", type: "homepage" },
-    { id: 6, name: "Blog", type: "blog" },
+    { id: 6, name: "Blogs", type: "blogs" },
     { id: 7, name: "Others", type: "others" },
   ];
 
@@ -90,7 +98,35 @@ const ShopForm = () => {
     setMainUrl(url);
   };
 
+  const onChangeSetTags = (e) => {
+    setTags(e.target.value);
+  };
+
+  const createTags = () => {
+    const tagsDividedByComma = tags.split(",");
+    for (const tag of tagsDividedByComma) {
+      const tagId = ftCreateId("tag");
+      const editTag = {
+        id: tagId,
+        ref: doc(db, "tags", tagId),
+        name: tag,
+      };
+
+      editShop.tags.push(editTag);
+      dispatch(
+        createTag({
+          id: editTag.id,
+          name: editTag.name,
+        })
+      );
+    }
+  };
+
   const onSubmit = (data) => {
+    if (tags) {
+      createTags();
+    }
+
     editShop.id = shopId;
     editShop.name = data.shopName;
     editShop.address = data.address;
@@ -105,7 +141,17 @@ const ShopForm = () => {
     editShop.links.blogs = data.blogs;
     editShop.links.homepage = data.homepage;
     editShop.links.others = data.others;
-    // updateUserする
+
+    dispatch(
+      updateUser({
+        id: currentUser.id,
+        shop: {
+          id: shopId,
+          ref: doc(db, "shops", shopId),
+        },
+      })
+    );
+
     dispatch(createShop(editShop));
     ftToast("shopが作成されました");
     router.push("/");
@@ -130,7 +176,7 @@ const ShopForm = () => {
         ></UploadMain>
       </HStack>
       <HStack mt={"50px"}>
-        <Stack w={"30%"} h={"200vh"}>
+        <Stack w={"30%"} h={"220vh"}>
           <VStack>
             <Text mb={"15px"}>Shop Icon Image</Text>
             <Box>
@@ -159,13 +205,17 @@ const ShopForm = () => {
           </VStack>
           <VStack>
             <Text>Tags</Text>
-            <Textarea w={"80%"} variant={"filled"}></Textarea>
+            <Textarea
+              w={"80%"}
+              variant={"filled"}
+              onChange={onChangeSetTags}
+            ></Textarea>
             <Text w={"80%"}>
               カンマを入れて、最大10個まで作成するこができます。
             </Text>
           </VStack>
         </Stack>
-        <Stack w={"40%"} h={"200vh"}>
+        <Stack w={"40%"} h={"220vh"}>
           <VStack>
             <form onSubmit={handleSubmit(onSubmit)}>
               <FormControl isInvalid={errors.shopName}>
@@ -302,7 +352,7 @@ const ShopForm = () => {
             </form>
           </VStack>
         </Stack>
-        <Stack w={"30%"} h={"200vh"}>
+        <Stack w={"30%"} h={"220vh"}>
           <VStack mt={"30px"}>
             <Wrap>
               {[...Array(9)].map((_) => {
