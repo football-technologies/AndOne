@@ -27,6 +27,7 @@ import { ftCreateId } from "@/plugins/mixin";
 import { createShop } from "@/store/shop";
 import { updateUser } from "@/store/user";
 import { createTag } from "@/store/tag";
+import { updateAccount } from "@/store/account";
 
 import { UploadIcon, UploadMain } from "@/components/ui/ImageUpload";
 
@@ -134,6 +135,8 @@ const ShopForm = () => {
     editShop.description = data.description;
     editShop.delegate = data.originalUrl;
     editShop.phone = data.phone;
+    editShop.openHour = data.openHour;
+    editShop.holidays = data.holidays;
     editShop.links.twitter = data.twitter;
     editShop.links.instagram = data.instagram;
     editShop.links.facebook = data.facebook;
@@ -149,6 +152,17 @@ const ShopForm = () => {
           id: shopId,
           ref: doc(db, "shops", shopId),
         },
+      })
+    );
+
+    dispatch(
+      updateAccount({
+        id: currentUser.id,
+        authId: currentUser.authId,
+        email: currentUser.email,
+        name: currentUser.name,
+        icon: currentUser.icon,
+        shopId: shopId,
       })
     );
 

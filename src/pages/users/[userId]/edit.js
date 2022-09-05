@@ -109,6 +109,7 @@ const Edit = ({ query }) => {
         email: data.email,
         name: data.displayName,
         icon: user.icon,
+        shopId: user.shopId,
       })
     );
 

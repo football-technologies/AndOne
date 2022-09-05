@@ -11,6 +11,7 @@ const account = createSlice({
     email: null,
     name: null,
     icon: null,
+    shopId: null,
   },
   reducers: {
     signup: (state, { payload }) => {
@@ -19,6 +20,7 @@ const account = createSlice({
       state.email = payload.email;
       state.name = payload.name;
       state.icon = payload.icon;
+      state.shopId = payload.shopId;
     },
     login: (state, { payload }) => {
       state.id = payload.id;
@@ -26,6 +28,7 @@ const account = createSlice({
       state.email = payload.email;
       state.name = payload.name;
       state.icon = payload.icon;
+      state.shopId = payload.shopId;
     },
     logout: (state, { payload }) => {
       signOut(auth);
@@ -34,6 +37,7 @@ const account = createSlice({
       state.email = null;
       state.name = null;
       state.icon = null;
+      state.shopId = null;
     },
     updateAccount: (state, { payload }) => {
       state.id = payload.id;
@@ -41,6 +45,7 @@ const account = createSlice({
       state.email = payload.email;
       state.name = payload.name;
       state.icon = payload.icon;
+      state.shopId = payload.shopId;
     },
   },
 });

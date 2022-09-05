@@ -74,6 +74,7 @@ const Signup = () => {
             email: secret.email,
             name: user.displayName,
             icon: null,
+            shopId: null,
           })
         );
 

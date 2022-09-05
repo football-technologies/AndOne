@@ -211,6 +211,8 @@ const scheme = {
     description: null,
     address: null,
     phone: null,
+    openHour: null,
+    holidays: null,
     links: {
       homepage: null,
       blogs: null,
