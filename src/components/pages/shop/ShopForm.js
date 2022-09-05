@@ -26,20 +26,23 @@ import { FtMiddleButtonOutlined } from "@/components/ui/FtButton";
 import { ftCreateId } from "@/plugins/mixin";
 import { createShop } from "@/store/shop";
 
-import ImageUpload from "@/components/ui/ImageUpload";
+import { UploadIcon, UploadMain } from "@/components/ui/ImageUpload";
+// import ImageUpload from "@/components/ui/ImageUpload";
 
 import _ from "lodash";
 import rules from "@/plugins/validation";
 import scheme from "@/helpers/scheme";
 
 const ShopForm = () => {
-  const [url, setUrl] = useState(null);
+  const [iconUrl, setIconUrl] = useState(null);
+  const [mainUrl, setMainUrl] = useState(null);
   const [shopId, setShopId] = useState(null);
   const [editShop, setEditShop] = useState(null);
   const dispatch = useDispatch();
   const { ftToast } = useFtToast();
   const router = useRouter();
-  const inputRef = useRef();
+  const iconRef = useRef();
+  const mainRef = useRef();
   const {
     register,
     handleSubmit,
@@ -69,13 +72,22 @@ const ShopForm = () => {
     { id: 7, name: "Others", type: "others" },
   ];
 
-  const openInputRef = () => {
-    inputRef.current.click();
+  const openIconRef = () => {
+    iconRef.current.click();
   };
 
-  const upload = (url) => {
-    console.log(">>>>>>>>>>>>> return URL", url);
-    setUrl(url);
+  const openMainRef = () => {
+    mainRef.current.click();
+  };
+
+  const uploadIcon = (url) => {
+    console.log(">>>>>>>>>>>>> return icon URL", url);
+    setIconUrl(url);
+  };
+
+  const uploadMain = (url) => {
+    console.log(">>>>>>>>>>>>> return main URL", url);
+    setMainUrl(url);
   };
 
   const onSubmit = (data) => {
@@ -101,28 +113,29 @@ const ShopForm = () => {
 
   return (
     <>
-      <HStack bg={"lightGray"}>
-        {url ? (
+      <HStack bg={"lightGray"} className="ftHover" onClick={openMainRef}>
+        {mainUrl ? (
           <AspectRatio w={"100%"} h={"auto"} ratio={2.5}>
-            <Image className="ftHover" onClick={openInputRef} src={url}></Image>
+            <Image src={mainUrl}></Image>
           </AspectRatio>
         ) : (
           <AspectRatio w={"100%"} h={"auto"} ratio={2.5}>
-            <Image
-              className="ftHover"
-              onClick={openInputRef}
-              src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
-            ></Image>
+            <Image src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"></Image>
           </AspectRatio>
         )}
+        <UploadMain
+          ref={mainRef}
+          folderPath={`shops/${shopId}/main`}
+          uploadMain={uploadMain}
+        ></UploadMain>
       </HStack>
       <HStack mt={"50px"}>
         <Stack w={"30%"} h={"200vh"}>
           <VStack>
             <Text mb={"15px"}>Shop Icon Image</Text>
             <Box>
-              {url ? (
-                <Image src={url} boxSize={"120px"} rounded={"xl"}></Image>
+              {iconUrl ? (
+                <Image src={iconUrl} boxSize={"120px"} rounded={"xl"}></Image>
               ) : (
                 <Image
                   boxSize={"120px"}
@@ -133,12 +146,12 @@ const ShopForm = () => {
             </Box>
             <Box>
               <VStack mb={"50px"}>
-                <ImageUpload
-                  ref={inputRef}
-                  folderPath={`shops/icon`}
-                  upload={upload}
-                ></ImageUpload>
-                <FtMiddleButtonOutlined onClick={openInputRef}>
+                <UploadIcon
+                  ref={iconRef}
+                  folderPath={`shops/${shopId}/icon`}
+                  uploadIcon={uploadIcon}
+                ></UploadIcon>
+                <FtMiddleButtonOutlined onClick={openIconRef}>
                   iconを変更する
                 </FtMiddleButtonOutlined>
               </VStack>
