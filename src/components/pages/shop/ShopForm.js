@@ -29,7 +29,7 @@ import { updateUser } from "@/store/user";
 import { createTag } from "@/store/tag";
 import { updateAccount } from "@/store/account";
 
-import { UploadIcon, UploadMain } from "@/components/ui/ImageUpload";
+import { UploadIcon, UploadMain, UploadSub } from "@/components/ui/ImageUpload";
 
 import { db } from "@/plugins/firebase";
 import { doc } from "firebase/firestore";
@@ -37,9 +37,21 @@ import { doc } from "firebase/firestore";
 import _ from "lodash";
 import rules from "@/plugins/validation";
 import scheme from "@/helpers/scheme";
+import { createRef } from "react";
 
 const ShopForm = () => {
   const [iconUrl, setIconUrl] = useState(null);
+  const [subUrls, setSubUrl] = useState([
+    { key: 0, url: null },
+    { key: 1, url: null },
+    { key: 2, url: null },
+    { key: 3, url: null },
+    { key: 4, url: null },
+    { key: 5, url: null },
+    { key: 6, url: null },
+    { key: 7, url: null },
+    { key: 8, url: null },
+  ]);
   const [mainUrl, setMainUrl] = useState(null);
   const [shopId, setShopId] = useState(null);
   const [editShop, setEditShop] = useState(null);
@@ -50,6 +62,8 @@ const ShopForm = () => {
   const router = useRouter();
   const iconRef = useRef();
   const mainRef = useRef();
+  const subRefs = useRef([]);
+
   const {
     register,
     handleSubmit,
@@ -97,6 +111,13 @@ const ShopForm = () => {
   const uploadMain = (url) => {
     console.log(">>>>>>>>>>>>> return main URL", url);
     setMainUrl(url);
+  };
+
+  const uploadSub = (obj) => {
+    console.log(">>>>>>>>>>>>> return sub URL", obj.url);
+    const newSubUrls = [...subUrls];
+    newSubUrls[obj.index].url = obj.url;
+    setSubUrl(newSubUrls);
   };
 
   const onChangeSetTags = (e) => {
@@ -373,16 +394,48 @@ const ShopForm = () => {
         <Stack w={"30%"} h={"220vh"}>
           <VStack mt={"30px"}>
             <Wrap>
-              {[...Array(9)].map((_) => {
-                return (
-                  <WrapItem>
-                    <Image
-                      boxSize={"60px"}
-                      rounded={"xl"}
-                      src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
-                    ></Image>
-                  </WrapItem>
-                );
+              {[...Array(9)].map((_, index) => {
+                subRefs.current[index] = createRef();
+                if (subUrls[index].url) {
+                  return (
+                    <WrapItem key={index}>
+                      <Image
+                        boxSize={"80px"}
+                        rounded={"xl"}
+                        className="ftHover"
+                        onClick={() => {
+                          subRefs.current[index].current?.click();
+                        }}
+                        src={subUrls[index].url}
+                      ></Image>
+                      <UploadSub
+                        ref={subRefs.current[index]}
+                        folderPath={`shops/${shopId}/sub/${index}`}
+                        uploadSub={uploadSub}
+                      ></UploadSub>
+                    </WrapItem>
+                  );
+                } else {
+                  return (
+                    <WrapItem key={index}>
+                      <Image
+                        boxSize={"80px"}
+                        rounded={"xl"}
+                        className="ftHover"
+                        onClick={() => {
+                          subRefs.current[index].current?.click();
+                        }}
+                        src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
+                      ></Image>
+                      <UploadSub
+                        ref={subRefs.current[index]}
+                        folderPath={`shops/${shopId}/sub/${index}`}
+                        index={index}
+                        uploadSub={uploadSub}
+                      ></UploadSub>
+                    </WrapItem>
+                  );
+                }
               })}
             </Wrap>
             <Text>お店の紹介画像は最大で9枚まで表示できます</Text>
