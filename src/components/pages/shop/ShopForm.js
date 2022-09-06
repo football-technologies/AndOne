@@ -26,7 +26,7 @@ import { FtMiddleButtonOutlined } from "@/components/ui/FtButton";
 import { ftCreateId } from "@/plugins/mixin";
 import { createShop, fetchShop, updateShop } from "@/store/shop";
 import { updateUser } from "@/store/user";
-import tag, { createTag } from "@/store/tag";
+import { createTag, deleteTag } from "@/store/tag";
 import { updateAccount } from "@/store/account";
 
 import { UploadIcon, UploadMain, UploadSub } from "@/components/ui/ImageUpload";
@@ -207,9 +207,13 @@ const ShopForm = () => {
     if (removeTags.length > 0) {
       for (const tag of removeTags) {
         const tags = editShop.tags;
-        _.remove(tags, function (t) {
+
+        let res = null;
+        res = _.remove(tags, function (t) {
           return t.name == tag;
         });
+
+        dispatch(deleteTag(res[0]));
       }
     }
   };
@@ -290,6 +294,7 @@ const ShopForm = () => {
 
   if (editShop) {
     const snsLinks = Object.entries(editShop.links);
+
     const images = [];
     editShop.images.length > 0
       ? (images = editShop.images)
