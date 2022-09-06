@@ -27,24 +27,25 @@ const shop = createSlice({
 });
 
 const fetchShop = (payload) => {
-  // return async (dispatch, getState) => {
-  //   console.log(">>>>>>>>> called fetchUser");
+  return async (dispatch, getState) => {
+    console.log(">>>>>>>>> called fetchShop");
 
-  //   const unsubscribe = await onSnapshot(
-  //     doc(db, "users", payload.query),
-  //     async (doc) => {
-  //       if (doc.id) {
-  //         dispatch(readUser(doc.data()));
-  //       }
-  //     }
-  //   );
+    const unsubscribe = await onSnapshot(
+      doc(db, "shops", payload.query),
+      async (doc) => {
+        if (doc.id) {
+          dispatch(readShop(doc.data()));
+        }
+      }
+    );
 
-  //   if (payload.type === "delete") {
-  //     unsubscribe();
-  //   }
-  // };
+    if (payload.type === "delete") {
+      console.log(">>>>>>>>> delete fetchShop");
+      unsubscribe();
+    }
+  };
 };
 
-export const { createShop, updateShop } = shop.actions;
+export const { createShop, updateShop, readShop } = shop.actions;
 export { fetchShop };
 export default shop;
