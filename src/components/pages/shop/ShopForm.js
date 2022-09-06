@@ -26,7 +26,7 @@ import { FtMiddleButtonOutlined } from "@/components/ui/FtButton";
 import { ftCreateId } from "@/plugins/mixin";
 import { createShop, fetchShop, updateShop } from "@/store/shop";
 import { updateUser } from "@/store/user";
-import { createTag } from "@/store/tag";
+import tag, { createTag } from "@/store/tag";
 import { updateAccount } from "@/store/account";
 
 import { UploadIcon, UploadMain, UploadSub } from "@/components/ui/ImageUpload";
@@ -54,7 +54,6 @@ const ShopForm = () => {
   const [mainUrl, setMainUrl] = useState(null);
   const [submitType, setSubmitType] = useState(null);
   const [editShop, setEditShop] = useState(null);
-  const [isReload, setIsReload] = useState(false);
   const [tags, setTags] = useState(null);
 
   const currentUser = useSelector((state) => state.account);
@@ -103,18 +102,17 @@ const ShopForm = () => {
   useEffect(() => {
     if (bindShop) {
       const shop = _.cloneDeep(bindShop);
-      setEditShop(shop);
+      if (shop.tags.length > 0) {
+        const tagNames = [];
+        for (const tag of shop.tags) {
+          tagNames.push(tag.name);
+        }
+        const tags = tagNames.join();
+        setTags(tags);
+      }
       setSubmitType("update");
       setSubUrl({ ...shop.images });
-
-      // if (shop.tags.length > 0) {
-      //   const tagNames = [];
-      //   for (const tag of shop.tags) {
-      //     tagNames.push(tag.name);
-      //   }
-      //   const tags = tagNames.join();
-      //   setTags(tags);
-      // }
+      setEditShop(shop);
     }
 
     return () => {
@@ -165,38 +163,72 @@ const ShopForm = () => {
   };
 
   const createTags = (tags) => {
-    // for (const tag of tags) {
-    //   const tagId = ftCreateId("tag");
-    //   const editTag = _.cloneDeep(scheme.tags);
-    //   editTag.id = tagId;
-    //   editTag.name = tag;
-    //   const tagToSaveShopsCollection = {
-    //     id: tagId,
-    //     ref: doc(db, "tags", tagId),
-    //     name: tag,
-    //   };
-    //   editShop.tags.push(tagToSaveShopsCollection);
-    //   dispatch(createTag(editTag));
-    // }
+    for (const tag of tags) {
+      const tagId = ftCreateId("tag");
+      const editTag = _.cloneDeep(scheme.tags);
+      editTag.id = tagId;
+      editTag.name = tag;
+      const tagToSaveShopsCollection = {
+        id: tagId,
+        ref: doc(db, "tags", tagId),
+        name: tag,
+      };
+      editShop.tags.push(tagToSaveShopsCollection);
+      dispatch(createTag(editTag));
+    }
+  };
+
+  const updateTags = (tags) => {
+    const defaultTags = _.map(editShop.tags, (tag) => tag["name"]);
+
+    const newTags = tags.filter((i) => defaultTags.indexOf(i) == -1);
+
+    const removeTags = defaultTags.filter((i) => tags.indexOf(i) == -1);
+
+    if (newTags.length > 0) {
+      for (const newTag of newTags) {
+        const tagId = ftCreateId("tag");
+        const editTag = _.cloneDeep(scheme.tags);
+        editTag.id = tagId;
+        editTag.name = newTag;
+        dispatch(createTag(editTag));
+
+        const tagToSaveShopsCollection = {
+          id: tagId,
+          ref: doc(db, "tags", tagId),
+          name: newTag,
+        };
+        editShop.tags.push(tagToSaveShopsCollection);
+      }
+    }
+
+    if (removeTags.length > 0) {
+      for (const tag of removeTags) {
+        const tags = editShop.tags;
+        _.remove(tags, function (t) {
+          return t.name == tag;
+        });
+      }
+    }
   };
 
   const onSubmit = (data) => {
-    // console.log(">>>>>>>>>> tags", tags);
-    // console.log(">>>>>>>>>> editShop.tags", editShop.tags);
+    if (tags) {
+      const tagsDividedByComma = tags.split(",");
+      if (tagsDividedByComma.length > 10) {
+        ftToast("タグは10個以上設定することができません");
+        return false;
+      }
 
-    // if (tags) {
-    //   const tagsDividedByComma = tags.split(",");
-    //   if (tagsDividedByComma.length > 10) {
-    //     ftToast("タグは10個以上設定することができません");
-    //     return false;
-    //   }
-    //   if (submitType === "create") {
-    //     createTags(tagsDividedByComma);
-    //   }
-    //   if (submitType === "update") {
-    //     // createTags(tagsDividedByComma);
-    //   }
-    // }
+      if (submitType === "create") {
+        createTags(tagsDividedByComma);
+      }
+
+      if (submitType === "update") {
+        updateTags(tagsDividedByComma);
+      }
+    }
+
     if (mainUrl) {
       editShop.cover = mainUrl;
     }
@@ -318,7 +350,7 @@ const ShopForm = () => {
               </Box>
             </VStack>
 
-            {/* <VStack>
+            <VStack>
               <Text>Tags</Text>
               <Textarea
                 w={"80%"}
@@ -329,7 +361,7 @@ const ShopForm = () => {
               <Text w={"80%"}>
                 カンマを入れて、最大10個まで作成するこができます。
               </Text>
-            </VStack> */}
+            </VStack>
           </Stack>
           <Stack w={"40%"} h={"200vh"}>
             <VStack>
