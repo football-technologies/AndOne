@@ -102,6 +102,7 @@ const ShopForm = () => {
   useEffect(() => {
     if (bindShop) {
       const shop = _.cloneDeep(bindShop);
+
       if (shop.tags.length > 0) {
         const tagNames = [];
         for (const tag of shop.tags) {
@@ -110,6 +111,7 @@ const ShopForm = () => {
         const tags = tagNames.join();
         setTags(tags);
       }
+
       setSubmitType("update");
       setSubUrl({ ...shop.images });
       setEditShop(shop);
