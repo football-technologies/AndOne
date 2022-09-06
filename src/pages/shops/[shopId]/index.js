@@ -13,6 +13,12 @@ import {
   Tabs,
   TabList,
   Tab,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  Circle,
 } from "@chakra-ui/react";
 import {
   FaBookOpen,
@@ -25,7 +31,7 @@ import {
   FaTiktok,
   FaTwitter,
 } from "react-icons/fa";
-import { MdMail } from "react-icons/md";
+import { MdMail, MdOutlineMoreVert } from "react-icons/md";
 
 import { useRouter } from "next/router";
 import NextLink from "next/link";
@@ -102,10 +108,43 @@ const ShopShow = () => {
     <>
       {bindShop && (
         <>
-          <Box className="HeroContainer">
+          <Box className="HeroContainer" pos="relative">
             <AspectRatio ratio={16 / 9}>
               <Image src={bindShop.cover}></Image>
             </AspectRatio>
+
+            <Box pos="absolute" top="0" right="0" zIndex="10">
+              <Menu>
+                <MenuButton className="ftHover">
+                  <Circle
+                    size="50px"
+                    bg="whiteAlpha.500"
+                    border="1px"
+                    borderColor="lightGray"
+                    _hover={{ bg: "red" }}
+                  >
+                    <Icon boxSize="2em" as={MdOutlineMoreVert}></Icon>
+                  </Circle>
+                </MenuButton>
+                <MenuList>
+                  <MenuItem p="5">
+                    <NextLink href={`/shops/${shopId}/edit`} passHref>
+                      <a>
+                        <Text fontSize="sm">ショップを編集</Text>
+                      </a>
+                    </NextLink>
+                  </MenuItem>
+                  <MenuDivider />
+                  <MenuItem p="5">
+                    <NextLink href="/items/new" passHref>
+                      <a>
+                        <Text fontSize="sm">アイテムを作成</Text>
+                      </a>
+                    </NextLink>
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            </Box>
           </Box>
 
           <HStack align="start" p="5" className="mainContainer">
