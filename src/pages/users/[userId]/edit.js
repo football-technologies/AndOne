@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchUser, update } from "@/store/user";
+import { fetchUser, updateUser } from "@/store/user";
 import { fetchSecret, updateSecret } from "@/store/secret";
 import { updateAccount } from "@/store/account";
 
@@ -113,7 +113,7 @@ const Edit = ({ query }) => {
       })
     );
 
-    dispatch(update(user));
+    dispatch(updateUser(user));
     dispatch(updateSecret(secret));
 
     ftToast("プロフィールの更新が完了しました");
@@ -158,7 +158,6 @@ const Edit = ({ query }) => {
           <FormControl mt={"45px"}>
             <FormLabel>Display Name</FormLabel>
             <Input
-              type="displayName"
               variant="filled"
               placeholder="山下俊朗"
               defaultValue={user.displayName}
@@ -170,7 +169,6 @@ const Edit = ({ query }) => {
           <FormControl isInvalid={errors.screenName} mt={"45px"}>
             <FormLabel>Screen Name</FormLabel>
             <Input
-              type="screenName"
               variant="filled"
               defaultValue={user.screenName}
               placeholder="footballworld"
@@ -187,7 +185,6 @@ const Edit = ({ query }) => {
           <FormControl isInvalid={errors.bio} mt={"45px"}>
             <FormLabel>Bio</FormLabel>
             <Textarea
-              type="bio"
               variant="filled"
               placeholder="bio"
               defaultValue={user.description}
@@ -202,7 +199,6 @@ const Edit = ({ query }) => {
           <FormControl isInvalid={errors.email} mt={"45px"}>
             <FormLabel>Email</FormLabel>
             <Input
-              type="email"
               variant="filled"
               placeholder="steve@apple.com"
               defaultValue={secret.email}
@@ -223,7 +219,6 @@ const Edit = ({ query }) => {
           <FormControl isInvalid={errors.address} mt={"45px"}>
             <FormLabel>Address</FormLabel>
             <Textarea
-              type="address"
               variant="filled"
               placeholder="東京都千代田区1-11-1"
               defaultValue={secret.address}

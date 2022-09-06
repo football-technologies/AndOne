@@ -330,7 +330,6 @@ const ShopForm = () => {
               <FormControl isInvalid={errors.phone} mt={"10px"}>
                 <FormLabel>Phone</FormLabel>
                 <Input
-                  type="phone"
                   variant="filled"
                   placeholder="090-1111-1111"
                   {...register("phone", {
@@ -345,7 +344,6 @@ const ShopForm = () => {
               <FormControl isInvalid={errors.email} mt={"10px"}>
                 <FormLabel>Email</FormLabel>
                 <Input
-                  type="email"
                   variant="filled"
                   placeholder="shop@apple.com"
                   {...register("email", {
@@ -381,7 +379,6 @@ const ShopForm = () => {
                   <FormControl key={sns.id} mt={"10px"} w={"90%"}>
                     <FormLabel>{sns.name}</FormLabel>
                     <Input
-                      type={sns.type}
                       variant="filled"
                       placeholder={`https://${sns.type}.com/shibauraG2913`}
                       {...register(sns.type)}
