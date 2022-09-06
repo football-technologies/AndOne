@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, createRef } from "react";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -37,7 +37,6 @@ import { doc } from "firebase/firestore";
 import _ from "lodash";
 import rules from "@/plugins/validation";
 import scheme from "@/helpers/scheme";
-import { createRef } from "react";
 
 const ShopForm = () => {
   const [iconUrl, setIconUrl] = useState(null);
@@ -415,6 +414,7 @@ const ShopForm = () => {
                       <UploadSub
                         ref={subRefs.current[index]}
                         folderPath={`shops/${shopId}/sub/${index}`}
+                        index={index}
                         uploadSub={uploadSub}
                       ></UploadSub>
                     </WrapItem>
