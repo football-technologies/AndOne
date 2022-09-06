@@ -46,14 +46,21 @@ const theme = extendTheme({
 
 import DefaultLayout from "@/layouts";
 
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
+
+let persistor = persistStore(store);
+
 function MyApp({ Component, pageProps }) {
   return (
     <Provider store={store}>
-      <ChakraProvider theme={theme}>
-        <DefaultLayout>
-          <Component {...pageProps} />
-        </DefaultLayout>
-      </ChakraProvider>
+      <PersistGate loading={null} persistor={persistor}>
+        <ChakraProvider theme={theme}>
+          <DefaultLayout>
+            <Component {...pageProps} />
+          </DefaultLayout>
+        </ChakraProvider>
+      </PersistGate>
     </Provider>
   );
 }
