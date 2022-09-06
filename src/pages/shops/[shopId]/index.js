@@ -13,6 +13,11 @@ import {
   Tabs,
   TabList,
   Tab,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
 } from "@chakra-ui/react";
 import {
   FaBookOpen,
@@ -25,7 +30,7 @@ import {
   FaTiktok,
   FaTwitter,
 } from "react-icons/fa";
-import { MdMail } from "react-icons/md";
+import { MdMail, MdOutlineMoreVert } from "react-icons/md";
 
 import { useRouter } from "next/router";
 import NextLink from "next/link";
@@ -33,16 +38,53 @@ import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
 
 const ShopShow = () => {
   const router = useRouter();
-  const { itemId } = router.query;
+  const { shopId } = router.query;
 
-  console.log(">>>>>>>> itemId", itemId);
+  console.log(">>>>>>>> shopId", shopId);
+
+  const relative = {
+    position: "relative",
+  };
+
+  const absolute = {
+    position: "absolute",
+    top: "25px",
+    right: "25px",
+  };
+
+  const icon = {
+    fill: "white",
+  };
 
   return (
     <>
-      <Box className="HeroContainer">
+      <Box style={relative}>
         <AspectRatio ratio={16 / 9}>
           <Image src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80"></Image>
         </AspectRatio>
+
+        <Menu>
+          <MenuButton style={absolute} className="ftHover">
+            <Icon style={icon} as={MdOutlineMoreVert} w={10} h={10}></Icon>
+          </MenuButton>
+          <MenuList>
+            <MenuItem p="5">
+              <NextLink href={`/shops/${shopId}/edit`} passHref>
+                <a>
+                  <Text fontSize="sm">ショップを編集</Text>
+                </a>
+              </NextLink>
+            </MenuItem>
+            <MenuDivider />
+            <MenuItem p="5">
+              <NextLink href="/items/new" passHref>
+                <a>
+                  <Text fontSize="sm">アイテムを登録</Text>
+                </a>
+              </NextLink>
+            </MenuItem>
+          </MenuList>
+        </Menu>
       </Box>
 
       <HStack align="start" p="5" className="mainContainer">

@@ -3,7 +3,6 @@ import { forwardRef, useState } from "react";
 import useFtToast from "@/components/ui/FtToast";
 import { storage } from "@/plugins/firebase";
 import { getDownloadURL, ref, uploadString } from "@firebase/storage";
-import { v4 as uuidv4 } from "uuid";
 import LoadingSpinner from "./LoadingSpinner";
 
 const UploadIcon = forwardRef(({ folderPath, uploadIcon }, iconRef) => {
@@ -187,6 +186,7 @@ const UploadSub = forwardRef(({ folderPath, uploadSub, index }, subRef) => {
         type={"file"}
         accept=".jpg, .png"
         hidden
+        multiple
         name="image"
         onChange={onChange}
       ></Input>
