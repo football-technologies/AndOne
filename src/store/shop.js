@@ -39,25 +39,27 @@ const shop = createSlice({
 });
 
 const fetchShop = (payload) => {
-  // return async (dispatch, getState) => {
-  //   console.log(">>>>>>>>> called fetchUser");
-  //   const unsubscribe = await onSnapshot(
-  //     doc(db, "users", payload.query),
-  //     async (doc) => {
-  //       if (doc.id) {
-  //         dispatch(readUser(doc.data()));
-  //       }
-  //     }
-  //   );
-  //   if (payload.type === "delete") {
-  //     unsubscribe();
-  //   }
-  // };
+  return async (dispatch, getState) => {
+    console.log(">>>>>>>>> called fetchShop");
+
+    const unsubscribe = await onSnapshot(
+      doc(db, payload.query),
+      async (doc) => {
+        if (doc.id) {
+          dispatch(readShop(doc.data()));
+        }
+      }
+    );
+
+    if (payload.type === "delete") {
+      unsubscribe();
+    }
+  };
 };
 
 const fetchShops = (payload) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchUser");
+    console.log(">>>>>>>>> called fetchShops");
 
     const newShops = [];
     const q = query(
@@ -100,6 +102,6 @@ const fetchShops = (payload) => {
   };
 };
 
-export const { createShop, updateShop, readShops } = shop.actions;
-export { fetchShops };
+export const { createShop, updateShop, readShop, readShops } = shop.actions;
+export { fetchShop, fetchShops };
 export default shop;
