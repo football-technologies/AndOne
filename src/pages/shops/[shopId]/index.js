@@ -99,9 +99,9 @@ const ShopShow = () => {
 
           <HStack align="start" p="5" className="mainContainer">
             <Stack w="20%" className="tagsBlock">
-              {bindShop.tags.forEach((tag) => {
+              {bindShop.tags.map((tag) => {
                 return (
-                  <NextLink href={`tags/${tag.id}`} passHref>
+                  <NextLink href={`/tags/${tag.id}`} passHref key={tag.id}>
                     <Button size="sm" variant="link" as="a">
                       #{tag.name}
                     </Button>
