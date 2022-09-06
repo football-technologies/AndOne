@@ -48,6 +48,33 @@ const ShopShow = () => {
   console.log(">>>>>>>> bindShop", bindShop);
   const dispatch = useDispatch();
 
+  const outerLinks = [
+    {
+      name: "homepage",
+      icon: FaDesktop,
+    },
+    {
+      name: "twitter",
+      icon: FaTwitter,
+    },
+    {
+      name: "instagram",
+      icon: FaInstagram,
+    },
+    {
+      name: "facebook",
+      icon: FaFacebook,
+    },
+    {
+      name: "tiktok",
+      icon: FaTiktok,
+    },
+    {
+      name: "others",
+      icon: FaGlobe,
+    },
+  ];
+
   useEffect(() => {
     console.log(">>>>>>>>> called useEffect");
     if (router.isReady) {
@@ -86,33 +113,20 @@ const ShopShow = () => {
             <Stack w="60%" px="5" className="textBlock">
               <Stack direction="row">
                 <Box>
-                  {bindShop.links.homepage && (
-                    <Link href={bindShop.links.homepage} isExternal p="1">
-                      <Icon as={FaDesktop}></Icon>
-                    </Link>
-                  )}
-                  <Link href="https://google.com" isExternal p="1">
-                    <Icon as={FaFacebook}></Icon>
-                  </Link>
-                  <Link href="https://google.com" isExternal p="1">
-                    <Icon as={FaInstagram}></Icon>
-                  </Link>
-                  <Link href="https://google.com" isExternal p="1">
-                    <Icon as={FaTiktok}></Icon>
-                  </Link>
-
-                  {bindShop.links.twitter && (
-                    <Link href={bindShop.links.twitter} isExternal p="1">
-                      <Icon as={FaTwitter}></Icon>
-                    </Link>
-                  )}
-
-                  <Link href="https://google.com" isExternal p="1">
-                    <Icon as={FaTwitter}></Icon>
-                  </Link>
-                  <Link href="https://google.com" isExternal p="1">
-                    <Icon as={FaGlobe}></Icon>
-                  </Link>
+                  {outerLinks
+                    .filter((eachLink) => bindShop.links[eachLink.name])
+                    .map((link) => {
+                      return (
+                        <Link
+                          href={bindShop.links[link.name]}
+                          isExternal
+                          p="1"
+                          key={link.name}
+                        >
+                          <Icon as={link.icon}></Icon>
+                        </Link>
+                      );
+                    })}
                 </Box>
               </Stack>
 
