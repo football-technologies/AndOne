@@ -17,6 +17,7 @@ const runtimeOpts = {
 };
 
 module.exports = functions
+  .region("asia-northeast1")
   .runWith(runtimeOpts)
   .https.onRequest(async (req, res) => {
     // exports.nextjsFunc = https.onRequest((req, res) => {
