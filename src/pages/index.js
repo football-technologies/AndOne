@@ -30,6 +30,10 @@ export default function Home() {
       <Button as="a" m="5" href="/shops">
         shops list
       </Button>
+      <Button as="a" m="5" href="/tags">
+        tags list
+      </Button>
+
       {/* {[...Array(3)].map((_, index) => {
         return (
           <Stack px="10">
