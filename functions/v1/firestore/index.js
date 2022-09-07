@@ -1,5 +1,6 @@
 // const Auth = require("./auth");
 // const User = require("./user");
+const Shop = require("./shop");
 // exports.auth = { ...Auth };
 // exports.user = { ...User };
 exports.shop = { ...Shop };
