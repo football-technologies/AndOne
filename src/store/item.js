@@ -10,7 +10,6 @@ import {
   collection,
   orderBy,
 } from "firebase/firestore";
-import ItemSmallCard from "@/components/cards/ItemSmallCard";
 
 const item = createSlice({
   name: "item",

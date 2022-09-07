@@ -248,6 +248,7 @@ const scheme = {
     id: null,
     status: 1,
     name: null,
+    images: null,
     description: null,
     birthAt: null,
     country: [], // e.g. 日本、メキシコ、イタリア
