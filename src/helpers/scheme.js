@@ -90,6 +90,11 @@ const scheme = {
       ref: null,
       name: null,
     },
+    user: {
+      id: null,
+      ref: null,
+      name: null,
+    },
     createdAt: null,
     updatedAt: null,
   },
