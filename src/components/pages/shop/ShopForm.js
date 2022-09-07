@@ -222,46 +222,8 @@ const ShopForm = () => {
       newTags.push(tagToSaveShopsCollection);
     }
 
-    // const beforeTags = [...editShop.tags];
-    // const afterTags = [...newTags];
     editShop.tags = newTags;
-
-    // delate tagは、shop.onUpdateで実施
-
-    // await deleteTags({ beforeTags, afterTags });
-  };
-
-  const deleteTags = async ({ beforeTags, afterTags }) => {
-    for (const beforeTag of beforeTags) {
-      const matchedTag = await _.find(afterTags, (afterTag) => {
-        if (beforeTag.name === afterTag.name) {
-          return afterTag;
-        }
-      });
-
-      if (!matchedTag) {
-        const sameNameTags = [];
-        const q = query(
-          collection(db, "tags"),
-          where("name", "==", beforeTag.name)
-        );
-        await getDocs(q).then((snapshot) => {
-          snapshot.forEach((doc) => {
-            if (doc.id) {
-              sameNameTags.push(doc.data());
-            }
-          });
-        });
-
-        if (sameNameTags.length === 1) {
-          dispatch(
-            deleteTag({
-              id: beforeTag.id,
-            })
-          );
-        }
-      }
-    }
+    // TODO: master_tagのdelate関連は、shop.onUpdateで実施
   };
 
   const onSubmit = async (data) => {
