@@ -56,8 +56,6 @@ const ShopShow = () => {
 
   const bindShop = useSelector((state) => state.shop.shop);
 
-  console.log(">>>>>>>> bindShop", bindShop);
-
   const outerLinks = [
     {
       name: "homepage",
@@ -95,6 +93,7 @@ const ShopShow = () => {
   useEffect(() => {
     console.log(">>>>>>>>> called useEffect");
     if (router.isReady) {
+      console.log(router.query);
       dispatch(
         fetchShop({
           query: `shops/${shopId}`,
