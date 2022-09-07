@@ -45,7 +45,7 @@ import { fetchShop } from "@/store/shop";
 
 import DialogImage from "@/components/pages/shop/DialogImage";
 import { useRef } from "react";
-import { FtMiddleButton } from "@/components/ui/FtButton";
+import LikeButton from "@/components/ui/LikeButton";
 
 const ShopShow = () => {
   const dispatch = useDispatch();
@@ -180,7 +180,14 @@ const ShopShow = () => {
                 </Box>
               </Stack>
 
-              <Heading as="h1">{bindShop.name}</Heading>
+              <Heading as="h1">
+                {bindShop.name}{" "}
+                <LikeButton
+                  target="shop"
+                  id={shopId}
+                  name={bindShop.name}
+                ></LikeButton>
+              </Heading>
 
               <Text fontSize="sm" py="10">
                 {bindShop.description}
