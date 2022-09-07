@@ -72,7 +72,7 @@ const ShopForm = () => {
       if (router.query.shopId) {
         dispatch(
           fetchShop({
-            query: router.query.shopId,
+            query: `shops/${router.query.shopId}`,
             type: "fetch",
           })
         );
@@ -80,7 +80,7 @@ const ShopForm = () => {
         return () => {
           dispatch(
             fetchShop({
-              query: router.query.shopId,
+              query: `shops/${router.query.shopId}`,
               type: "delete",
             })
           );
@@ -94,6 +94,18 @@ const ShopForm = () => {
         return () => {
           setEditShop(null);
           setSubmitType(null);
+          setTags(null);
+          setSubUrl([
+            { key: 0, url: null, caption: null },
+            { key: 1, url: null, caption: null },
+            { key: 2, url: null, caption: null },
+            { key: 3, url: null, caption: null },
+            { key: 4, url: null, caption: null },
+            { key: 5, url: null, caption: null },
+            { key: 6, url: null, caption: null },
+            { key: 7, url: null, caption: null },
+            { key: 8, url: null, caption: null },
+          ]);
         };
       }
     }
@@ -120,6 +132,18 @@ const ShopForm = () => {
     return () => {
       setEditShop(null);
       setSubmitType(null);
+      setTags(null);
+      setSubUrl([
+        { key: 0, url: null, caption: null },
+        { key: 1, url: null, caption: null },
+        { key: 2, url: null, caption: null },
+        { key: 3, url: null, caption: null },
+        { key: 4, url: null, caption: null },
+        { key: 5, url: null, caption: null },
+        { key: 6, url: null, caption: null },
+        { key: 7, url: null, caption: null },
+        { key: 8, url: null, caption: null },
+      ]);
     };
   }, [bindShop]);
 
@@ -323,7 +347,7 @@ const ShopForm = () => {
           ></UploadMain>
         </HStack>
         <HStack mt={"50px"}>
-          <Stack w={"30%"} h={"200vh"}>
+          <Stack w={"30%"} h={"220vh"}>
             <VStack>
               <Text mb={"15px"}>Shop Icon Image</Text>
               <Box>
@@ -370,7 +394,7 @@ const ShopForm = () => {
               </Text>
             </VStack>
           </Stack>
-          <Stack w={"40%"} h={"200vh"}>
+          <Stack w={"40%"} h={"220vh"}>
             <VStack>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <FormControl isInvalid={errors.shopName}>
@@ -501,7 +525,7 @@ const ShopForm = () => {
               </form>
             </VStack>
           </Stack>
-          <Stack w={"30%"} h={"200vh"}>
+          <Stack w={"30%"} h={"220vh"}>
             <VStack mt={"30px"}>
               {editShop.images.length > 0 ? (
                 <Wrap>

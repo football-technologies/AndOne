@@ -18,6 +18,7 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
+  Circle,
 } from "@chakra-ui/react";
 import {
   FaBookOpen,
@@ -36,210 +37,254 @@ import { useRouter } from "next/router";
 import NextLink from "next/link";
 import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
 
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+
+import { fetchShop } from "@/store/shop";
+
+import DialogImage from "@/components/pages/shop/DialogImage";
+import { useRef } from "react";
+import { FtMiddleButton } from "@/components/ui/FtButton";
+
 const ShopShow = () => {
+  const dispatch = useDispatch();
+  const dialogImage = useRef();
   const router = useRouter();
+
   const { shopId } = router.query;
 
-  console.log(">>>>>>>> shopId", shopId);
+  const bindShop = useSelector((state) => state.shop.shop);
 
-  const relative = {
-    position: "relative",
+  const outerLinks = [
+    {
+      name: "homepage",
+      icon: FaDesktop,
+    },
+    {
+      name: "twitter",
+      icon: FaTwitter,
+    },
+    {
+      name: "instagram",
+      icon: FaInstagram,
+    },
+    {
+      name: "facebook",
+      icon: FaFacebook,
+    },
+    {
+      name: "tiktok",
+      icon: FaTiktok,
+    },
+    {
+      name: "others",
+      icon: FaGlobe,
+    },
+  ];
+
+  const openDialogImage = (index) => {
+    dialogImage.current.openDialog({
+      images: bindShop.images.filter((img) => img.url),
+      index: index,
+    });
   };
 
-  const absolute = {
-    position: "absolute",
-    top: "25px",
-    right: "25px",
-  };
-
-  const icon = {
-    fill: "white",
-  };
+  useEffect(() => {
+    console.log(">>>>>>>>> called useEffect");
+    if (router.isReady) {
+      console.log(router.query);
+      dispatch(
+        fetchShop({
+          query: `shops/${shopId}`,
+          type: "fetch",
+        })
+      );
+    }
+  }, [router.isReady]);
 
   return (
     <>
-      <Box style={relative}>
-        <AspectRatio ratio={16 / 9}>
-          <Image src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80"></Image>
-        </AspectRatio>
+      {bindShop && (
+        <>
+          <Box className="HeroContainer" pos="relative">
+            <AspectRatio ratio={16 / 9}>
+              <Image src={bindShop.cover}></Image>
+            </AspectRatio>
 
-        <Menu>
-          <MenuButton style={absolute} className="ftHover">
-            <Icon style={icon} as={MdOutlineMoreVert} w={10} h={10}></Icon>
-          </MenuButton>
-          <MenuList>
-            <MenuItem p="5">
-              <NextLink href={`/shops/${shopId}/edit`} passHref>
-                <a>
-                  <Text fontSize="sm">ショップを編集</Text>
-                </a>
-              </NextLink>
-            </MenuItem>
-            <MenuDivider />
-            <MenuItem p="5">
-              <NextLink href="/items/new" passHref>
-                <a>
-                  <Text fontSize="sm">アイテムを登録</Text>
-                </a>
-              </NextLink>
-            </MenuItem>
-          </MenuList>
-        </Menu>
-      </Box>
+            <Box pos="absolute" top="0" right="0" zIndex="10">
+              <Menu>
+                <MenuButton className="ftHover">
+                  <Circle
+                    size="50px"
+                    bg="whiteAlpha.500"
+                    border="1px"
+                    borderColor="lightGray"
+                    _hover={{ bg: "red" }}
+                  >
+                    <Icon boxSize="2em" as={MdOutlineMoreVert}></Icon>
+                  </Circle>
+                </MenuButton>
+                <MenuList>
+                  <MenuItem p="5">
+                    <NextLink href={`/shops/${shopId}/edit`} passHref>
+                      <a>
+                        <Text fontSize="sm">ショップを編集</Text>
+                      </a>
+                    </NextLink>
+                  </MenuItem>
+                  <MenuDivider />
+                  <MenuItem p="5">
+                    <NextLink href="/items/new" passHref>
+                      <a>
+                        <Text fontSize="sm">アイテムを作成</Text>
+                      </a>
+                    </NextLink>
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            </Box>
+          </Box>
 
-      <HStack align="start" p="5" className="mainContainer">
-        <Stack w="20%" className="tagsBlock">
-          <NextLink href="/tags/123" passHref>
-            <Button size="sm" variant="link" as="a">
-              #英国
-            </Button>
-          </NextLink>
-          <NextLink href="/tags/123" passHref>
-            <Button size="sm" variant="link" as="a">
-              #2012
-            </Button>
-          </NextLink>
-          <NextLink href="/tags/123" passHref>
-            <Button size="sm" variant="link" as="a">
-              #football
-            </Button>
-          </NextLink>
-          <NextLink href="/tags/123" passHref>
-            <Button size="sm" variant="link" as="a">
-              #サッカー
-            </Button>
-          </NextLink>
-          <NextLink href="/tags/123" passHref>
-            <Button size="sm" variant="link" as="a">
-              #ユニフォーム
-            </Button>
-          </NextLink>
-          <NextLink href="/tags/123" passHref>
-            <Button size="sm" variant="link" as="a">
-              #uniform
-            </Button>
-          </NextLink>
-        </Stack>
+          <HStack align="start" p="5" className="mainContainer">
+            <Stack w="20%" className="tagsBlock">
+              {bindShop.tags.map((tag) => {
+                return (
+                  <NextLink href={`/tags/${tag.id}`} passHref key={tag.id}>
+                    <Button size="sm" variant="link" as="a">
+                      #{tag.name}
+                    </Button>
+                  </NextLink>
+                );
+              })}
+            </Stack>
 
-        <Stack w="60%" px="5" className="textBlock">
-          <Stack direction="row">
-            <Box>
-              <Link href="https://google.com" isExternal p="1">
-                <Icon as={FaDesktop}></Icon>
-              </Link>
-              <Link href="https://google.com" isExternal p="1">
-                <Icon as={FaFacebook}></Icon>
-              </Link>
-              <Link href="https://google.com" isExternal p="1">
-                <Icon as={FaInstagram}></Icon>
-              </Link>
-              <Link href="https://google.com" isExternal p="1">
-                <Icon as={FaTiktok}></Icon>
-              </Link>
-              <Link href="https://google.com" isExternal p="1">
-                <Icon as={FaTwitter}></Icon>
-              </Link>
-              <Link href="https://google.com" isExternal p="1">
-                <Icon as={FaGlobe}></Icon>
-              </Link>
+            <Stack w="60%" px="5" className="textBlock">
+              <Stack direction="row">
+                <Box>
+                  {outerLinks
+                    .filter((eachLink) => bindShop.links[eachLink.name])
+                    .map((link) => {
+                      return (
+                        <Link
+                          href={bindShop.links[link.name]}
+                          isExternal
+                          p="1"
+                          key={link.name}
+                        >
+                          <Icon as={link.icon}></Icon>
+                        </Link>
+                      );
+                    })}
+                </Box>
+              </Stack>
+
+              <Heading as="h1">{bindShop.name}</Heading>
+
+              <Text fontSize="sm" py="10">
+                {bindShop.description}
+              </Text>
+
+              <Box bg="paleGray" p="5">
+                <Text
+                  fontSize="xs"
+                  fontWeight="700"
+                  borderBottom="1px"
+                  borderColor="white"
+                >
+                  <Icon as={FaMapMarked} boxSize="1em" mr="2"></Icon>
+                  {bindShop.address}
+                </Text>
+                <Text
+                  fontSize="xs"
+                  fontWeight="700"
+                  borderBottom="1px"
+                  borderColor="white"
+                  pt="3"
+                >
+                  <Icon as={FaPhone} boxSize="1em" mr="2"></Icon>
+                  {bindShop.phone}
+                </Text>
+                <Text
+                  fontSize="xs"
+                  fontWeight="700"
+                  borderBottom="1px"
+                  borderColor="white"
+                  pt="3"
+                >
+                  <Icon as={MdMail} boxSize="1em" mr="2"></Icon>
+                  {bindShop.email}
+                </Text>
+
+                <Text
+                  fontSize="xs"
+                  fontWeight="700"
+                  borderBottom="1px"
+                  borderColor="white"
+                  pt="3"
+                >
+                  <Icon as={FaBookOpen} boxSize="1em" mr="2"></Icon>
+                  営業時間： {bindShop.openHour}
+                  、定休：{bindShop.holidays}
+                </Text>
+              </Box>
+            </Stack>
+
+            <Stack w="20%" className="imagesBlock">
+              <Wrap spacing="0">
+                {bindShop.images
+                  .filter((image) => image.url)
+                  .map((img, index) => {
+                    return (
+                      <>
+                        <Box
+                          w="31%"
+                          p="1%"
+                          key={index}
+                          onClick={() => openDialogImage(index)}
+                        >
+                          <AspectRatio ratio={1}>
+                            <Image
+                              rounded="md"
+                              src={img.url}
+                              className="ftHover"
+                            ></Image>
+                          </AspectRatio>
+                        </Box>
+                      </>
+                    );
+                  })}
+              </Wrap>
+            </Stack>
+          </HStack>
+
+          <Stack className="itemsBlock">
+            <Box w="600px" mx="auto" pt="10" mt="10">
+              <Tabs isFitted colorScheme="primary">
+                <TabList>
+                  <Tab>All (823)</Tab>
+                  <Tab>On Sale (323)</Tab>
+                  <Tab>Sold (513)</Tab>
+                </TabList>
+              </Tabs>
+            </Box>
+
+            <Box pt="5">
+              <Wrap p="5">
+                {[...Array(10)].map((_, index) => {
+                  return (
+                    <Stack isInline w="23%" p="1%" key={index}>
+                      <ItemMiddleCard></ItemMiddleCard>
+                    </Stack>
+                  );
+                })}
+              </Wrap>
             </Box>
           </Stack>
-
-          <Heading as="h1">芝浦Football Garally</Heading>
-
-          <Text fontSize="sm" py="10">
-            ミッドソールに開けたウインドウから適度な圧が解放されるようになり、エアバッグにより多量のエアを充填できることとなった。
-            このことから、エアマックスに搭載されているエアバッグは「マキシマムエア」や「マックスエア」と呼称されることとなる。
-            この「エアマックス」という製品名に関してかなり厳格であり、舗装路用ランニングシューズでビジブルエア搭載かつ最大容量のエア搭載の最上位モデルにその名が冠せられることとなった。ただしこのネーミングに関しては、当時からエア・スタブやエア180、エアクラシックBWなどの例外も存在し、エアマックスCB34やエアノモマックスなどランニングシューズ以外にも適応されるようになっている。
-            また現在では、最上位モデルのシューズでない所謂廉価版シューズであってもエアマックスと冠するシューズが存在するなど、その呼称に関しては当時ほど厳格ではない。
-          </Text>
-
-          <Box bg="paleGray" p="5">
-            <Text
-              fontSize="xs"
-              fontWeight="700"
-              borderBottom="1px"
-              borderColor="white"
-            >
-              <Icon as={FaMapMarked} size="xl" mr="2"></Icon>
-              東京都港区芝浦1-12-3
-            </Text>
-            <Text
-              fontSize="xs"
-              fontWeight="700"
-              borderBottom="1px"
-              borderColor="white"
-              pt="3"
-            >
-              <Icon as={FaPhone} size="xl" mr="2"></Icon>
-              03-1234-5678
-            </Text>
-            <Text
-              fontSize="xs"
-              fontWeight="700"
-              borderBottom="1px"
-              borderColor="white"
-              pt="3"
-            >
-              <Icon as={MdMail} size="xl" mr="2"></Icon>
-              contact@football.com
-            </Text>
-
-            <Text
-              fontSize="xs"
-              fontWeight="700"
-              borderBottom="1px"
-              borderColor="white"
-              pt="3"
-            >
-              <Icon as={FaBookOpen} size="xl" mr="2"></Icon>
-              営業時間：10:00〜20:00、定休：月曜日
-            </Text>
-          </Box>
-        </Stack>
-
-        <Stack w="20%" className="imagesBlock">
-          <Wrap spacing="0">
-            {[...Array(9)].map((_) => {
-              return (
-                <Box w="31%" p="1%">
-                  <AspectRatio ratio={1}>
-                    <Image
-                      rounded="md"
-                      src="https://images.unsplash.com/photo-1557346817-0fa9ee43e5ab?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                      className="ftHover"
-                    ></Image>
-                  </AspectRatio>
-                </Box>
-              );
-            })}
-          </Wrap>
-        </Stack>
-      </HStack>
-
-      <Stack className="itemsBlock">
-        <Box w="600px" mx="auto" pt="10" mt="10">
-          <Tabs isFitted colorScheme="primary">
-            <TabList>
-              <Tab>All (823)</Tab>
-              <Tab>On Sale (323)</Tab>
-              <Tab>Sold (513)</Tab>
-            </TabList>
-          </Tabs>
-        </Box>
-
-        <Box pt="5">
-          <Wrap p="5">
-            {[...Array(10)].map((_) => {
-              return (
-                <Stack isInline w="23%" p="1%">
-                  <ItemMiddleCard></ItemMiddleCard>
-                </Stack>
-              );
-            })}
-          </Wrap>
-        </Box>
-      </Stack>
+        </>
+      )}
+      {/* dialog */}
+      <DialogImage ref={dialogImage}></DialogImage>
     </>
   );
 };

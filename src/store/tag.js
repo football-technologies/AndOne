@@ -7,6 +7,9 @@ import {
   serverTimestamp,
   onSnapshot,
   deleteDoc,
+  query,
+  collection,
+  orderBy,
 } from "firebase/firestore";
 
 const tag = createSlice({
@@ -33,26 +36,72 @@ const tag = createSlice({
     readTag(state, { type, payload }) {
       state.tag = { ...payload };
     },
+
+    readTags(state, { type, payload }) {
+      state.tag = [...payload];
+    },
   },
 });
 
 const fetchTag = (payload) => {
-  // return async (dispatch, getState) => {
-  //   console.log(">>>>>>>>> called fetchUser");
-  //   const unsubscribe = await onSnapshot(
-  //     doc(db, "users", payload.query),
-  //     async (doc) => {
-  //       if (doc.id) {
-  //         dispatch(readUser(doc.data()));
-  //       }
-  //     }
-  //   );
-  //   if (payload.type === "delete") {
-  //     unsubscribe();
-  //   }
-  // };
+  return async (dispatch, getState) => {
+    console.log(">>>>>>>>> called fetchTag");
+
+    const unsubscribe = await onSnapshot(
+      doc(db, payload.query),
+      async (doc) => {
+        if (doc.id) {
+          dispatch(readTag(doc.data()));
+        }
+      }
+    );
+
+    if (payload.type === "delete") {
+      unsubscribe();
+    }
+  };
 };
 
-export const { createTag, updateTag, deleteTag } = tag.actions;
-export { fetchTag };
+const fetchTags = (payload) => {
+  return async (dispatch, getState) => {
+    console.log(">>>>>>>>> called fetchTags", payload);
+
+    const newtags = [];
+    // const q = query(
+    //   collection(db, payload.query),
+    //   orderBy("createdAt", "desc")
+    // );
+
+    const q = payload.query;
+
+    const unsubscribe = await onSnapshot(q, async (snapshot) => {
+      if (snapshot) {
+        await snapshot.docChanges().forEach(async (change) => {
+          if (change.type === "added") {
+            if (change.doc.data().id) {
+              const newIndex = change.newIndex;
+              newtags.splice(newIndex, 0, change.doc.data());
+            }
+          }
+
+          if (change.type === "modified") {
+            if (change.doc.data().id) {
+              const newIndex = change.newIndex;
+              newtags.splice(newIndex, 1, change.doc.data());
+            }
+          }
+        });
+      }
+
+      dispatch(readTags(newtags));
+    });
+
+    if (payload.type === "delete") {
+      unsubscribe();
+    }
+  };
+};
+
+export const { createTag, updateTag, readTag, readTags } = tag.actions;
+export { fetchTag, fetchTags };
 export default tag;

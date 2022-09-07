@@ -23,31 +23,38 @@ export default function Home() {
 
   return (
     <>
-      {[...Array(3)].map((_) => {
+      <Button as="a" m="5" href="/items">
+        items list
+      </Button>
+      <Divider></Divider>
+      <Button as="a" m="5" href="/shops">
+        shops list
+      </Button>
+      {/* {[...Array(3)].map((_, index) => {
         return (
           <Stack px="10">
-            <ItemExtraSmallCard></ItemExtraSmallCard>;
+            <ItemExtraSmallCard key={index}></ItemExtraSmallCard>;
           </Stack>
         );
       })}
 
-      {[...Array(3)].map((_) => {
+      {[...Array(3)].map((_, index) => {
         return (
           <Stack px="10">
-            <ItemSmallCard></ItemSmallCard>;
+            <ItemSmallCard key={index}></ItemSmallCard>;
           </Stack>
         );
       })}
 
       <Wrap p="5">
-        {[...Array(10)].map((_) => {
+        {[...Array(10)].map((_, index) => {
           return (
             <Stack isInline w="23%" p="1%">
-              <ItemMiddleCard></ItemMiddleCard>
+              <ItemMiddleCard key={index}></ItemMiddleCard>
             </Stack>
           );
         })}
-      </Wrap>
+      </Wrap> */}
     </>
   );
 }
