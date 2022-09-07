@@ -105,7 +105,6 @@ const ItemForm = () => {
         const artist = _.cloneDeep(scheme.artists);
         item.id = ftCreateId("item");
         item.artist.id = artist.id = ftCreateId("artist");
-        item.links = itemLinks;
 
         setEditItem(item);
         setEditArtist(artist);
@@ -135,12 +134,9 @@ const ItemForm = () => {
         item.tags = tags;
       }
 
-      if (item.links.length === 0) {
-        item.links = itemLinks;
-      }
-
       setSubmitType("update");
       setSubUrl([...item.images]);
+      setItemLinks([...item.links]);
       setEditItem(item);
 
       dispatch(
@@ -287,6 +283,7 @@ const ItemForm = () => {
     editArtist.description = data.artistDescription;
 
     editItem.images = subUrls;
+    editItem.links = itemLinks;
     editItem.name = data.itemName;
     editItem.description = data.description;
     editItem.createdYear = data.createdYear;
@@ -482,7 +479,7 @@ const ItemForm = () => {
 
                 <Text mt={"10px"}>Links（最大10個まで）</Text>
                 <Stack align={"end"}>
-                  {editItem.links.map((link, index) => (
+                  {itemLinks.map((link, index) => (
                     <FormControl key={index} mt={"10px"} w={"90%"}>
                       <Input
                         variant="filled"
