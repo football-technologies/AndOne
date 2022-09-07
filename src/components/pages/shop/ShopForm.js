@@ -38,19 +38,10 @@ import _ from "lodash";
 import rules from "@/plugins/validation";
 import scheme from "@/helpers/scheme";
 
+import SubImagesForm from "@/components/pages/shop/SubImagesForm";
+
 const ShopForm = () => {
   const [iconUrl, setIconUrl] = useState(null);
-  const [subUrls, setSubUrl] = useState([
-    { order: 0, url: null, caption: null },
-    { order: 1, url: null, caption: null },
-    { order: 2, url: null, caption: null },
-    { order: 3, url: null, caption: null },
-    { order: 4, url: null, caption: null },
-    { order: 5, url: null, caption: null },
-    { order: 6, url: null, caption: null },
-    { order: 7, url: null, caption: null },
-    { order: 8, url: null, caption: null },
-  ]);
   const [mainUrl, setMainUrl] = useState(null);
   const [submitType, setSubmitType] = useState(null);
   const [editShop, setEditShop] = useState(null);
@@ -95,17 +86,6 @@ const ShopForm = () => {
           setEditShop(null);
           setSubmitType(null);
           setTags(null);
-          setSubUrl([
-            { order: 0, url: null, caption: null },
-            { order: 1, url: null, caption: null },
-            { order: 2, url: null, caption: null },
-            { order: 3, url: null, caption: null },
-            { order: 4, url: null, caption: null },
-            { order: 5, url: null, caption: null },
-            { order: 6, url: null, caption: null },
-            { order: 7, url: null, caption: null },
-            { order: 8, url: null, caption: null },
-          ]);
         };
       }
     }
@@ -125,7 +105,6 @@ const ShopForm = () => {
       }
 
       setSubmitType("update");
-      setSubUrl({ ...shop.images });
       setEditShop(shop);
     }
 
@@ -133,17 +112,6 @@ const ShopForm = () => {
       setEditShop(null);
       setSubmitType(null);
       setTags(null);
-      setSubUrl([
-        { order: 0, url: null, caption: null },
-        { order: 1, url: null, caption: null },
-        { order: 2, url: null, caption: null },
-        { order: 3, url: null, caption: null },
-        { order: 4, url: null, caption: null },
-        { order: 5, url: null, caption: null },
-        { order: 6, url: null, caption: null },
-        { order: 7, url: null, caption: null },
-        { order: 8, url: null, caption: null },
-      ]);
     };
   }, [bindShop]);
 
@@ -171,18 +139,18 @@ const ShopForm = () => {
     setMainUrl(url);
   };
 
-  const uploadSub = ({ url, index }) => {
-    console.log(">>>>>>>>>>>>> return sub URL", url);
-    const newSubUrls = _.cloneDeep(subUrls);
+  // const uploadSub = ({ url, index }) => {
+  //   console.log(">>>>>>>>>>>>> return sub URL", url);
+  //   const newSubUrls = _.cloneDeep(subUrls);
 
-    const editSubUrl = _.find(newSubUrls, function (subUrl) {
-      return subUrl.order === index;
-    });
+  //   const editSubUrl = _.find(newSubUrls, function (subUrl) {
+  //     return subUrl.order === index;
+  //   });
 
-    newSubUrls[editSubUrl.order].url = url;
+  //   newSubUrls[editSubUrl.order].url = url;
 
-    setSubUrl(newSubUrls);
-  };
+  //   setSubUrl(newSubUrls);
+  // };
 
   const onChangeSetTags = (e) => {
     setTags(e.target.value);
@@ -226,6 +194,10 @@ const ShopForm = () => {
     // TODO: master_tagのdelate関連は、shop.onUpdateで実施
   };
 
+  const returnImages = (images) => {
+    editShop.images = images;
+  };
+
   const onSubmit = async (data) => {
     if (tags) {
       const replaceTagsName = tags
@@ -252,7 +224,7 @@ const ShopForm = () => {
       editShop.icon = iconUrl;
     }
 
-    editShop.images = subUrls;
+    // editShop.images = subUrls;
     editShop.name = data.shopName;
     editShop.address = data.address;
     editShop.email = data.email;
@@ -333,8 +305,9 @@ const ShopForm = () => {
             uploadMain={uploadMain}
           ></UploadMain>
         </HStack>
-        <HStack mt={"50px"}>
-          <Stack w={"30%"} h={"220vh"}>
+
+        <HStack mt={"50px"} align="top">
+          <Stack w={"30%"}>
             <VStack>
               <Text mb={"15px"}>Shop Icon Image</Text>
               <Box>
@@ -381,7 +354,8 @@ const ShopForm = () => {
               </Text>
             </VStack>
           </Stack>
-          <Stack w={"40%"} h={"220vh"}>
+
+          <Stack w={"40%"}>
             <VStack>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <FormControl isInvalid={errors.shopName}>
@@ -512,126 +486,13 @@ const ShopForm = () => {
               </form>
             </VStack>
           </Stack>
-          <Stack w={"30%"} h={"220vh"}>
-            <VStack mt={"30px"}>
-              {editShop.images.length > 0 ? (
-                <Wrap>
-                  {images.map((image, index) => {
-                    subRefs.current[index] = createRef();
-                    if (subUrls[index].url) {
-                      return (
-                        <WrapItem key={index}>
-                          <Image
-                            boxSize={"80px"}
-                            rounded={"xl"}
-                            className="ftHover"
-                            onClick={() => {
-                              subRefs.current[index].current?.click();
-                            }}
-                            src={subUrls[index].url}
-                          ></Image>
-                          <UploadSub
-                            ref={subRefs.current[index]}
-                            folderPath={`shops/${editShop.id}/sub/${index}`}
-                            index={index}
-                            uploadSub={uploadSub}
-                          ></UploadSub>
-                        </WrapItem>
-                      );
-                    } else if (image.url) {
-                      return (
-                        <WrapItem key={index}>
-                          <Image
-                            boxSize={"80px"}
-                            rounded={"xl"}
-                            className="ftHover"
-                            onClick={() => {
-                              subRefs.current[index].current?.click();
-                            }}
-                            src={image.url}
-                          ></Image>
-                          <UploadSub
-                            ref={subRefs.current[index]}
-                            folderPath={`shops/${editShop.id}/sub/${index}`}
-                            index={index}
-                            uploadSub={uploadSub}
-                          ></UploadSub>
-                        </WrapItem>
-                      );
-                    } else {
-                      return (
-                        <WrapItem key={index}>
-                          <Image
-                            boxSize={"80px"}
-                            rounded={"xl"}
-                            className="ftHover"
-                            onClick={() => {
-                              subRefs.current[index].current?.click();
-                            }}
-                            src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
-                          ></Image>
-                          <UploadSub
-                            ref={subRefs.current[index]}
-                            folderPath={`shops/${editShop.id}/sub/${index}`}
-                            index={index}
-                            uploadSub={uploadSub}
-                          ></UploadSub>
-                        </WrapItem>
-                      );
-                    }
-                  })}
-                </Wrap>
-              ) : (
-                <Wrap>
-                  {images.map((_, index) => {
-                    subRefs.current[index] = createRef();
-                    if (subUrls[index].url) {
-                      return (
-                        <WrapItem key={index}>
-                          <Image
-                            boxSize={"80px"}
-                            rounded={"xl"}
-                            className="ftHover"
-                            onClick={() => {
-                              subRefs.current[index].current?.click();
-                            }}
-                            src={subUrls[index].url}
-                          ></Image>
-                          <UploadSub
-                            ref={subRefs.current[index]}
-                            folderPath={`shops/${editShop.id}/sub/${index}`}
-                            index={index}
-                            uploadSub={uploadSub}
-                          ></UploadSub>
-                        </WrapItem>
-                      );
-                    } else {
-                      return (
-                        <WrapItem key={index}>
-                          <Image
-                            boxSize={"80px"}
-                            rounded={"xl"}
-                            className="ftHover"
-                            onClick={() => {
-                              subRefs.current[index].current?.click();
-                            }}
-                            src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
-                          ></Image>
-                          <UploadSub
-                            ref={subRefs.current[index]}
-                            folderPath={`shops/${editShop.id}/sub/${index}`}
-                            index={index}
-                            uploadSub={uploadSub}
-                          ></UploadSub>
-                        </WrapItem>
-                      );
-                    }
-                  })}
-                </Wrap>
-              )}
 
-              <Text>お店の紹介画像は最大で9枚まで表示できます</Text>
-            </VStack>
+          <Stack w={"30%"}>
+            <SubImagesForm
+              images={editShop.images}
+              returnImages={returnImages}
+            ></SubImagesForm>
+            <Text fontSize="sm">お店の紹介画像は最大で9枚まで表示できます</Text>
           </Stack>
         </HStack>
       </>
