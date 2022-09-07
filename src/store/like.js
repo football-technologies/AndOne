@@ -48,19 +48,6 @@ const like = createSlice({
 const fetchLike = (payload) => {
   return async (dispatch, getState) => {
     console.log(">>>>>>>>> called fetchLike");
-
-    const unsubscribe = await onSnapshot(
-      doc(db, payload.query),
-      async (doc) => {
-        if (doc.id) {
-          dispatch(readLike(doc.data()));
-        }
-      }
-    );
-
-    if (payload.type === "delete") {
-      unsubscribe();
-    }
   };
 };
 
@@ -80,35 +67,6 @@ const fetchLikes = (payload) => {
     });
 
     dispatch(readLikes(newlikes));
-
-    // const unsubscribe = await onSnapshot(q, async (snapshot) => {
-    //   if (snapshot) {
-    //     await snapshot.docChanges().forEach(async (change) => {
-    //       // console.log(
-    //       //   ">>>>>>>>>>>> change.type",
-    //       //   change.type,
-    //       //   change.newIndex,
-    //       //   change.doc.data()
-    //       // );
-
-    //       if (change.type === "added") {
-    //         if (change.doc.data().id) {
-    //           const newIndex = change.newIndex;
-    //           newlikes.splice(newIndex, 0, change.doc.data());
-    //         }
-    //       }
-
-    //       if (change.type === "modified") {
-    //         if (change.doc.data().id) {
-    //           const newIndex = change.newIndex;
-    //           newlikes.splice(newIndex, 1, change.doc.data());
-    //         }
-    //       }
-    //     });
-    //   }
-
-    //   dispatch(readLikes(newlikes));
-    // });
 
     if (payload.type === "delete") {
       unsubscribe();

@@ -1,19 +1,16 @@
 import { FtSmallButtonOutlined } from "./FtButton";
 import { useSelector } from "react-redux";
-
-import like, { createLike, deleteLike, fetchLikes } from "@/store/like";
-
+import { createLike, deleteLike, fetchLikes } from "@/store/like";
 import { useDispatch } from "react-redux";
-import { ftToast, ftCreateId } from "@/plugins/mixin";
-
+import { ftCreateId } from "@/plugins/mixin";
 import { db } from "@/plugins/firebase";
 import { doc, query, collectionGroup, where } from "firebase/firestore";
 import useFtToast from "@/components/ui/FtToast";
-
 import { useEffect } from "react";
-
 import scheme from "@/helpers/scheme";
 import _ from "lodash";
+import { Button, Icon } from "@chakra-ui/react";
+import { MdCheck } from "react-icons/md";
 
 const LikeButton = ({ target, id, name }) => {
   const dispatch = useDispatch();
@@ -21,21 +18,25 @@ const LikeButton = ({ target, id, name }) => {
   const currentUser = useSelector((state) => state.account);
   const likes = useSelector((state) => state.like.likes);
 
-  console.log(">>>>>>>>>>>>>>>>>> likes", likes);
-
   useEffect(() => {
-    dispatch(
-      fetchLikes({
-        query: query(
-          collectionGroup(db, `likes`),
-          where("shop.id", "==", id),
-          where("user.id", "==", currentUser.id)
-        ),
-      })
-    );
+    _fetchLikes();
   }, [dispatch]);
 
-  const _createLike = () => {
+  const _fetchLikes = () => {
+    if (target === "shop") {
+      dispatch(
+        fetchLikes({
+          query: query(
+            collectionGroup(db, `likes`),
+            where("shop.id", "==", id),
+            where("user.id", "==", currentUser.id)
+          ),
+        })
+      );
+    }
+  };
+
+  const _createLike = async () => {
     console.log(">>>>> clikc like button", target, id, currentUser.id);
 
     const editLike = _.cloneDeep(scheme.likes);
@@ -56,21 +57,18 @@ const LikeButton = ({ target, id, name }) => {
     editLike.user.name = currentUser.name;
     editLike.user.ref = doc(db, `users/${currentUser.id}`);
 
-    dispatch(createLike(editLike));
-
-    likes = [
-      {
-        id: editLike.id,
-      },
-    ];
+    await dispatch(createLike(editLike));
 
     ftToast("Likeを保存しました。");
+
+    // TODO: store/likesのonSnapshotにしていないので、更新の旅にdispatchを呼び出している
+    _fetchLikes();
   };
 
-  const _deleteLike = () => {
+  const _deleteLike = async () => {
     console.log(">>>>>>>>>> likes[0]", likes[0]);
 
-    dispatch(
+    await dispatch(
       deleteLike({
         id: likes[0].id,
         user: {
@@ -79,19 +77,31 @@ const LikeButton = ({ target, id, name }) => {
       })
     );
 
-    likes = null;
     ftToast("Likeを取り消しました。");
+
+    // TODO: store/likesのonSnapshotにしていないので、更新の旅にdispatchを呼び出している
+    _fetchLikes();
   };
 
   return (
     <>
       {likes && likes.length > 0 ? (
-        <FtSmallButtonOutlined onClick={() => _deleteLike()}>
-          Delete Like
-        </FtSmallButtonOutlined>
+        <Button
+          rounded="full"
+          fontSize="10px"
+          size="xs"
+          borderWidth="1px"
+          borderColor="lightGray"
+          px={2}
+          py={0}
+          onClick={() => _deleteLike()}
+        >
+          <Icon as={MdCheck} color="paleGray" mr="1"></Icon>
+          Like
+        </Button>
       ) : (
         <FtSmallButtonOutlined onClick={() => _createLike()}>
-          Like
+          + Like
         </FtSmallButtonOutlined>
       )}
     </>
