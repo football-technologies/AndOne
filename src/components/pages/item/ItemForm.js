@@ -48,7 +48,6 @@ const ItemForm = () => {
     { order: 6, url: null, caption: null },
     { order: 7, url: null, caption: null },
   ]);
-  const [mainUrl, setMainUrl] = useState(null);
   const [submitType, setSubmitType] = useState(null);
   const [tags, setTags] = useState(null);
   const [editItem, setEditItem] = useState(null);
@@ -175,11 +174,6 @@ const ItemForm = () => {
     setIconUrl(url);
   };
 
-  const uploadMain = (url) => {
-    console.log(">>>>>>>>>>>>> return main URL", url);
-    setMainUrl(url);
-  };
-
   const uploadSub = ({ url, index }) => {
     console.log(">>>>>>>>>>>>> return sub URL", url);
     const newSubUrls = _.cloneDeep(subUrls);
@@ -201,8 +195,56 @@ const ItemForm = () => {
     width: "100%",
   };
 
+  const createTags = (tags) => {
+    for (const tag of tags) {
+      const tagId = ftCreateId("tag");
+      const editTag = _.cloneDeep(scheme.tags);
+      editTag.id = tagId;
+      editTag.name = tag;
+      const tagToSaveItemsCollection = {
+        id: tagId,
+        ref: doc(db, "tags", tagId),
+        name: tag,
+      };
+      editItem.tags.push(tagToSaveItemsCollection);
+      dispatch(createTag(editTag));
+    }
+  };
+
   const onSubmit = (data) => {
-    console.log(data);
+    if (data.tags) {
+      const tagsDividedByComma = data.tags.split(",");
+      if (tagsDividedByComma.length > 10) {
+        ftToast("タグは10個以上設定することができません");
+        return false;
+      }
+
+      if (submitType === "create") {
+        createTags(tagsDividedByComma);
+      }
+    }
+
+    if (iconUrl) {
+      editArtist.images = iconUrl;
+    }
+
+    editArtist.name = data.artistName;
+    editArtist.description = data.artistDescription;
+
+    editItem.images = subUrls;
+    editItem.name = data.itemName;
+    editItem.description = data.description;
+    editItem.createdYear = data.createdYear;
+
+    // editItem.links
+
+    if (submitType === "create") {
+      dispatch(createShop(editItem));
+      dispatch(createArtist(editArtist));
+      ftToast("itemが作成されました");
+    }
+
+    router.push("/");
   };
 
   return (
