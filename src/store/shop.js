@@ -40,7 +40,7 @@ const shop = createSlice({
 
 const fetchShop = (payload) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchShop");
+    console.log(">>>>>>>>> called fetchShop", payload);
 
     const unsubscribe = await onSnapshot(
       doc(db, payload.query),
@@ -52,6 +52,7 @@ const fetchShop = (payload) => {
     );
 
     if (payload.type === "delete") {
+      console.log(">>>>>>>>> called deleteShop");
       unsubscribe();
     }
   };

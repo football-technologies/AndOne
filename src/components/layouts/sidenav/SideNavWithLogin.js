@@ -88,36 +88,31 @@ const SideNavWithoutLogin = () => {
               <Icon as={MdOutlineMoreVert} w={6} h={6}></Icon>
             </MenuButton>
             <MenuList>
-              {currentUser.shopId && (
-                <>
-                  <MenuItem m="0" p="0">
-                    <NextLink href={`/shops/${currentUser.shopId}`} passHref>
-                      <a className="ftBlock">
-                        <Text fontSize="sm" p="5">
-                          shopを確認する
-                        </Text>
-                      </a>
-                    </NextLink>
-                  </MenuItem>
-                  <MenuDivider m="0" p="0" />
-                </>
-              )}
-
               <MenuItem m="0" p="0">
-                <NextLink href={`/users/${currentUser.id}/edit`} passHref>
+                <NextLink
+                  href={
+                    currentUser.shopId
+                      ? `/shops/${currentUser.shopId}`
+                      : `/shops/new`
+                  }
+                  passHref
+                >
                   <a className="ftBlock">
                     <Text fontSize="sm" p="5">
-                      プロフィール編集をする
+                      {currentUser.shopId
+                        ? "shopページを確認"
+                        : "shopページを作成"}
                     </Text>
                   </a>
                 </NextLink>
               </MenuItem>
               <MenuDivider m="0" p="0" />
+
               <MenuItem m="0" p="0">
-                <NextLink href="/shops/new" passHref>
+                <NextLink href={`/users/${currentUser.id}/edit`} passHref>
                   <a className="ftBlock">
                     <Text fontSize="sm" p="5">
-                      shopを作成する
+                      プロフィール編集
                     </Text>
                   </a>
                 </NextLink>

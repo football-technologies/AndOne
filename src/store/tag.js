@@ -6,6 +6,7 @@ import {
   setDoc,
   serverTimestamp,
   onSnapshot,
+  deleteDoc,
   query,
   collection,
   orderBy,
@@ -26,6 +27,10 @@ const tag = createSlice({
     updateTag(state, { type, payload }) {
       payload["updatedAt"] = serverTimestamp();
       setDoc(doc(db, `tags/${payload.id}`), payload, { merge: true });
+    },
+
+    deleteTag(state, { type, payload }) {
+      deleteDoc(doc(db, `tags/${payload.id}`));
     },
 
     readTag(state, { type, payload }) {
