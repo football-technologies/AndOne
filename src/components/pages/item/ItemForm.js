@@ -39,14 +39,14 @@ import scheme from "@/helpers/scheme";
 const ItemForm = () => {
   const [iconUrl, setIconUrl] = useState(null);
   const [subUrls, setSubUrl] = useState([
-    { index: 0, url: null, caption: null },
-    { index: 1, url: null, caption: null },
-    { index: 2, url: null, caption: null },
-    { index: 3, url: null, caption: null },
-    { index: 4, url: null, caption: null },
-    { index: 5, url: null, caption: null },
-    { index: 6, url: null, caption: null },
-    { index: 7, url: null, caption: null },
+    { order: 0, url: null, caption: null },
+    { order: 1, url: null, caption: null },
+    { order: 2, url: null, caption: null },
+    { order: 3, url: null, caption: null },
+    { order: 4, url: null, caption: null },
+    { order: 5, url: null, caption: null },
+    { order: 6, url: null, caption: null },
+    { order: 7, url: null, caption: null },
   ]);
   const [mainUrl, setMainUrl] = useState(null);
   const [submitType, setSubmitType] = useState(null);
@@ -99,15 +99,15 @@ const ItemForm = () => {
           setSubmitType(null);
           setTags(null);
           setSubUrl([
-            { index: 0, url: null, caption: null },
-            { index: 1, url: null, caption: null },
-            { index: 2, url: null, caption: null },
-            { index: 3, url: null, caption: null },
-            { index: 4, url: null, caption: null },
-            { index: 5, url: null, caption: null },
-            { index: 6, url: null, caption: null },
-            { index: 7, url: null, caption: null },
-            { index: 8, url: null, caption: null },
+            { order: 0, url: null, caption: null },
+            { order: 1, url: null, caption: null },
+            { order: 2, url: null, caption: null },
+            { order: 3, url: null, caption: null },
+            { order: 4, url: null, caption: null },
+            { order: 5, url: null, caption: null },
+            { order: 6, url: null, caption: null },
+            { order: 7, url: null, caption: null },
+            { order: 8, url: null, caption: null },
           ]);
         };
       }
@@ -143,15 +143,15 @@ const ItemForm = () => {
       setSubmitType(null);
       setTags(null);
       setSubUrl([
-        { index: 0, url: null, caption: null },
-        { index: 1, url: null, caption: null },
-        { index: 2, url: null, caption: null },
-        { index: 3, url: null, caption: null },
-        { index: 4, url: null, caption: null },
-        { index: 5, url: null, caption: null },
-        { index: 6, url: null, caption: null },
-        { index: 7, url: null, caption: null },
-        { index: 8, url: null, caption: null },
+        { order: 0, url: null, caption: null },
+        { order: 1, url: null, caption: null },
+        { order: 2, url: null, caption: null },
+        { order: 3, url: null, caption: null },
+        { order: 4, url: null, caption: null },
+        { order: 5, url: null, caption: null },
+        { order: 6, url: null, caption: null },
+        { order: 7, url: null, caption: null },
+        { order: 8, url: null, caption: null },
       ]);
     };
   }, [bindItem]);
@@ -180,15 +180,15 @@ const ItemForm = () => {
     setMainUrl(url);
   };
 
-  const uploadSub = (obj) => {
-    console.log(">>>>>>>>>>>>> return sub URL", obj.url);
+  const uploadSub = ({ url, index }) => {
+    console.log(">>>>>>>>>>>>> return sub URL", url);
     const newSubUrls = _.cloneDeep(subUrls);
 
     const editSubUrl = _.find(newSubUrls, function (subUrl) {
-      return subUrl.index === obj.index;
+      return subUrl.order === index;
     });
 
-    newSubUrls[editSubUrl.index].url = obj.url;
+    newSubUrls[editSubUrl.order].url = url;
 
     setSubUrl(newSubUrls);
   };
