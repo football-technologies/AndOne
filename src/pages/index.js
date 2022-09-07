@@ -23,6 +23,13 @@ export default function Home() {
 
   return (
     <>
+      <Button as="a" m="5" href="/items">
+        items list
+      </Button>
+      <Divider></Divider>
+      <Button as="a" m="5" href="/shops">
+        shops list
+      </Button>
       {/* {[...Array(3)].map((_, index) => {
         return (
           <Stack px="10">
