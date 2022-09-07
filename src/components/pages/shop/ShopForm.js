@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useState, useRef, useEffect, createRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -16,8 +16,6 @@ import {
   Stack,
   Text,
   Image,
-  Wrap,
-  WrapItem,
   AspectRatio,
 } from "@chakra-ui/react";
 
@@ -26,10 +24,10 @@ import { FtMiddleButtonOutlined } from "@/components/ui/FtButton";
 import { ftCreateId } from "@/plugins/mixin";
 import { createShop, fetchShop, updateShop } from "@/store/shop";
 import { updateUser } from "@/store/user";
-import { createTag, deleteTag } from "@/store/tag";
+import { createTag } from "@/store/tag";
 import { updateAccount } from "@/store/account";
 
-import { UploadIcon, UploadMain, UploadSub } from "@/components/ui/ImageUpload";
+import { UploadIcon, UploadMain } from "@/components/ui/ImageUpload";
 
 import { db } from "@/plugins/firebase";
 import { doc, query, collection, getDocs, where } from "firebase/firestore";
@@ -139,19 +137,6 @@ const ShopForm = () => {
     setMainUrl(url);
   };
 
-  // const uploadSub = ({ url, index }) => {
-  //   console.log(">>>>>>>>>>>>> return sub URL", url);
-  //   const newSubUrls = _.cloneDeep(subUrls);
-
-  //   const editSubUrl = _.find(newSubUrls, function (subUrl) {
-  //     return subUrl.order === index;
-  //   });
-
-  //   newSubUrls[editSubUrl.order].url = url;
-
-  //   setSubUrl(newSubUrls);
-  // };
-
   const onChangeSetTags = (e) => {
     setTags(e.target.value);
   };
@@ -224,7 +209,6 @@ const ShopForm = () => {
       editShop.icon = iconUrl;
     }
 
-    // editShop.images = subUrls;
     editShop.name = data.shopName;
     editShop.address = data.address;
     editShop.email = data.email;

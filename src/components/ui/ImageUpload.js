@@ -130,7 +130,7 @@ const UploadMain = forwardRef(({ folderPath, uploadMain }, mainRef) => {
 });
 
 const UploadSub = forwardRef(
-  ({ folderPath, returnURL, showLoading, index }, subRef) => {
+  ({ folderPath, returnURL, showLoading = false, index }, subRef) => {
     const [isLoading, setIsLoading] = useState(false);
     const { ftToast } = useFtToast();
 
