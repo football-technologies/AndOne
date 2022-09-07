@@ -26,18 +26,25 @@ import useFtToast from "@/components/ui/FtToast";
 import { FtMiddleButtonOutlined } from "@/components/ui/FtButton";
 import { ftCreateId } from "@/plugins/mixin";
 import { createItem, fetchItem, updateItem } from "@/store/item";
+import { createArtist } from "@/store/artist";
 import { createTag, deleteTag } from "@/store/tag";
-import { UploadIcon, UploadMain, UploadSub } from "@/components/ui/ImageUpload";
+import { UploadIcon, UploadSub } from "@/components/ui/ImageUpload";
+import { fetchShop } from "@/store/shop";
+import { fetchArtist } from "@/store/artist";
 
 import { db } from "@/plugins/firebase";
-import { doc } from "firebase/firestore";
+import { doc, query, getDocs, collection, where } from "firebase/firestore";
 
 import _ from "lodash";
-import rules from "@/plugins/validation";
 import scheme from "@/helpers/scheme";
 
 const ItemForm = () => {
   const [iconUrl, setIconUrl] = useState(null);
+  const [submitType, setSubmitType] = useState(null);
+  const [tags, setTags] = useState(null);
+  const [editItem, setEditItem] = useState(null);
+  const [editArtist, setEditArtist] = useState(null);
+
   const [subUrls, setSubUrl] = useState([
     { order: 0, url: null, caption: null },
     { order: 1, url: null, caption: null },
@@ -48,21 +55,32 @@ const ItemForm = () => {
     { order: 6, url: null, caption: null },
     { order: 7, url: null, caption: null },
   ]);
-  const [submitType, setSubmitType] = useState(null);
-  const [tags, setTags] = useState(null);
-  const [editItem, setEditItem] = useState(null);
-  const [editArtist, setEditArtist] = useState(null);
-  const [displayImages, setDisplayImages] = useState([]);
+
+  const [itemLinks, setItemLinks] = useState([
+    { order: 0, url: null, caption: null },
+    { order: 1, url: null, caption: null },
+    { order: 2, url: null, caption: null },
+    { order: 3, url: null, caption: null },
+    { order: 4, url: null, caption: null },
+    { order: 5, url: null, caption: null },
+    { order: 6, url: null, caption: null },
+    { order: 7, url: null, caption: null },
+    { order: 8, url: null, caption: null },
+    { order: 9, url: null, caption: null },
+  ]);
 
   const currentUser = useSelector((state) => state.account);
   const bindItem = useSelector((state) => state.item.item);
   const bindArtist = useSelector((state) => state.artist.artist);
+  const bindShop = useSelector((state) => state.shop.shop);
 
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const iconRef = useRef();
-  const mainRef = useRef();
   const subRefs = useRef([]);
+
+  const { ftToast } = useFtToast();
 
   useEffect(() => {
     if (router.isReady) {
@@ -86,28 +104,19 @@ const ItemForm = () => {
         const item = _.cloneDeep(scheme.items);
         const artist = _.cloneDeep(scheme.artists);
         item.id = ftCreateId("item");
-        artist.id = ftCreateId("artist");
+        item.artist.id = artist.id = ftCreateId("artist");
+        item.links = itemLinks;
 
         setEditItem(item);
         setEditArtist(artist);
         setSubmitType("create");
-        setDisplayImages([...Array(8)]);
 
         return () => {
           setEditItem(null);
           setSubmitType(null);
           setTags(null);
-          setSubUrl([
-            { order: 0, url: null, caption: null },
-            { order: 1, url: null, caption: null },
-            { order: 2, url: null, caption: null },
-            { order: 3, url: null, caption: null },
-            { order: 4, url: null, caption: null },
-            { order: 5, url: null, caption: null },
-            { order: 6, url: null, caption: null },
-            { order: 7, url: null, caption: null },
-            { order: 8, url: null, caption: null },
-          ]);
+          setItemLinks([]);
+          setSubUrl([]);
         };
       }
     }
@@ -123,37 +132,67 @@ const ItemForm = () => {
           tagNames.push(tag.name);
         }
         const tags = tagNames.join();
-        setTags(tags);
+        item.tags = tags;
       }
 
-      if (editItem.images.length > 0) {
-        setDisplayImages([...editItem.images]);
-      } else {
-        setDisplayImages([...Array(8)]);
+      if (item.links.length === 0) {
+        item.links = itemLinks;
       }
 
       setSubmitType("update");
-      setSubUrl({ ...item.images });
+      setSubUrl([...item.images]);
       setEditItem(item);
+
+      dispatch(
+        fetchArtist({
+          query: `artists/${item.artist.id}`,
+          type: "fetch",
+        })
+      );
     }
 
     return () => {
       setEditItem(null);
       setSubmitType(null);
       setTags(null);
-      setSubUrl([
-        { order: 0, url: null, caption: null },
-        { order: 1, url: null, caption: null },
-        { order: 2, url: null, caption: null },
-        { order: 3, url: null, caption: null },
-        { order: 4, url: null, caption: null },
-        { order: 5, url: null, caption: null },
-        { order: 6, url: null, caption: null },
-        { order: 7, url: null, caption: null },
-        { order: 8, url: null, caption: null },
-      ]);
+      setItemLinks([]);
+      setSubUrl([]);
     };
   }, [bindItem]);
+
+  useEffect(() => {
+    if (bindArtist) {
+      const artist = _.cloneDeep(bindArtist);
+      setEditArtist(artist);
+    }
+
+    return () => {
+      // dispatch(
+      //   fetchArtist({
+      //     query: `artists/${artist.id}`,
+      //     type: "delete",
+      //   })
+      // );
+    };
+  }, [bindArtist]);
+
+  useEffect(() => {
+    dispatch(
+      fetchShop({
+        query: `shops/${currentUser.shopId}`,
+        type: "fetch",
+      })
+    );
+
+    return () => {
+      dispatch(
+        fetchShop({
+          query: `shops/${currentUser.shopId}`,
+          type: "delete",
+        })
+      );
+    };
+  }, []);
 
   const {
     register,
@@ -163,10 +202,6 @@ const ItemForm = () => {
 
   const openIconRef = () => {
     iconRef.current.click();
-  };
-
-  const openMainRef = () => {
-    mainRef.current.click();
   };
 
   const uploadIcon = (url) => {
@@ -187,45 +222,65 @@ const ItemForm = () => {
     setSubUrl(newSubUrls);
   };
 
-  const onChangeSetTags = (e) => {
-    setTags(e.target.value);
-  };
+  const createTags = async (tagNames) => {
+    const newTags = [];
+    for (const tagName of tagNames) {
+      const sameNameTags = [];
 
-  const form = {
-    width: "100%",
-  };
+      const q = query(collection(db, "tags"), where("name", "==", tagName));
+      await getDocs(q).then((snapshot) => {
+        snapshot.forEach((doc) => {
+          if (doc.id) {
+            sameNameTags.push(doc.data());
+          }
+        });
+      });
 
-  const createTags = (tags) => {
-    for (const tag of tags) {
-      const tagId = ftCreateId("tag");
-      const editTag = _.cloneDeep(scheme.tags);
-      editTag.id = tagId;
-      editTag.name = tag;
+      let tagId = null;
+      if (sameNameTags.length === 0) {
+        const editTag = _.cloneDeep(scheme.tags);
+        editTag.id = ftCreateId("tag");
+        editTag.name = tagName;
+        dispatch(createTag(editTag));
+        tagId = editTag.id;
+      } else {
+        const sameNameTag = sameNameTags[0];
+        tagId = sameNameTag.id;
+      }
+
       const tagToSaveItemsCollection = {
         id: tagId,
-        ref: doc(db, "tags", tagId),
-        name: tag,
+        ref: doc(db, `tags/${tagId.id}`),
+        name: tagName,
       };
-      editItem.tags.push(tagToSaveItemsCollection);
-      dispatch(createTag(editTag));
+      newTags.push(tagToSaveItemsCollection);
     }
+
+    editItem.tags = newTags;
+    // TODO: master_tagのdelate関連は、item.onUpdateで実施
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (data.tags) {
-      const tagsDividedByComma = data.tags.split(",");
+      const replaceTagsName = data.tags
+        .replaceAll(" ", "")
+        .replaceAll("　", "")
+        .replaceAll("、", ",")
+        .split(",");
+
+      const tagsDividedByComma = _.uniq(replaceTagsName);
+      console.log(tagsDividedByComma);
+
       if (tagsDividedByComma.length > 10) {
         ftToast("タグは10個以上設定することができません");
         return false;
       }
 
-      if (submitType === "create") {
-        createTags(tagsDividedByComma);
-      }
+      await createTags(tagsDividedByComma);
     }
 
     if (iconUrl) {
-      editArtist.images = iconUrl;
+      editArtist.icon = iconUrl;
     }
 
     editArtist.name = data.artistName;
@@ -235,16 +290,26 @@ const ItemForm = () => {
     editItem.name = data.itemName;
     editItem.description = data.description;
     editItem.createdYear = data.createdYear;
+    editItem.artist.name = data.artistName;
+    editItem.artist.ref = doc(db, "artists", editArtist.id);
 
-    // editItem.links
+    editItem.shop.id = editArtist.shop.id = currentUser.shopId;
+    editItem.shop.ref = editArtist.shop.ref = doc(
+      db,
+      "shops",
+      currentUser.shopId
+    );
+    editItem.shop.name = editArtist.shop.name = bindShop.name;
 
-    if (submitType === "create") {
-      dispatch(createShop(editItem));
-      dispatch(createArtist(editArtist));
-      ftToast("itemが作成されました");
-    }
+    await dispatch(createItem(editItem));
+    await dispatch(createArtist(editArtist));
 
-    router.push("/");
+    ftToast("itemが作成されました");
+    router.push(`/items/${editItem.id}`);
+  };
+
+  const form = {
+    width: "100%",
   };
 
   return (
@@ -256,122 +321,52 @@ const ItemForm = () => {
               <Text align={"start"} my={"30px"}>
                 Item Images
               </Text>
-              {editItem.images.length > 0 ? (
-                <Wrap spacing="15px">
-                  {displayImages.map((image, index) => {
-                    subRefs.current[index] = createRef();
-                    if (subUrls[index].url) {
-                      return (
-                        <WrapItem key={index}>
-                          <Image
-                            boxSize={"90px"}
-                            rounded={"xl"}
-                            className="ftHover"
-                            onClick={() => {
-                              subRefs.current[index].current?.click();
-                            }}
-                            src={subUrls[index].url}
-                          ></Image>
-                          <UploadSub
-                            ref={subRefs.current[index]}
-                            folderPath={`items/${editItem.id}/sub/${index}`}
-                            index={index}
-                            uploadSub={uploadSub}
-                          ></UploadSub>
-                        </WrapItem>
-                      );
-                    } else if (image.url) {
-                      return (
-                        <WrapItem key={index}>
-                          <Image
-                            boxSize={"90px"}
-                            rounded={"xl"}
-                            className="ftHover"
-                            onClick={() => {
-                              subRefs.current[index].current?.click();
-                            }}
-                            src={image.url}
-                          ></Image>
-                          <UploadSub
-                            ref={subRefs.current[index]}
-                            folderPath={`items/${editItem.id}/sub/${index}`}
-                            index={index}
-                            uploadSub={uploadSub}
-                          ></UploadSub>
-                        </WrapItem>
-                      );
-                    } else {
-                      return (
-                        <WrapItem key={index}>
-                          <Image
-                            boxSize={"90px"}
-                            rounded={"xl"}
-                            className="ftHover"
-                            onClick={() => {
-                              subRefs.current[index].current?.click();
-                            }}
-                            src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
-                          ></Image>
-                          <UploadSub
-                            ref={subRefs.current[index]}
-                            folderPath={`items/${editItem.id}/sub/${index}`}
-                            index={index}
-                            uploadSub={uploadSub}
-                          ></UploadSub>
-                        </WrapItem>
-                      );
-                    }
-                  })}
-                </Wrap>
-              ) : (
-                <Wrap spacing="15px">
-                  {displayImages.map((_, index) => {
-                    subRefs.current[index] = createRef();
-                    if (subUrls[index].url) {
-                      return (
-                        <WrapItem key={index}>
-                          <Image
-                            boxSize={"90px"}
-                            rounded={"xl"}
-                            className="ftHover"
-                            onClick={() => {
-                              subRefs.current[index].current?.click();
-                            }}
-                            src={subUrls[index].url}
-                          ></Image>
-                          <UploadSub
-                            ref={subRefs.current[index]}
-                            folderPath={`items/${editItem.id}/sub/${index}`}
-                            index={index}
-                            uploadSub={uploadSub}
-                          ></UploadSub>
-                        </WrapItem>
-                      );
-                    } else {
-                      return (
-                        <WrapItem key={index}>
-                          <Image
-                            boxSize={"90px"}
-                            rounded={"xl"}
-                            className="ftHover"
-                            onClick={() => {
-                              subRefs.current[index].current?.click();
-                            }}
-                            src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
-                          ></Image>
-                          <UploadSub
-                            ref={subRefs.current[index]}
-                            folderPath={`items/${editItem.id}/sub/${index}`}
-                            index={index}
-                            uploadSub={uploadSub}
-                          ></UploadSub>
-                        </WrapItem>
-                      );
-                    }
-                  })}
-                </Wrap>
-              )}
-
+              <Wrap spacing="15px">
+                {subUrls.map((obj, index) => {
+                  subRefs.current[index] = createRef();
+                  if (subUrls[index]?.url) {
+                    return (
+                      <WrapItem key={index}>
+                        <Image
+                          boxSize={"90px"}
+                          rounded={"xl"}
+                          className="ftHover"
+                          onClick={() => {
+                            subRefs.current[index].current?.click();
+                          }}
+                          src={subUrls[index].url}
+                        ></Image>
+                        <UploadSub
+                          ref={subRefs.current[index]}
+                          folderPath={`items/${editItem.id}/sub/${index}`}
+                          index={index}
+                          uploadSub={uploadSub}
+                        ></UploadSub>
+                      </WrapItem>
+                    );
+                  } else {
+                    return (
+                      <WrapItem key={index}>
+                        <Image
+                          boxSize={"90px"}
+                          rounded={"xl"}
+                          className="ftHover"
+                          onClick={() => {
+                            subRefs.current[index].current?.click();
+                          }}
+                          src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
+                        ></Image>
+                        <UploadSub
+                          ref={subRefs.current[index]}
+                          folderPath={`items/${editItem.id}/sub/${index}`}
+                          index={index}
+                          uploadSub={uploadSub}
+                        ></UploadSub>
+                      </WrapItem>
+                    );
+                  }
+                })}
+              </Wrap>
               <form onSubmit={handleSubmit(onSubmit)} style={form}>
                 <FormControl isInvalid={errors.itemName}>
                   <FormLabel>Item Name</FormLabel>
@@ -402,8 +397,7 @@ const ItemForm = () => {
                   <Text>Tags</Text>
                   <Textarea
                     variant={"filled"}
-                    onChange={onChangeSetTags}
-                    defaultValue={tags}
+                    defaultValue={editItem.tags}
                     {...register("tags")}
                   ></Textarea>
                   <Text>
@@ -435,6 +429,7 @@ const ItemForm = () => {
                       {...register("artistName")}
                     ></Textarea>
                   </FormControl>
+
                   <FormControl mt={"10px"} w={"90%"}>
                     <FormLabel>Bio</FormLabel>
                     <Textarea
@@ -444,17 +439,58 @@ const ItemForm = () => {
                       {...register("artistDescription")}
                     ></Textarea>
                   </FormControl>
+
+                  <Box w={"100%"}>
+                    <Text>Image</Text>
+                    {iconUrl ? (
+                      <Image
+                        src={iconUrl}
+                        boxSize={"160px"}
+                        m={"0px auto"}
+                        rounded={"xl"}
+                        className="ftHover"
+                        onClick={openIconRef}
+                      ></Image>
+                    ) : editArtist.icon ? (
+                      <Image
+                        boxSize={"160px"}
+                        m={"0px auto"}
+                        rounded={"xl"}
+                        src={editArtist.icon}
+                        className="ftHover"
+                        onClick={openIconRef}
+                      ></Image>
+                    ) : (
+                      <Image
+                        boxSize={"160px"}
+                        m={"0px auto"}
+                        rounded={"xl"}
+                        src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
+                        className="ftHover"
+                        onClick={openIconRef}
+                      ></Image>
+                    )}
+                    <VStack>
+                      <UploadIcon
+                        ref={iconRef}
+                        folderPath={`artists/${editArtist.id}/icon`}
+                        uploadIcon={uploadIcon}
+                      ></UploadIcon>
+                    </VStack>
+                  </Box>
                 </Stack>
 
                 <Text mt={"10px"}>Links（最大10個まで）</Text>
                 <Stack align={"end"}>
-                  {[...Array(9)].map((_, index) => (
+                  {editItem.links.map((link, index) => (
                     <FormControl key={index} mt={"10px"} w={"90%"}>
                       <Input
                         variant="filled"
                         placeholder={`https://apple.com/shibauraG2913`}
-                        // defaultValue={}
-                        {...register("links")}
+                        defaultValue={link.url}
+                        onChange={(e) => {
+                          link.url = e.target.value;
+                        }}
                       />
                     </FormControl>
                   ))}

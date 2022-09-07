@@ -20,12 +20,12 @@ const item = createSlice({
   reducers: {
     createItem(state, { type, payload }) {
       payload["createdAt"] = serverTimestamp();
-      setDoc(doc(db, `shops/${payload.id}`), payload, { merge: true });
+      setDoc(doc(db, `items/${payload.id}`), payload, { merge: true });
     },
 
     updateItem(state, { type, payload }) {
       payload["updatedAt"] = serverTimestamp();
-      setDoc(doc(db, `shops/${payload.id}`), payload, { merge: true });
+      setDoc(doc(db, `items/${payload.id}`), payload, { merge: true });
     },
 
     readItem(state, { type, payload }) {
