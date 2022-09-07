@@ -21,6 +21,7 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
+  Button,
 } from "@chakra-ui/react";
 import {
   MdOutlineCollections,
@@ -92,34 +93,45 @@ const SideNavWithoutLogin = () => {
         )}
 
         <Box>
-          <Menu>
+          <Menu arrowPadding="0" offset="0">
             <MenuButton className="ftHover">
               <Icon as={MdOutlineMoreVert} w={6} h={6}></Icon>
             </MenuButton>
             <MenuList>
-              <MenuItem p="5">
+              <MenuItem m="0" p="0">
                 <NextLink href={`/users/${currentUser.id}/edit`} passHref>
-                  <a>
-                    <Text fontSize="sm">プロフィール編集をする</Text>
+                  <a className="ftBlock">
+                    <Text fontSize="sm" p="5">
+                      プロフィール編集をする
+                    </Text>
                   </a>
                 </NextLink>
               </MenuItem>
-              <MenuDivider />
-              <MenuItem p="5">
+              <MenuDivider m="0" p="0" />
+              <MenuItem m="0" p="0">
                 <NextLink href="/shops/new" passHref>
-                  <a>
-                    <Text fontSize="sm">shopを作成する</Text>
+                  <a className="ftBlock">
+                    <Text fontSize="sm" p="5">
+                      shopを作成する
+                    </Text>
                   </a>
                 </NextLink>
               </MenuItem>
-              <MenuDivider />
+              <MenuDivider m="0" p="0" />
               <MenuItem
-                p="5"
+                p="0"
+                m="0"
                 onClick={() => {
                   logoutAuth();
                 }}
               >
-                <Text fontSize="sm">ログアウトする</Text>
+                <Text
+                  p="5"
+                  fontSize="sm"
+                  style={{ display: "block", width: "100%" }}
+                >
+                  ログアウトする
+                </Text>
               </MenuItem>
             </MenuList>
           </Menu>
