@@ -91,7 +91,6 @@ const ShopShow = () => {
   };
 
   useEffect(() => {
-    console.log(">>>>>>>>> called useEffect");
     if (router.isReady) {
       console.log(router.query);
       dispatch(
@@ -243,22 +242,20 @@ const ShopShow = () => {
                   .filter((image) => image.url)
                   .map((img, index) => {
                     return (
-                      <>
-                        <Box
-                          w="31%"
-                          p="1%"
-                          key={index}
-                          onClick={() => openDialogImage(index)}
-                        >
-                          <AspectRatio ratio={1}>
-                            <Image
-                              rounded="md"
-                              src={img.url}
-                              className="ftHover"
-                            ></Image>
-                          </AspectRatio>
-                        </Box>
-                      </>
+                      <Box
+                        w="31%"
+                        p="1%"
+                        key={index}
+                        onClick={() => openDialogImage(index)}
+                      >
+                        <AspectRatio ratio={1}>
+                          <Image
+                            rounded="md"
+                            src={img.url}
+                            className="ftHover"
+                          ></Image>
+                        </AspectRatio>
+                      </Box>
                     );
                   })}
               </Wrap>
