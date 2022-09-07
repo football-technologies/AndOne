@@ -105,6 +105,15 @@ const SideNavWithoutLogin = () => {
                 </NextLink>
               </MenuItem>
               <MenuDivider />
+              {/* dummy */}
+              <MenuItem p="5">
+                <NextLink href="/items/new" passHref>
+                  <a>
+                    <Text fontSize="sm">アイテムを作成する</Text>
+                  </a>
+                </NextLink>
+              </MenuItem>
+              <MenuDivider />
               {currentUser.shopId ? (
                 <MenuItem p="5">
                   <NextLink href={`/shops/${currentUser.shopId}/edit`} passHref>

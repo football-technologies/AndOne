@@ -5,6 +5,7 @@ import user from "@/store/user";
 import secret from "@/store/secret";
 import shop from "@/store/shop";
 import tag from "@/store/tag";
+import item from "@/store/item";
 
 import storage from "redux-persist/lib/storage";
 import { combineReducers } from "redux";
@@ -17,6 +18,7 @@ const reducers = combineReducers({
   secret: secret.reducer,
   shop: shop.reducer,
   tag: tag.reducer,
+  item: item.reducer,
 });
 
 const persistConfig = {
