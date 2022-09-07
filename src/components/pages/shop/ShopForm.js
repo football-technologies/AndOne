@@ -41,15 +41,15 @@ import scheme from "@/helpers/scheme";
 const ShopForm = () => {
   const [iconUrl, setIconUrl] = useState(null);
   const [subUrls, setSubUrl] = useState([
-    { key: 0, url: null, caption: null },
-    { key: 1, url: null, caption: null },
-    { key: 2, url: null, caption: null },
-    { key: 3, url: null, caption: null },
-    { key: 4, url: null, caption: null },
-    { key: 5, url: null, caption: null },
-    { key: 6, url: null, caption: null },
-    { key: 7, url: null, caption: null },
-    { key: 8, url: null, caption: null },
+    { order: 0, url: null, caption: null },
+    { order: 1, url: null, caption: null },
+    { order: 2, url: null, caption: null },
+    { order: 3, url: null, caption: null },
+    { order: 4, url: null, caption: null },
+    { order: 5, url: null, caption: null },
+    { order: 6, url: null, caption: null },
+    { order: 7, url: null, caption: null },
+    { order: 8, url: null, caption: null },
   ]);
   const [mainUrl, setMainUrl] = useState(null);
   const [submitType, setSubmitType] = useState(null);
@@ -96,15 +96,15 @@ const ShopForm = () => {
           setSubmitType(null);
           setTags(null);
           setSubUrl([
-            { key: 0, url: null, caption: null },
-            { key: 1, url: null, caption: null },
-            { key: 2, url: null, caption: null },
-            { key: 3, url: null, caption: null },
-            { key: 4, url: null, caption: null },
-            { key: 5, url: null, caption: null },
-            { key: 6, url: null, caption: null },
-            { key: 7, url: null, caption: null },
-            { key: 8, url: null, caption: null },
+            { order: 0, url: null, caption: null },
+            { order: 1, url: null, caption: null },
+            { order: 2, url: null, caption: null },
+            { order: 3, url: null, caption: null },
+            { order: 4, url: null, caption: null },
+            { order: 5, url: null, caption: null },
+            { order: 6, url: null, caption: null },
+            { order: 7, url: null, caption: null },
+            { order: 8, url: null, caption: null },
           ]);
         };
       }
@@ -134,15 +134,15 @@ const ShopForm = () => {
       setSubmitType(null);
       setTags(null);
       setSubUrl([
-        { key: 0, url: null, caption: null },
-        { key: 1, url: null, caption: null },
-        { key: 2, url: null, caption: null },
-        { key: 3, url: null, caption: null },
-        { key: 4, url: null, caption: null },
-        { key: 5, url: null, caption: null },
-        { key: 6, url: null, caption: null },
-        { key: 7, url: null, caption: null },
-        { key: 8, url: null, caption: null },
+        { order: 0, url: null, caption: null },
+        { order: 1, url: null, caption: null },
+        { order: 2, url: null, caption: null },
+        { order: 3, url: null, caption: null },
+        { order: 4, url: null, caption: null },
+        { order: 5, url: null, caption: null },
+        { order: 6, url: null, caption: null },
+        { order: 7, url: null, caption: null },
+        { order: 8, url: null, caption: null },
       ]);
     };
   }, [bindShop]);
@@ -171,15 +171,15 @@ const ShopForm = () => {
     setMainUrl(url);
   };
 
-  const uploadSub = (obj) => {
-    console.log(">>>>>>>>>>>>> return sub URL", obj.url);
+  const uploadSub = ({ url, index }) => {
+    console.log(">>>>>>>>>>>>> return sub URL", url);
     const newSubUrls = _.cloneDeep(subUrls);
 
     const editSubUrl = _.find(newSubUrls, function (subUrl) {
-      return subUrl.key === obj.index;
+      return subUrl.order === index;
     });
 
-    newSubUrls[editSubUrl.key].url = obj.url;
+    newSubUrls[editSubUrl.order].url = url;
 
     setSubUrl(newSubUrls);
   };
