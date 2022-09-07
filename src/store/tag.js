@@ -100,6 +100,7 @@ const fetchTags = (payload) => {
   };
 };
 
-export const { createTag, updateTag, readTag, readTags } = tag.actions;
+export const { createTag, updateTag, deleteTag, readTag, readTags } =
+  tag.actions;
 export { fetchTag, fetchTags };
 export default tag;

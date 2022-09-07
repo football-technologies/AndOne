@@ -1,20 +1,14 @@
 // const Auth = require("./auth");
 // const User = require("./user");
+const Shop = require("./shop");
 // exports.auth = { ...Auth };
 // exports.user = { ...User };
+exports.shop = { ...Shop };
 
 if (
   !process.env.K_SERVICE ||
-  /^v1\-firestore\-user\-/.test(process.env.K_SERVICE)
+  /^v1\-firestore\-shop\-/.test(process.env.K_SERVICE)
 ) {
-  const User = require("./user");
-  exports.user = { ...User };
-}
-
-if (
-  !process.env.K_SERVICE ||
-  /^v1\-firestore\-auth\-/.test(process.env.K_SERVICE)
-) {
-  const Auth = require("./auth");
-  exports.auth = { ...Auth };
+  const Shop = require("./shop");
+  exports.shop = { ...Shop };
 }
