@@ -38,7 +38,7 @@ const tag = createSlice({
     },
 
     readTags(state, { type, payload }) {
-      state.tag = [...payload];
+      state.tags = [...payload];
     },
   },
 });
@@ -66,34 +66,32 @@ const fetchTags = (payload) => {
   return async (dispatch, getState) => {
     console.log(">>>>>>>>> called fetchTags", payload);
 
-    const newtags = [];
-    // const q = query(
-    //   collection(db, payload.query),
-    //   orderBy("createdAt", "desc")
-    // );
+    const newTags = [];
 
     const q = payload.query;
 
     const unsubscribe = await onSnapshot(q, async (snapshot) => {
       if (snapshot) {
         await snapshot.docChanges().forEach(async (change) => {
+          console.log(">>>>>>>> change", change);
+
           if (change.type === "added") {
             if (change.doc.data().id) {
               const newIndex = change.newIndex;
-              newtags.splice(newIndex, 0, change.doc.data());
+              newTags.splice(newIndex, 0, change.doc.data());
             }
           }
 
           if (change.type === "modified") {
             if (change.doc.data().id) {
               const newIndex = change.newIndex;
-              newtags.splice(newIndex, 1, change.doc.data());
+              newTags.splice(newIndex, 1, change.doc.data());
             }
           }
         });
       }
 
-      dispatch(readTags(newtags));
+      dispatch(readTags(newTags));
     });
 
     if (payload.type === "delete") {

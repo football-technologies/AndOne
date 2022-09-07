@@ -37,8 +37,6 @@ const LikeButton = ({ target, id, name }) => {
   };
 
   const _createLike = async () => {
-    console.log(">>>>> clikc like button", target, id, currentUser.id);
-
     const editLike = _.cloneDeep(scheme.likes);
     editLike.id = ftCreateId("like");
     if (target === "shop") {
@@ -66,8 +64,6 @@ const LikeButton = ({ target, id, name }) => {
   };
 
   const _deleteLike = async () => {
-    console.log(">>>>>>>>>> likes[0]", likes[0]);
-
     await dispatch(
       deleteLike({
         id: likes[0].id,
