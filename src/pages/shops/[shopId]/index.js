@@ -236,7 +236,7 @@ const ShopShow = () => {
               </Box>
             </Stack>
 
-            <Stack w="20%" className="imagesBlock">
+            {/* <Stack w="20%" className="imagesBlock">
               <Wrap spacing="0">
                 {bindShop.images
                   .filter((image) => image.url)
@@ -259,7 +259,7 @@ const ShopShow = () => {
                     );
                   })}
               </Wrap>
-            </Stack>
+            </Stack> */}
           </HStack>
 
           <Stack className="itemsBlock">

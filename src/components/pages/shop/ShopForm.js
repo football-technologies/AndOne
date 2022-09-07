@@ -32,7 +32,7 @@ import { updateAccount } from "@/store/account";
 import { UploadIcon, UploadMain, UploadSub } from "@/components/ui/ImageUpload";
 
 import { db } from "@/plugins/firebase";
-import { doc } from "firebase/firestore";
+import { doc, query, collection, getDocs, where } from "firebase/firestore";
 
 import _ from "lodash";
 import rules from "@/plugins/validation";
@@ -188,75 +188,98 @@ const ShopForm = () => {
     setTags(e.target.value);
   };
 
-  const createTags = (tags) => {
-    for (const tag of tags) {
-      const tagId = ftCreateId("tag");
-      const editTag = _.cloneDeep(scheme.tags);
-      editTag.id = tagId;
-      editTag.name = tag;
+  const createTags = async (tagNames) => {
+    const newTags = [];
+    for (const tagName of tagNames) {
+      const sameNameTags = [];
+
+      const q = query(collection(db, "tags"), where("name", "==", tagName));
+      await getDocs(q).then((snapshot) => {
+        snapshot.forEach((doc) => {
+          if (doc.id) {
+            sameNameTags.push(doc.data());
+          }
+        });
+      });
+
+      let tagId = null;
+      if (sameNameTags.length === 0) {
+        const editTag = _.cloneDeep(scheme.tags);
+        editTag.id = ftCreateId("tag");
+        editTag.name = tagName;
+        dispatch(createTag(editTag));
+        tagId = editTag.id;
+      } else {
+        const sameNameTag = sameNameTags[0];
+        tagId = sameNameTag.id;
+      }
+
       const tagToSaveShopsCollection = {
         id: tagId,
-        ref: doc(db, "tags", tagId),
-        name: tag,
+        ref: doc(db, `tags/${tagId.id}`),
+        name: tagName,
       };
-      editShop.tags.push(tagToSaveShopsCollection);
-      dispatch(createTag(editTag));
+      newTags.push(tagToSaveShopsCollection);
     }
+
+    // const beforeTags = [...editShop.tags];
+    // const afterTags = [...newTags];
+    editShop.tags = newTags;
+
+    // delate tagは、shop.onUpdateで実施
+
+    // await deleteTags({ beforeTags, afterTags });
   };
 
-  const updateTags = (tags) => {
-    const defaultTags = _.map(editShop.tags, (tag) => tag["name"]);
+  const deleteTags = async ({ beforeTags, afterTags }) => {
+    for (const beforeTag of beforeTags) {
+      const matchedTag = await _.find(afterTags, (afterTag) => {
+        if (beforeTag.name === afterTag.name) {
+          return afterTag;
+        }
+      });
 
-    const newTags = tags.filter((i) => defaultTags.indexOf(i) == -1);
-
-    const removeTags = defaultTags.filter((i) => tags.indexOf(i) == -1);
-
-    if (newTags.length > 0) {
-      for (const newTag of newTags) {
-        const tagId = ftCreateId("tag");
-        const editTag = _.cloneDeep(scheme.tags);
-        editTag.id = tagId;
-        editTag.name = newTag;
-        dispatch(createTag(editTag));
-
-        const tagToSaveShopsCollection = {
-          id: tagId,
-          ref: doc(db, "tags", tagId),
-          name: newTag,
-        };
-        editShop.tags.push(tagToSaveShopsCollection);
-      }
-    }
-
-    if (removeTags.length > 0) {
-      for (const tag of removeTags) {
-        const tags = editShop.tags;
-
-        let res = null;
-        res = _.remove(tags, function (t) {
-          return t.name == tag;
+      if (!matchedTag) {
+        const sameNameTags = [];
+        const q = query(
+          collection(db, "tags"),
+          where("name", "==", beforeTag.name)
+        );
+        await getDocs(q).then((snapshot) => {
+          snapshot.forEach((doc) => {
+            if (doc.id) {
+              sameNameTags.push(doc.data());
+            }
+          });
         });
 
-        dispatch(deleteTag(res[0]));
+        if (sameNameTags.length === 1) {
+          dispatch(
+            deleteTag({
+              id: beforeTag.id,
+            })
+          );
+        }
       }
     }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (tags) {
-      const tagsDividedByComma = tags.split(",");
+      const replaceTagsName = tags
+        .replaceAll(" ", "")
+        .replaceAll("　", "")
+        .replaceAll("、", ",")
+        .split(",");
+
+      const tagsDividedByComma = _.uniq(replaceTagsName);
+
       if (tagsDividedByComma.length > 10) {
         ftToast("タグは10個以上設定することができません");
         return false;
       }
 
-      if (submitType === "create") {
-        createTags(tagsDividedByComma);
-      }
-
-      if (submitType === "update") {
-        updateTags(tagsDividedByComma);
-      }
+      await createTags(tagsDividedByComma);
     }
 
     if (mainUrl) {
@@ -313,7 +336,9 @@ const ShopForm = () => {
       dispatch(updateShop(editShop));
       ftToast("shopを更新しました");
     }
-    router.push("/");
+
+    console.log(">>>>>>>>> finish submit");
+    router.push(`/shops/${editShop.id}`);
   };
 
   if (editShop) {
