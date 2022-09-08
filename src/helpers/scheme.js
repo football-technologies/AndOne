@@ -112,11 +112,13 @@ const scheme = {
       id: null,
       ref: null,
       name: null,
+      icon: null,
     },
     shop: {
       id: null,
       ref: null,
       name: null,
+      icon: null,
     },
     createdYear: null,
     links: [], // {caption, url}

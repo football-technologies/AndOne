@@ -94,14 +94,11 @@ const SubImagesInput = ({ images, returnImages, shopId, itemId }) => {
                     borderColor="lightGray"
                     rounded="md"
                     className="ftHover"
+                    onClick={() => {
+                      imageInputRefs.current[index].click();
+                    }}
                   >
-                    <Icon
-                      as={MdOutlineAddPhotoAlternate}
-                      fontSize="2xl"
-                      onClick={() => {
-                        imageInputRefs.current[index].click();
-                      }}
-                    ></Icon>
+                    <Icon as={MdOutlineAddPhotoAlternate} fontSize="2xl"></Icon>
                   </Box>
                 </AspectRatio>
               )}

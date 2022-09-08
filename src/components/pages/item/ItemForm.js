@@ -188,11 +188,12 @@ const ItemForm = () => {
     editItem.name = data.itemName;
     editItem.description = data.description;
     editItem.createdYear = data.createdYear;
+    editItem.shop.id = currentUser.shopId;
+    editItem.shop.ref = doc(db, "shops", currentUser.shopId);
+    editItem.shop.name = bindShop.name;
+    editItem.shop.icon = bindShop.icon;
 
     if (submitType === "create") {
-      editItem.shop.id = currentUser.shopId;
-      editItem.shop.ref = doc(db, "shops", currentUser.shopId);
-      editItem.shop.name = bindShop.name;
       await dispatch(createItem(editItem));
       ftToast("itemが作成されました");
     }
