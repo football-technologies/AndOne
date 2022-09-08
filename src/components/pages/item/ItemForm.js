@@ -1,38 +1,28 @@
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { useEffect, useState, useRef, createRef } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
   FormControl,
   FormLabel,
-  FormHelperText,
   FormErrorMessage,
-  Button,
   Box,
   Input,
   VStack,
   Textarea,
-  HStack,
   Stack,
   Text,
-  Image,
-  Wrap,
-  WrapItem,
-  AspectRatio,
 } from "@chakra-ui/react";
 
 import useFtToast from "@/components/ui/FtToast";
-import { FtMiddleButtonOutlined } from "@/components/ui/FtButton";
+import { FtLargeButton } from "@/components/ui/FtButton";
 import { ftCreateId } from "@/plugins/mixin";
-import { createItem, fetchItem, updateItem } from "@/store/item";
-import { createArtist } from "@/store/artist";
-import { createTag, deleteTag } from "@/store/tag";
-import { UploadIcon } from "@/components/ui/ImageUpload";
+import { createItem, fetchItem } from "@/store/item";
+import { createTag } from "@/store/tag";
 import SubImagesForm from "@/components/pages/shop/SubImagesForm";
 
 import { fetchShop } from "@/store/shop";
-import { fetchArtist } from "@/store/artist";
 
 import { db } from "@/plugins/firebase";
 import { doc, query, getDocs, collection, where } from "firebase/firestore";
@@ -41,33 +31,15 @@ import _ from "lodash";
 import scheme from "@/helpers/scheme";
 
 const ItemForm = () => {
-  const [iconUrl, setIconUrl] = useState(null);
   const [submitType, setSubmitType] = useState(null);
   const [editItem, setEditItem] = useState(null);
-  const [editArtist, setEditArtist] = useState(null);
-
-  const [itemLinks, setItemLinks] = useState([
-    { order: 0, url: null, caption: null },
-    { order: 1, url: null, caption: null },
-    { order: 2, url: null, caption: null },
-    { order: 3, url: null, caption: null },
-    { order: 4, url: null, caption: null },
-    { order: 5, url: null, caption: null },
-    { order: 6, url: null, caption: null },
-    { order: 7, url: null, caption: null },
-    { order: 8, url: null, caption: null },
-    { order: 9, url: null, caption: null },
-  ]);
 
   const currentUser = useSelector((state) => state.account);
   const bindItem = useSelector((state) => state.item.item);
-  const bindArtist = useSelector((state) => state.artist.artist);
   const bindShop = useSelector((state) => state.shop.shop);
 
   const router = useRouter();
   const dispatch = useDispatch();
-
-  const iconRef = useRef();
 
   const { ftToast } = useFtToast();
 
@@ -93,17 +65,12 @@ const ItemForm = () => {
         const item = _.cloneDeep(scheme.items);
         item.id = ftCreateId("item");
 
-        // const artist = _.cloneDeep(scheme.artists);
-        // item.artist.id = artist.id = ftCreateId("artist");
-
         setEditItem(item);
-        // setEditArtist(artist);
         setSubmitType("create");
 
         return () => {
           setEditItem(null);
           setSubmitType(null);
-          setItemLinks([]);
         };
       }
     }
@@ -123,39 +90,14 @@ const ItemForm = () => {
       }
 
       setSubmitType("update");
-      setItemLinks([...item.links]);
       setEditItem(item);
-
-      dispatch(
-        fetchArtist({
-          query: `artists/${item.artist.id}`,
-          type: "fetch",
-        })
-      );
     }
 
     return () => {
       setEditItem(null);
       setSubmitType(null);
-      setItemLinks([]);
     };
   }, [bindItem]);
-
-  // useEffect(() => {
-  //   if (bindArtist) {
-  //     const artist = _.cloneDeep(bindArtist);
-  //     setEditArtist(artist);
-  //   }
-
-  //   return () => {
-  //     dispatch(
-  //       fetchArtist({
-  //         query: `artists/${artist.id}`,
-  //         type: "delete",
-  //       })
-  //     );
-  //   };
-  // }, [bindArtist]);
 
   useEffect(() => {
     dispatch(
@@ -180,15 +122,6 @@ const ItemForm = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
-
-  const openIconRef = () => {
-    iconRef.current.click();
-  };
-
-  const uploadIcon = (url) => {
-    console.log(">>>>>>>>>>>>> return icon URL", url);
-    setIconUrl(url);
-  };
 
   const createTags = async (tagNames) => {
     const newTags = [];
@@ -251,7 +184,7 @@ const ItemForm = () => {
       await createTags(tagsDividedByComma);
     }
 
-    editItem.links = itemLinks;
+    // editItem.links = itemLinks;
     editItem.name = data.itemName;
     editItem.description = data.description;
     editItem.createdYear = data.createdYear;
@@ -259,25 +192,7 @@ const ItemForm = () => {
     editItem.shop.ref = doc(db, "shops", currentUser.shopId);
     editItem.shop.name = bindShop.name;
 
-    // if (iconUrl) {
-    //   editArtist.icon = iconUrl;
-    // }
-    // editArtist.name = data.artistName;
-    // editArtist.description = data.artistDescription;
-
-    // editItem.artist.name = data.artistName;
-    // editItem.artist.ref = doc(db, "artists", editArtist.id);
-
-    // editItem.shop.id = editArtist.shop.id = currentUser.shopId;
-    // editItem.shop.ref = editArtist.shop.ref = doc(
-    //   db,
-    //   "shops",
-    //   currentUser.shopId
-    // );
-    // editItem.shop.name = editArtist.shop.name = bindShop.name;
-
     await dispatch(createItem(editItem));
-    // await dispatch(createArtist(editArtist));
 
     ftToast("itemが作成されました");
     router.push(`/items/${editItem.id}`);
@@ -291,7 +206,7 @@ const ItemForm = () => {
     <>
       {editItem && (
         <>
-          <Box w={"40%"} m={"0px auto"}>
+          <Box w="500px" mx="auto">
             <Stack py={"30px"}>
               <Text mt={"40px"}>Item Images</Text>
               <SubImagesForm
@@ -306,7 +221,7 @@ const ItemForm = () => {
                   <FormLabel>Item Name</FormLabel>
                   <Input
                     variant="filled"
-                    placeholder="戦術特化サッカーノート"
+                    placeholder="例）浦和レッズ 2005年モデル Home"
                     defaultValue={editItem.name}
                     {...register("itemName", {
                       required: "アイテム名は必須入力です",
@@ -317,33 +232,39 @@ const ItemForm = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                <FormControl mt={"10px"}>
+                <FormControl mt="10">
                   <FormLabel>Description</FormLabel>
                   <Textarea
                     variant="filled"
-                    placeholder="戦術に特化したサッカーノートです"
+                    h="10em"
+                    placeholder="例）浦和最初の全盛期時代のユニフォーム。
+                    エメルソン、田中達也、永井が活躍した年。ボランチは鈴木啓太、長谷部誠。
+                    リーグの最終成績は2位。
+                    胸の星は、2003年のナビスコ優勝の勲章"
                     defaultValue={editItem.description}
                     {...register("description")}
                   ></Textarea>
                 </FormControl>
 
-                <FormControl mt={"10px"}>
+                <FormControl mt="10">
                   <Text>Tags</Text>
                   <Textarea
                     variant={"filled"}
+                    placeholder="例）ユニフォーム,football,英国,2011"
                     defaultValue={editItem.tags}
                     {...register("tags")}
                   ></Textarea>
-                  <Text>
+                  <Text fontSize="sm">
                     カンマを入れて、最大10個まで作成するこができます。
                   </Text>
                 </FormControl>
 
-                <FormControl mt={"10px"}>
+                <FormControl mt="10">
                   <FormLabel>Created Year</FormLabel>
                   <Input
                     variant="filled"
-                    placeholder="2020年"
+                    w="50%"
+                    placeholder="例）2020年"
                     defaultValue={editItem.createdYear}
                     {...register("createdYear")}
                   />
@@ -352,88 +273,10 @@ const ItemForm = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                {/* <Text mt={"10px"}>Artist</Text>
-                <Stack align={"end"}>
-                  <FormControl mt={"10px"} w={"90%"}>
-                    <FormLabel>Name</FormLabel>
-                    <Textarea
-                      variant="filled"
-                      placeholder="ティンカーハット"
-                      defaultValue={editArtist.name}
-                      {...register("artistName")}
-                    ></Textarea>
-                  </FormControl>
-
-                  <FormControl mt={"10px"} w={"90%"}>
-                    <FormLabel>Bio</FormLabel>
-                    <Textarea
-                      variant="filled"
-                      placeholder="ドイツ生まれの世界的なフットボールコーチです"
-                      defaultValue={editArtist.description}
-                      {...register("artistDescription")}
-                    ></Textarea>
-                  </FormControl>
-
-                  <Box w={"100%"}>
-                    <Text>Image</Text>
-                    {iconUrl ? (
-                      <Image
-                        src={iconUrl}
-                        boxSize={"160px"}
-                        m={"0px auto"}
-                        rounded={"xl"}
-                        className="ftHover"
-                        onClick={openIconRef}
-                      ></Image>
-                    ) : editArtist.icon ? (
-                      <Image
-                        boxSize={"160px"}
-                        m={"0px auto"}
-                        rounded={"xl"}
-                        src={editArtist.icon}
-                        className="ftHover"
-                        onClick={openIconRef}
-                      ></Image>
-                    ) : (
-                      <Image
-                        boxSize={"160px"}
-                        m={"0px auto"}
-                        rounded={"xl"}
-                        src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
-                        className="ftHover"
-                        onClick={openIconRef}
-                      ></Image>
-                    )}
-                    <VStack>
-                      <UploadIcon
-                        ref={iconRef}
-                        folderPath={`artists/${editArtist.id}/icon`}
-                        uploadIcon={uploadIcon}
-                      ></UploadIcon>
-                    </VStack>
-                  </Box>
-                </Stack> */}
-
-                <Text mt={"10px"}>Links（最大10個まで）</Text>
-                <Stack align={"end"}>
-                  {itemLinks.map((link, index) => (
-                    <FormControl key={index} mt={"10px"} w={"90%"}>
-                      <Input
-                        variant="filled"
-                        placeholder={`https://apple.com/shibauraG2913`}
-                        defaultValue={link.url}
-                        onChange={(e) => {
-                          link.url = e.target.value;
-                        }}
-                      />
-                    </FormControl>
-                  ))}
-                </Stack>
-
                 <VStack my={"30px"}>
-                  <Button colorScheme="pink" type="submit" mt={"20px"}>
+                  <FtLargeButton colorScheme="pink" type="submit" my={"20px"}>
                     {submitType === "create" ? "作成する" : "更新する"}
-                  </Button>
+                  </FtLargeButton>
                 </VStack>
               </form>
             </VStack>
