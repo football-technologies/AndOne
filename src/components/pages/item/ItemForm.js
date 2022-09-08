@@ -195,12 +195,12 @@ const ItemForm = () => {
     editItem.shop.name = bindShop.name;
     editItem.shop.icon = bindShop.icon;
 
-    if (submitType === "create") {
+    if (!isEditMode) {
       await dispatch(createItem(editItem));
       ftToast("itemが作成されました");
     }
 
-    if (submitType === "update") {
+    if (isEditMode) {
       await dispatch(updateItem(editItem));
       ftToast("itemを更新しました");
     }

@@ -42,6 +42,7 @@ import { useRef } from "react";
 import LikeButton from "@/components/ui/LikeButton";
 
 import ShopMenu from "@/components/pages/shop/ShopMenu";
+import MyShopItemsList from "@/components/pages/shop/MyShopItemsList";
 
 const ShopShow = () => {
   const dispatch = useDispatch();
@@ -226,27 +227,7 @@ const ShopShow = () => {
           </HStack>
 
           <Stack className="itemsBlock">
-            <Box w="600px" mx="auto" pt="10" mt="10">
-              <Tabs isFitted colorScheme="primary">
-                <TabList>
-                  <Tab>All (823)</Tab>
-                  <Tab>On Sale (323)</Tab>
-                  <Tab>Sold (513)</Tab>
-                </TabList>
-              </Tabs>
-            </Box>
-
-            <Box pt="5">
-              <Wrap p="5">
-                {[...Array(10)].map((_, index) => {
-                  return (
-                    <Stack isInline w="23%" p="1%" key={index}>
-                      <ItemMiddleCard></ItemMiddleCard>
-                    </Stack>
-                  );
-                })}
-              </Wrap>
-            </Box>
+            <MyShopItemsList shopId={bindShop.id}></MyShopItemsList>
           </Stack>
         </>
       )}

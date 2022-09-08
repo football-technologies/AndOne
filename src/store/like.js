@@ -46,15 +46,11 @@ const like = createSlice({
 });
 
 const fetchLike = (payload) => {
-  return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchLike");
-  };
+  return async (dispatch, getState) => {};
 };
 
 const fetchLikes = (payload) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchLikes");
-
     const newlikes = [];
     const q = payload.query;
 
