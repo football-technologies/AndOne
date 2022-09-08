@@ -18,6 +18,29 @@ const LikeButton = ({ target, id, name }) => {
   const currentUser = useSelector((state) => state.account);
   const likes = useSelector((state) => state.like.likes);
 
+  const text = {
+    shop: {
+      button: {
+        create: "+ Like",
+        delete: "Like",
+      },
+      toast: {
+        create: "Likeに保存しました",
+        delete: "Likeを取り消しました",
+      },
+    },
+    item: {
+      button: {
+        create: "+ Watch",
+        delete: "Watch",
+      },
+      toast: {
+        create: "Watchに保存しました",
+        delete: "Watchを取り消しました",
+      },
+    },
+  };
+
   useEffect(() => {
     _fetchLikes();
   }, [dispatch]);
@@ -29,6 +52,16 @@ const LikeButton = ({ target, id, name }) => {
           query: query(
             collectionGroup(db, `likes`),
             where("shop.id", "==", id),
+            where("user.id", "==", currentUser.id)
+          ),
+        })
+      );
+    } else {
+      dispatch(
+        fetchLikes({
+          query: query(
+            collectionGroup(db, `likes`),
+            where("item.id", "==", id),
             where("user.id", "==", currentUser.id)
           ),
         })
@@ -57,7 +90,7 @@ const LikeButton = ({ target, id, name }) => {
 
     await dispatch(createLike(editLike));
 
-    ftToast("Likeを保存しました。");
+    ftToast(text[target].toast.create);
 
     // TODO: store/likesのonSnapshotにしていないので、更新の旅にdispatchを呼び出している
     _fetchLikes();
@@ -73,7 +106,7 @@ const LikeButton = ({ target, id, name }) => {
       })
     );
 
-    ftToast("Likeを取り消しました。");
+    ftToast(text[target].toast.delete);
 
     // TODO: store/likesのonSnapshotにしていないので、更新の旅にdispatchを呼び出している
     _fetchLikes();
@@ -90,14 +123,15 @@ const LikeButton = ({ target, id, name }) => {
           borderColor="lightGray"
           px={2}
           py={0}
+          mt="2"
           onClick={() => _deleteLike()}
         >
           <Icon as={MdCheck} color="paleGray" mr="1"></Icon>
-          Like
+          {text[target].button.delete}
         </Button>
       ) : (
-        <FtSmallButtonOutlined onClick={() => _createLike()}>
-          + Like
+        <FtSmallButtonOutlined mt="2" onClick={() => _createLike()}>
+          {text[target].button.create}
         </FtSmallButtonOutlined>
       )}
     </>
