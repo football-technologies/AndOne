@@ -30,7 +30,7 @@ const ShopMenu = ({ shopId }) => {
           </MenuButton>
           <MenuList>
             <MenuItem m="0" p="0">
-              <NextLink href={`/items/${shopId}/edit`} passHref>
+              <NextLink href={`/shops/${shopId}/edit`} passHref>
                 <a className="ftBlock">
                   <Text fontSize="sm" p="5">
                     ショップを編集
