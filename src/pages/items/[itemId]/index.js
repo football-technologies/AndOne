@@ -26,6 +26,8 @@ import DialogImage from "@/components/pages/shop/DialogImage";
 import ItemMenu from "@/components/pages/item/ItemMenu";
 import LikeButton from "@/components/ui/LikeButton";
 
+import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
+
 const ItemShow = () => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -34,6 +36,12 @@ const ItemShow = () => {
   const bindItem = useSelector((state) => state.item.item);
   const dialogPostBidding = useRef(null);
   const dialogImage = useRef();
+
+  // const itemStatus = _.find(dictionary.itemStatus, (row) => {
+  //   if (row.id === bindItem.itemStatus) {
+  //     return row;
+  //   }
+  // });
 
   console.log(">>>>>>>> bindItem", bindItem);
 
@@ -63,7 +71,13 @@ const ItemShow = () => {
     <>
       {bindItem && (
         <>
-          <HStack align="start">
+          <HStack align="start" position="relative">
+            <Box position="absolute" top="-30px" right="0" zIndex="2">
+              <DisplayItemStatus
+                itemStatus={bindItem.itemStatus}
+              ></DisplayItemStatus>
+            </Box>
+
             <Stack width="70%">
               <Stack direction="row">
                 <Box width="100px">
