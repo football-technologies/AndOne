@@ -20,7 +20,11 @@ import {
 } from "@chakra-ui/react";
 
 import useFtToast from "@/components/ui/FtToast";
-import { FtMiddleButtonOutlined } from "@/components/ui/FtButton";
+import {
+  FtSmallButtonOutlined,
+  FtMiddleButtonOutlined,
+  FtLargeButton,
+} from "@/components/ui/FtButton";
 import { ftCreateId } from "@/plugins/mixin";
 import { createShop, fetchShop, updateShop } from "@/store/shop";
 import { updateUser } from "@/store/user";
@@ -44,6 +48,7 @@ const ShopForm = () => {
   const [submitType, setSubmitType] = useState(null);
   const [editShop, setEditShop] = useState(null);
   const [tags, setTags] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const currentUser = useSelector((state) => state.account);
   const bindShop = useSelector((state) => state.shop.shop);
@@ -184,6 +189,8 @@ const ShopForm = () => {
   };
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
+
     if (tags) {
       const replaceTagsName = tags
         .replaceAll(" ", "")
@@ -195,6 +202,7 @@ const ShopForm = () => {
 
       if (tagsDividedByComma.length > 10) {
         ftToast("タグは10個以上設定することができません");
+        setIsLoading(false);
         return false;
       }
 
@@ -257,6 +265,7 @@ const ShopForm = () => {
 
     console.log(">>>>>>>>> finish submit");
     router.push(`/shops/${editShop.id}`);
+    // setIsLoading(false);
   };
 
   if (editShop) {
@@ -269,20 +278,39 @@ const ShopForm = () => {
 
     return (
       <>
-        <HStack bg={"lightGray"} className="ftHover" onClick={openMainRef}>
-          {mainUrl ? (
-            <AspectRatio w={"100%"} h={"auto"} ratio={2.5}>
-              <Image src={mainUrl}></Image>
-            </AspectRatio>
-          ) : editShop.cover ? (
-            <AspectRatio w={"100%"} h={"auto"} ratio={2.5}>
-              <Image src={editShop.cover}></Image>
-            </AspectRatio>
-          ) : (
-            <AspectRatio w={"100%"} h={"auto"} ratio={2.5}>
-              <Image src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"></Image>
-            </AspectRatio>
-          )}
+        <HStack bg={"lightGray"} position="relative" overflow="hidden">
+          <Box
+            position="absolute"
+            top="0"
+            left="0"
+            w="100%"
+            h="5000px"
+            zIndex="2"
+            bg="blackAlpha.300"
+          ></Box>
+
+          <Box position="absolute" top="40%" right="40%" zIndex="3">
+            <FtMiddleButtonOutlined
+              borderColor="white"
+              color="white"
+              onClick={openMainRef}
+            >
+              Cover画像を変更する
+            </FtMiddleButtonOutlined>
+          </Box>
+
+          <AspectRatio w={"100%"} h={"auto"} ratio={2.5}>
+            <Image
+              src={
+                mainUrl
+                  ? mainUrl
+                  : editShop.cover
+                  ? editShop.cover
+                  : "https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
+              }
+            ></Image>
+          </AspectRatio>
+
           <UploadMain
             ref={mainRef}
             folderPath={`shops/${editShop.id}/main`}
@@ -290,26 +318,24 @@ const ShopForm = () => {
           ></UploadMain>
         </HStack>
 
-        <HStack mt={"50px"} align="top">
-          <Stack w={"30%"}>
+        <HStack mt="50px" align="top">
+          <Stack w="25%">
             <VStack>
-              <Text mb={"15px"}>Shop Icon Image</Text>
+              <Text mb={"15px"}>Shop Icon</Text>
               <Box>
-                {iconUrl ? (
-                  <Image src={iconUrl} boxSize={"120px"} rounded={"xl"}></Image>
-                ) : editShop.icon ? (
-                  <Image
-                    boxSize={"120px"}
-                    rounded={"xl"}
-                    src={editShop.icon}
-                  ></Image>
-                ) : (
-                  <Image
-                    boxSize={"120px"}
-                    rounded={"xl"}
-                    src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
-                  ></Image>
-                )}
+                <Image
+                  boxSize="120px"
+                  rounded="full"
+                  border="1px"
+                  borderColor="paleGray"
+                  src={
+                    iconUrl
+                      ? iconUrl
+                      : editShop.icon
+                      ? editShop.icon
+                      : "https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
+                  }
+                ></Image>
               </Box>
               <Box>
                 <VStack mb={"50px"}>
@@ -318,9 +344,9 @@ const ShopForm = () => {
                     folderPath={`shops/${editShop.id}/icon`}
                     uploadIcon={uploadIcon}
                   ></UploadIcon>
-                  <FtMiddleButtonOutlined onClick={openIconRef}>
+                  <FtSmallButtonOutlined onClick={openIconRef}>
                     iconを変更する
-                  </FtMiddleButtonOutlined>
+                  </FtSmallButtonOutlined>
                 </VStack>
               </Box>
             </VStack>
@@ -329,18 +355,20 @@ const ShopForm = () => {
               <Text>Tags</Text>
               <Textarea
                 w={"80%"}
+                height="8em"
                 variant={"filled"}
                 onChange={onChangeSetTags}
                 defaultValue={tags}
+                placeholder="例） 2011,英国,サッカー,football"
               ></Textarea>
-              <Text w={"80%"}>
+              <Text w={"80%"} fontSize="sm">
                 カンマを入れて、最大10個まで作成するこができます。
               </Text>
             </VStack>
           </Stack>
 
-          <Stack w={"40%"}>
-            <VStack>
+          <Stack w="45%" px="10">
+            <Box>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <FormControl isInvalid={errors.shopName}>
                   <FormLabel>Shop Name</FormLabel>
@@ -381,6 +409,7 @@ const ShopForm = () => {
                   <FormLabel>Bio</FormLabel>
                   <Textarea
                     variant="filled"
+                    height="10em"
                     placeholder="bio"
                     defaultValue={editShop.description}
                     {...register("description")}
@@ -391,6 +420,7 @@ const ShopForm = () => {
                   <FormLabel>Address</FormLabel>
                   <Textarea
                     variant="filled"
+                    height="2em"
                     placeholder="東京都港区芝浦1-11-1"
                     defaultValue={editShop.address}
                     {...register("address")}
@@ -462,13 +492,17 @@ const ShopForm = () => {
                   ))}
                 </Stack>
 
-                <VStack mt={"20px"}>
-                  <Button colorScheme="pink" type="submit" mt={"20px"}>
+                <VStack my="10">
+                  <FtLargeButton
+                    type="submit"
+                    isLoading={isLoading}
+                    loadingText=" Submitting..."
+                  >
                     {submitType === "create" ? "作成する" : "更新する"}
-                  </Button>
+                  </FtLargeButton>
                 </VStack>
               </form>
-            </VStack>
+            </Box>
           </Stack>
 
           <Stack w={"30%"}>

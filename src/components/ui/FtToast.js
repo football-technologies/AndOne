@@ -1,5 +1,4 @@
-import { Button, useToast } from "@chakra-ui/react";
-import { Box, Icon } from "@chakra-ui/react";
+import { Box, useToast } from "@chakra-ui/react";
 
 const useFtToast = () => {
   const toast = useToast();
@@ -12,9 +11,10 @@ const useFtToast = () => {
         <Box
           display={"inline-block"}
           color="white"
-          p={3}
+          py="2"
+          px="10"
           bg="black"
-          rounded="full"
+          rounded="md"
         >
           {message}
         </Box>
