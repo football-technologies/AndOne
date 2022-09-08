@@ -2,10 +2,7 @@ import { useRouter } from "next/router";
 import { useRef } from "react";
 import DialogPostBidding from "@/components/dialog/DialogPostBidding";
 
-import {
-  FtMiddleButton,
-  FtSmallButtonOutlined,
-} from "@/components/ui/FtButton";
+import { FtMiddleButton } from "@/components/ui/FtButton";
 
 import {
   Box,
@@ -15,16 +12,9 @@ import {
   AspectRatio,
   Heading,
   Text,
-  Tag,
   Button,
-  Link,
   Center,
   Spacer,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useEffect } from "react";
@@ -34,7 +24,7 @@ import { fetchItem } from "@/store/item";
 import DialogImage from "@/components/pages/shop/DialogImage";
 
 import ItemMenu from "@/components/pages/item/ItemMenu";
-import EditItem from "./edit";
+import LikeButton from "@/components/ui/LikeButton";
 
 const ItemShow = () => {
   const router = useRouter();
@@ -106,10 +96,17 @@ const ItemShow = () => {
 
               <Heading as="h1" fontSize="md">
                 {bindItem.name}
-                <FtSmallButtonOutlined ml="2" mt="1">
-                  watch
-                </FtSmallButtonOutlined>
               </Heading>
+
+              <LikeButton
+                target="item"
+                id={bindItem.id}
+                name={bindItem.name}
+              ></LikeButton>
+
+              {/* <FtSmallButtonOutlined ml="2" mt="1">
+                  watch
+                </FtSmallButtonOutlined> */}
 
               <Stack
                 direction="row"

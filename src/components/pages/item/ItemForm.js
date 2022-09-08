@@ -13,6 +13,8 @@ import {
   Textarea,
   Stack,
   Text,
+  Button,
+  Icon,
 } from "@chakra-ui/react";
 
 import useFtToast from "@/components/ui/FtToast";
@@ -29,9 +31,11 @@ import { doc, query, getDocs, collection, where } from "firebase/firestore";
 
 import _ from "lodash";
 import scheme from "@/helpers/scheme";
+import NextLink from "next/link";
+import { MdArrowForward } from "react-icons/md";
 
 const ItemForm = () => {
-  const [submitType, setSubmitType] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [editItem, setEditItem] = useState(null);
 
   const currentUser = useSelector((state) => state.account);
@@ -52,7 +56,7 @@ const ItemForm = () => {
             type: "fetch",
           })
         );
-
+        setIsEditMode(true);
         return () => {
           dispatch(
             fetchItem({
@@ -66,11 +70,11 @@ const ItemForm = () => {
         item.id = ftCreateId("item");
 
         setEditItem(item);
-        setSubmitType("create");
+        setIsEditMode(false);
 
         return () => {
           setEditItem(null);
-          setSubmitType(null);
+          setIsEditMode(null);
         };
       }
     }
@@ -89,13 +93,11 @@ const ItemForm = () => {
         item.tags = tags;
       }
 
-      setSubmitType("update");
       setEditItem(item);
     }
 
     return () => {
       setEditItem(null);
-      setSubmitType(null);
     };
   }, [bindItem]);
 
@@ -214,15 +216,27 @@ const ItemForm = () => {
     <>
       {editItem && (
         <>
+          {isEditMode && (
+            <Box textAlign="right" p="5">
+              <NextLink href={`/items/${editItem.id}`}>
+                <Button as="a" variant="link">
+                  Back
+                  <Icon as={MdArrowForward} ml="1"></Icon>
+                </Button>
+              </NextLink>
+            </Box>
+          )}
+
           <Box w="500px" mx="auto">
             <Stack py={"30px"}>
-              <Text mt={"40px"}>Item Images</Text>
+              <Text>Item Images</Text>
               <SubImagesForm
                 images={editItem.images}
                 itemId={editItem.id}
                 returnImages={returnImages}
               ></SubImagesForm>
             </Stack>
+
             <VStack>
               <form onSubmit={handleSubmit(onSubmit)} style={form}>
                 <FormControl isInvalid={errors.itemName}>
@@ -283,7 +297,7 @@ const ItemForm = () => {
 
                 <VStack my={"30px"}>
                   <FtLargeButton colorScheme="pink" type="submit" my={"20px"}>
-                    {submitType === "create" ? "作成する" : "更新する"}
+                    {isEditMode ? "更新する" : "作成する"}
                   </FtLargeButton>
                 </VStack>
               </form>

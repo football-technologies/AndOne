@@ -13,12 +13,6 @@ import {
   Tabs,
   TabList,
   Tab,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
-  Circle,
 } from "@chakra-ui/react";
 import {
   FaBookOpen,
@@ -31,7 +25,7 @@ import {
   FaTiktok,
   FaTwitter,
 } from "react-icons/fa";
-import { MdMail, MdOutlineMoreVert } from "react-icons/md";
+import { MdMail } from "react-icons/md";
 
 import { useRouter } from "next/router";
 import NextLink from "next/link";
