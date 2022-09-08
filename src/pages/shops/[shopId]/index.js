@@ -47,6 +47,8 @@ import DialogImage from "@/components/pages/shop/DialogImage";
 import { useRef } from "react";
 import LikeButton from "@/components/ui/LikeButton";
 
+import ShopMenu from "@/components/pages/shop/ShopMenu";
+
 const ShopShow = () => {
   const dispatch = useDispatch();
   const dialogImage = useRef();
@@ -111,42 +113,7 @@ const ShopShow = () => {
               <Image src={bindShop.cover}></Image>
             </AspectRatio>
 
-            <Box pos="absolute" top="0" right="0" zIndex="10">
-              <Menu arrowPadding="0" offset="0">
-                <MenuButton className="ftHover">
-                  <Circle
-                    size="50px"
-                    bg="whiteAlpha.500"
-                    border="1px"
-                    borderColor="lightGray"
-                    _hover={{ bg: "red" }}
-                  >
-                    <Icon boxSize="2em" as={MdOutlineMoreVert}></Icon>
-                  </Circle>
-                </MenuButton>
-                <MenuList>
-                  <MenuItem m="0" p="0">
-                    <NextLink href={`/shops/${shopId}/edit`} passHref>
-                      <a className="ftBlock">
-                        <Text fontSize="sm" p="5">
-                          ショップを編集
-                        </Text>
-                      </a>
-                    </NextLink>
-                  </MenuItem>
-                  <MenuDivider />
-                  <MenuItem m="0" p="0">
-                    <NextLink href="/items/new" passHref>
-                      <a className="ftBlock">
-                        <Text fontSize="sm" p="5">
-                          アイテムを作成
-                        </Text>
-                      </a>
-                    </NextLink>
-                  </MenuItem>
-                </MenuList>
-              </Menu>
-            </Box>
+            <ShopMenu shopId={bindShop.id}></ShopMenu>
           </Box>
 
           <HStack align="start" p="5" className="mainContainer">
