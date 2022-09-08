@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 
-const ItemMiddleCard = () => {
+const ItemMiddleCard = ({ item }) => {
   return (
     <>
       <Stack
@@ -20,18 +20,18 @@ const ItemMiddleCard = () => {
         _hover={{ bg: "paleGray", borderColor: "darkGrey" }}
       >
         <NextLink
-          href="/items/123"
+          href={`/items/${item.id}`}
           passHref
           _hover={{ textDecoration: "none" }}
         >
           <a>
             <AspectRatio ratio={1}>
-              <Image src="https://d17x1wu3749i2y.cloudfront.net/2021/02/15/23/44/16/274ac8e2-9729-4223-9c34-4e336cacf00f/file.jpg"></Image>
+              <Image src={item.images[0].url}></Image>
             </AspectRatio>
 
             <Box p="5" pb="2">
               <Heading as="h3" fontSize="md" noOfLines={2}>
-                Nike International 2012 Black Edition ああああああああああああ
+                {item.name}
               </Heading>
 
               <Stack direction="row" align="center" pt="5">
@@ -41,7 +41,7 @@ const ItemMiddleCard = () => {
                   src="https://bit.ly/broken-link"
                 />
                 <Text fontSize="xs" noOfLines={2}>
-                  芝浦World National Grally ３号点
+                  {item.shop.name}
                 </Text>
               </Stack>
 

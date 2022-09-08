@@ -6,6 +6,9 @@ import NextLink from "next/link";
 import { fetchItems } from "@/store/item";
 import { Box, Button } from "@chakra-ui/react";
 
+import { db } from "@/plugins/firebase";
+import { query, collection, orderBy } from "firebase/firestore";
+
 const ItemIndex = () => {
   const bindItems = useSelector((state) => state.item.items);
 
@@ -15,7 +18,7 @@ const ItemIndex = () => {
   useEffect(() => {
     dispatch(
       fetchItems({
-        query: `items`,
+        query: query(collection(db, "items"), orderBy("createdAt", "desc")),
         type: "fetch",
       })
     );
