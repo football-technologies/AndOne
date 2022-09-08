@@ -18,7 +18,7 @@ import {
 import useFtToast from "@/components/ui/FtToast";
 import { FtLargeButton } from "@/components/ui/FtButton";
 import { ftCreateId } from "@/plugins/mixin";
-import { createItem, fetchItem } from "@/store/item";
+import { createItem, fetchItem, updateItem } from "@/store/item";
 import { createTag } from "@/store/tag";
 import SubImagesForm from "@/components/pages/shop/SubImagesForm";
 
@@ -188,13 +188,20 @@ const ItemForm = () => {
     editItem.name = data.itemName;
     editItem.description = data.description;
     editItem.createdYear = data.createdYear;
-    editItem.shop.id = currentUser.shopId;
-    editItem.shop.ref = doc(db, "shops", currentUser.shopId);
-    editItem.shop.name = bindShop.name;
 
-    await dispatch(createItem(editItem));
+    if (submitType === "create") {
+      editItem.shop.id = currentUser.shopId;
+      editItem.shop.ref = doc(db, "shops", currentUser.shopId);
+      editItem.shop.name = bindShop.name;
+      await dispatch(createItem(editItem));
+      ftToast("itemが作成されました");
+    }
 
-    ftToast("itemが作成されました");
+    if (submitType === "update") {
+      await dispatch(updateItem(editItem));
+      ftToast("itemを更新しました");
+    }
+
     router.push(`/items/${editItem.id}`);
   };
 
