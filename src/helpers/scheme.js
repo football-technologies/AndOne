@@ -169,6 +169,7 @@ const scheme = {
   // items/xxxxx/comments/xxxxx
   comments: {
     id: null,
+    text: null,
     status: 1,
     commentStatus: 1,
     item: {

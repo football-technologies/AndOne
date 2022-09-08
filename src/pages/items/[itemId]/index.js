@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useRef } from "react";
 import DialogPostBidding from "@/components/dialog/DialogPostBidding";
+import ItemComments from "@/components/pages/item/ItemComments";
 
 import { FtMiddleButton } from "@/components/ui/FtButton";
 
@@ -21,6 +22,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { fetchItem } from "@/store/item";
+import { fetchComments } from "@/store/comment";
 import DialogImage from "@/components/pages/shop/DialogImage";
 
 import ItemMenu from "@/components/pages/item/ItemMenu";
@@ -28,12 +30,16 @@ import LikeButton from "@/components/ui/LikeButton";
 
 import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
 
+import { db } from "@/plugins/firebase";
+import { collection } from "firebase/firestore";
+
 const ItemShow = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
   const { itemId } = router.query;
   const bindItem = useSelector((state) => state.item.item);
+  const bindComments = useSelector((state) => state.comment.comments);
   const dialogPostBidding = useRef(null);
   const dialogImage = useRef();
 
@@ -44,6 +50,7 @@ const ItemShow = () => {
   // });
 
   console.log(">>>>>>>> bindItem", bindItem);
+  console.log(">>>>>>>> bindComments", bindComments);
 
   const openDialogImage = (index) => {
     dialogImage.current.openDialog({
@@ -57,6 +64,17 @@ const ItemShow = () => {
       dispatch(
         fetchItem({
           query: `items/${itemId}`,
+          type: "fetch",
+        })
+      );
+    }
+  }, [router.isReady]);
+
+  useEffect(() => {
+    if (router.isReady) {
+      dispatch(
+        fetchComments({
+          query: collection(db, `items/${itemId}/comments`),
           type: "fetch",
         })
       );
@@ -201,6 +219,9 @@ const ItemShow = () => {
                     </Stack>
                   </a>
                 </NextLink>
+                <Box>
+                  <ItemComments></ItemComments>
+                </Box>
               </Box>
             </Box>
           </HStack>
