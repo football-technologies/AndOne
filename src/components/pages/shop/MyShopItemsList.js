@@ -45,9 +45,8 @@ const MyShopItemsList = ({ shopId }) => {
 
     dispatch(
       fetchItems({
-        // query: `shops/${shopId}`,
         query: query(
-          collection(db, `items`),
+          collection(db, "items"),
           where("shop.id", "==", shopId),
           orderBy("createdAt", "desc")
         ),
@@ -63,7 +62,7 @@ const MyShopItemsList = ({ shopId }) => {
           <Box w="600px" mx="auto" pt="10" mt="10">
             <Tabs isFitted colorScheme="primary">
               <TabList>
-                <Tab>All (823)</Tab>
+                <Tab>All ({bindItems.length})</Tab>
                 <Tab>On Sale (323)</Tab>
                 <Tab>Sold (513)</Tab>
               </TabList>
@@ -72,10 +71,10 @@ const MyShopItemsList = ({ shopId }) => {
 
           <Box pt="5">
             <Wrap p="5">
-              {[...Array(10)].map((_, index) => {
+              {bindItems.map((item) => {
                 return (
-                  <Stack isInline w="23%" p="1%" key={index}>
-                    <ItemMiddleCard></ItemMiddleCard>
+                  <Stack isInline w="23%" p="1%" key={item.id}>
+                    <ItemMiddleCard item={item}></ItemMiddleCard>
                   </Stack>
                 );
               })}
