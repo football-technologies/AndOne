@@ -40,7 +40,7 @@ const shop = createSlice({
 
 const fetchShop = (payload) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchShop", payload);
+    console.log(">>>>>>>>> called fetchShop");
 
     const unsubscribe = await onSnapshot(
       doc(db, payload.query),

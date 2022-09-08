@@ -5,6 +5,8 @@ import user from "@/store/user";
 import secret from "@/store/secret";
 import shop from "@/store/shop";
 import tag from "@/store/tag";
+import item from "@/store/item";
+import artist from "@/store/artist";
 import like from "@/store/like";
 
 import storage from "redux-persist/lib/storage";
@@ -18,6 +20,8 @@ const reducers = combineReducers({
   secret: secret.reducer,
   shop: shop.reducer,
   tag: tag.reducer,
+  item: item.reducer,
+  artist: artist.reducer,
   like: like.reducer,
 });
 

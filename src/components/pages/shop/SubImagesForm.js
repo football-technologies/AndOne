@@ -8,15 +8,26 @@ import {
   CloseButton,
 } from "@chakra-ui/react";
 import _ from "lodash";
-import { useRef } from "react";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useRef, useEffect, useState } from "react";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 
-const SubImagesInput = ({ images, returnImages }) => {
+const SubImagesInput = ({ images, returnImages, shopId, itemId }) => {
   const imageInputRefs = useRef([]);
   const [newImages, setNewImages] = useState(images);
-  const bindShop = useSelector((state) => state.shop.shop);
+  const [displayImages, setDisplayImages] = useState([]);
+  const [displayWidth, setDisplayWidth] = useState(null);
+
+  useEffect(() => {
+    if (shopId) {
+      setDisplayImages([...Array(9)]);
+      setDisplayWidth("31%");
+    }
+
+    if (itemId) {
+      setDisplayImages([...Array(8)]);
+      setDisplayWidth("25%");
+    }
+  }, []);
 
   const returnURL = ({ url, index }) => {
     const _newImages = _.cloneDeep(newImages);
@@ -45,9 +56,9 @@ const SubImagesInput = ({ images, returnImages }) => {
   return (
     <>
       <Wrap spacing="0">
-        {[...Array(9)].map((_, index) => {
+        {displayImages.map((_, index) => {
           return (
-            <Box key={index} w="31%" p="1%" position="relative">
+            <Box key={index} w={displayWidth} p="1%" position="relative">
               {newImages[index] && (
                 <>
                   <CloseButton
@@ -102,7 +113,11 @@ const SubImagesInput = ({ images, returnImages }) => {
                 returnURL={returnURL}
                 showLoading={true}
                 index={index}
-                folderPath={`shops/${bindShop.id}/sub/${index}`}
+                folderPath={
+                  shopId
+                    ? `shops/${shopId}/sub/${index}`
+                    : `items/${itemId}/sub/${index}`
+                }
               ></UploadSub>
             </Box>
           );

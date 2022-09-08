@@ -59,7 +59,6 @@ const ShopForm = () => {
 
   const iconRef = useRef();
   const mainRef = useRef();
-  const subRefs = useRef([]);
 
   useEffect(() => {
     if (router.isReady) {
@@ -270,11 +269,6 @@ const ShopForm = () => {
 
   if (editShop) {
     const snsLinks = Object.entries(editShop.links);
-
-    const images = [];
-    editShop.images.length > 0
-      ? (images = editShop.images)
-      : (images = [...Array(9)]);
 
     return (
       <>
@@ -508,6 +502,7 @@ const ShopForm = () => {
           <Stack w={"30%"}>
             <SubImagesForm
               images={editShop.images}
+              shopId={editShop.id}
               returnImages={returnImages}
             ></SubImagesForm>
             <Text fontSize="sm">お店の紹介画像は最大で9枚まで表示できます</Text>
