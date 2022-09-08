@@ -21,6 +21,7 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
+  Button,
 } from "@chakra-ui/react";
 import {
   MdOutlineCollections,
@@ -70,75 +71,67 @@ const SideNavWithoutLogin = () => {
   return (
     <Stack>
       <HStack justify="space-between">
-        {currentUser.icon ? (
-          <Stack direction="row" align="center">
-            <Avatar src={currentUser.icon} />
-            <Text w="130px" pl="2">
-              {currentUser.name}
-            </Text>
-          </Stack>
-        ) : currentUser.name ? (
-          <Stack direction="row" align="center">
-            <Avatar name={currentUser.name} />
-            <Text w="130px" pl="2">
-              {currentUser.name}
-            </Text>
-          </Stack>
-        ) : (
-          <Stack direction="row" align="center">
-            <Avatar src="https://s.hs-data.com/bilder/spieler/gross/150720.jpg?fallback=png" />
-            <Text pl="2">User Name</Text>
-          </Stack>
-        )}
+        <Stack direction="row" align="center">
+          {currentUser.icon ? (
+            <Avatar src={currentUser.icon}></Avatar>
+          ) : (
+            <Avatar name={currentUser.name}></Avatar>
+          )}
+          <Text w="130px" pl="2">
+            {currentUser.name}
+          </Text>
+        </Stack>
 
         <Box>
-          <Menu>
+          <Menu arrowPadding="0" offset="0">
             <MenuButton className="ftHover">
               <Icon as={MdOutlineMoreVert} w={6} h={6}></Icon>
             </MenuButton>
             <MenuList>
-              <MenuItem p="5">
+              <MenuItem m="0" p="0">
+                <NextLink
+                  href={
+                    currentUser.shopId
+                      ? `/shops/${currentUser.shopId}`
+                      : `/shops/new`
+                  }
+                  passHref
+                >
+                  <a className="ftBlock">
+                    <Text fontSize="sm" p="5">
+                      {currentUser.shopId
+                        ? "shopページを確認"
+                        : "shopページを作成"}
+                    </Text>
+                  </a>
+                </NextLink>
+              </MenuItem>
+              <MenuDivider m="0" p="0" />
+
+              <MenuItem m="0" p="0">
                 <NextLink href={`/users/${currentUser.id}/edit`} passHref>
-                  <a>
-                    <Text fontSize="sm">プロフィール編集をする</Text>
+                  <a className="ftBlock">
+                    <Text fontSize="sm" p="5">
+                      プロフィール編集
+                    </Text>
                   </a>
                 </NextLink>
               </MenuItem>
-              <MenuDivider />
-              {/* dummy */}
-              <MenuItem p="5">
-                <NextLink href="/items/new" passHref>
-                  <a>
-                    <Text fontSize="sm">アイテムを作成する</Text>
-                  </a>
-                </NextLink>
-              </MenuItem>
-              <MenuDivider />
-              {currentUser.shopId ? (
-                <MenuItem p="5">
-                  <NextLink href={`/shops/${currentUser.shopId}/edit`} passHref>
-                    <a>
-                      <Text fontSize="sm">ショップを編集する</Text>
-                    </a>
-                  </NextLink>
-                </MenuItem>
-              ) : (
-                <MenuItem p="5">
-                  <NextLink href="/shops/new" passHref>
-                    <a>
-                      <Text fontSize="sm">shopを作成する</Text>
-                    </a>
-                  </NextLink>
-                </MenuItem>
-              )}
-              <MenuDivider />
+              <MenuDivider m="0" p="0" />
               <MenuItem
-                p="5"
+                p="0"
+                m="0"
                 onClick={() => {
                   logoutAuth();
                 }}
               >
-                <Text fontSize="sm">ログアウトする</Text>
+                <Text
+                  p="5"
+                  fontSize="sm"
+                  style={{ display: "block", width: "100%" }}
+                >
+                  ログアウトする
+                </Text>
               </MenuItem>
             </MenuList>
           </Menu>

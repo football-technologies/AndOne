@@ -21,6 +21,11 @@ a {
   color: inherit;
   text-decoration: none;
 
+  &.ftBlock {
+    display: block;
+    width: 100%;
+  }
+
   // p {
   //   &:hover {
   //     text-decoration: none;

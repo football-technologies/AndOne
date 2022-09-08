@@ -28,7 +28,9 @@ import { ftCreateId } from "@/plugins/mixin";
 import { createItem, fetchItem, updateItem } from "@/store/item";
 import { createArtist } from "@/store/artist";
 import { createTag, deleteTag } from "@/store/tag";
-import { UploadIcon, UploadSub } from "@/components/ui/ImageUpload";
+import { UploadIcon } from "@/components/ui/ImageUpload";
+import SubImagesForm from "@/components/pages/shop/SubImagesForm";
+
 import { fetchShop } from "@/store/shop";
 import { fetchArtist } from "@/store/artist";
 
@@ -41,20 +43,8 @@ import scheme from "@/helpers/scheme";
 const ItemForm = () => {
   const [iconUrl, setIconUrl] = useState(null);
   const [submitType, setSubmitType] = useState(null);
-  const [tags, setTags] = useState(null);
   const [editItem, setEditItem] = useState(null);
   const [editArtist, setEditArtist] = useState(null);
-
-  const [subUrls, setSubUrl] = useState([
-    { order: 0, url: null, caption: null },
-    { order: 1, url: null, caption: null },
-    { order: 2, url: null, caption: null },
-    { order: 3, url: null, caption: null },
-    { order: 4, url: null, caption: null },
-    { order: 5, url: null, caption: null },
-    { order: 6, url: null, caption: null },
-    { order: 7, url: null, caption: null },
-  ]);
 
   const [itemLinks, setItemLinks] = useState([
     { order: 0, url: null, caption: null },
@@ -78,7 +68,6 @@ const ItemForm = () => {
   const dispatch = useDispatch();
 
   const iconRef = useRef();
-  const subRefs = useRef([]);
 
   const { ftToast } = useFtToast();
 
@@ -102,20 +91,19 @@ const ItemForm = () => {
         };
       } else {
         const item = _.cloneDeep(scheme.items);
-        const artist = _.cloneDeep(scheme.artists);
         item.id = ftCreateId("item");
-        item.artist.id = artist.id = ftCreateId("artist");
+
+        // const artist = _.cloneDeep(scheme.artists);
+        // item.artist.id = artist.id = ftCreateId("artist");
 
         setEditItem(item);
-        setEditArtist(artist);
+        // setEditArtist(artist);
         setSubmitType("create");
 
         return () => {
           setEditItem(null);
           setSubmitType(null);
-          setTags(null);
           setItemLinks([]);
-          setSubUrl([]);
         };
       }
     }
@@ -135,7 +123,6 @@ const ItemForm = () => {
       }
 
       setSubmitType("update");
-      setSubUrl([...item.images]);
       setItemLinks([...item.links]);
       setEditItem(item);
 
@@ -150,27 +137,25 @@ const ItemForm = () => {
     return () => {
       setEditItem(null);
       setSubmitType(null);
-      setTags(null);
       setItemLinks([]);
-      setSubUrl([]);
     };
   }, [bindItem]);
 
-  useEffect(() => {
-    if (bindArtist) {
-      const artist = _.cloneDeep(bindArtist);
-      setEditArtist(artist);
-    }
+  // useEffect(() => {
+  //   if (bindArtist) {
+  //     const artist = _.cloneDeep(bindArtist);
+  //     setEditArtist(artist);
+  //   }
 
-    return () => {
-      // dispatch(
-      //   fetchArtist({
-      //     query: `artists/${artist.id}`,
-      //     type: "delete",
-      //   })
-      // );
-    };
-  }, [bindArtist]);
+  //   return () => {
+  //     dispatch(
+  //       fetchArtist({
+  //         query: `artists/${artist.id}`,
+  //         type: "delete",
+  //       })
+  //     );
+  //   };
+  // }, [bindArtist]);
 
   useEffect(() => {
     dispatch(
@@ -203,19 +188,6 @@ const ItemForm = () => {
   const uploadIcon = (url) => {
     console.log(">>>>>>>>>>>>> return icon URL", url);
     setIconUrl(url);
-  };
-
-  const uploadSub = ({ url, index }) => {
-    console.log(">>>>>>>>>>>>> return sub URL", url);
-    const newSubUrls = _.cloneDeep(subUrls);
-
-    const editSubUrl = _.find(newSubUrls, function (subUrl) {
-      return subUrl.order === index;
-    });
-
-    newSubUrls[editSubUrl.order].url = url;
-
-    setSubUrl(newSubUrls);
   };
 
   const createTags = async (tagNames) => {
@@ -256,6 +228,10 @@ const ItemForm = () => {
     // TODO: master_tagのdelate関連は、item.onUpdateで実施
   };
 
+  const returnImages = (images) => {
+    editItem.images = images;
+  };
+
   const onSubmit = async (data) => {
     if (data.tags) {
       const replaceTagsName = data.tags
@@ -275,31 +251,33 @@ const ItemForm = () => {
       await createTags(tagsDividedByComma);
     }
 
-    if (iconUrl) {
-      editArtist.icon = iconUrl;
-    }
-
-    editArtist.name = data.artistName;
-    editArtist.description = data.artistDescription;
-
-    editItem.images = subUrls;
     editItem.links = itemLinks;
     editItem.name = data.itemName;
     editItem.description = data.description;
     editItem.createdYear = data.createdYear;
-    editItem.artist.name = data.artistName;
-    editItem.artist.ref = doc(db, "artists", editArtist.id);
+    editItem.shop.id = currentUser.shopId;
+    editItem.shop.ref = doc(db, "shops", currentUser.shopId);
+    editItem.shop.name = bindShop.name;
 
-    editItem.shop.id = editArtist.shop.id = currentUser.shopId;
-    editItem.shop.ref = editArtist.shop.ref = doc(
-      db,
-      "shops",
-      currentUser.shopId
-    );
-    editItem.shop.name = editArtist.shop.name = bindShop.name;
+    // if (iconUrl) {
+    //   editArtist.icon = iconUrl;
+    // }
+    // editArtist.name = data.artistName;
+    // editArtist.description = data.artistDescription;
+
+    // editItem.artist.name = data.artistName;
+    // editItem.artist.ref = doc(db, "artists", editArtist.id);
+
+    // editItem.shop.id = editArtist.shop.id = currentUser.shopId;
+    // editItem.shop.ref = editArtist.shop.ref = doc(
+    //   db,
+    //   "shops",
+    //   currentUser.shopId
+    // );
+    // editItem.shop.name = editArtist.shop.name = bindShop.name;
 
     await dispatch(createItem(editItem));
-    await dispatch(createArtist(editArtist));
+    // await dispatch(createArtist(editArtist));
 
     ftToast("itemが作成されました");
     router.push(`/items/${editItem.id}`);
@@ -311,59 +289,18 @@ const ItemForm = () => {
 
   return (
     <>
-      {editItem && editArtist && (
+      {editItem && (
         <>
           <Box w={"40%"} m={"0px auto"}>
+            <Stack py={"30px"}>
+              <Text mt={"40px"}>Item Images</Text>
+              <SubImagesForm
+                images={editItem.images}
+                itemId={editItem.id}
+                returnImages={returnImages}
+              ></SubImagesForm>
+            </Stack>
             <VStack>
-              <Text align={"start"} my={"30px"}>
-                Item Images
-              </Text>
-              <Wrap spacing="15px">
-                {subUrls.map((obj, index) => {
-                  subRefs.current[index] = createRef();
-                  if (subUrls[index]?.url) {
-                    return (
-                      <WrapItem key={index}>
-                        <Image
-                          boxSize={"90px"}
-                          rounded={"xl"}
-                          className="ftHover"
-                          onClick={() => {
-                            subRefs.current[index].current?.click();
-                          }}
-                          src={subUrls[index].url}
-                        ></Image>
-                        <UploadSub
-                          ref={subRefs.current[index]}
-                          folderPath={`items/${editItem.id}/sub/${index}`}
-                          index={index}
-                          uploadSub={uploadSub}
-                        ></UploadSub>
-                      </WrapItem>
-                    );
-                  } else {
-                    return (
-                      <WrapItem key={index}>
-                        <Image
-                          boxSize={"90px"}
-                          rounded={"xl"}
-                          className="ftHover"
-                          onClick={() => {
-                            subRefs.current[index].current?.click();
-                          }}
-                          src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
-                        ></Image>
-                        <UploadSub
-                          ref={subRefs.current[index]}
-                          folderPath={`items/${editItem.id}/sub/${index}`}
-                          index={index}
-                          uploadSub={uploadSub}
-                        ></UploadSub>
-                      </WrapItem>
-                    );
-                  }
-                })}
-              </Wrap>
               <form onSubmit={handleSubmit(onSubmit)} style={form}>
                 <FormControl isInvalid={errors.itemName}>
                   <FormLabel>Item Name</FormLabel>
@@ -415,7 +352,7 @@ const ItemForm = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                <Text mt={"10px"}>Artist</Text>
+                {/* <Text mt={"10px"}>Artist</Text>
                 <Stack align={"end"}>
                   <FormControl mt={"10px"} w={"90%"}>
                     <FormLabel>Name</FormLabel>
@@ -475,7 +412,7 @@ const ItemForm = () => {
                       ></UploadIcon>
                     </VStack>
                   </Box>
-                </Stack>
+                </Stack> */}
 
                 <Text mt={"10px"}>Links（最大10個まで）</Text>
                 <Stack align={"end"}>

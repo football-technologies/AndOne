@@ -29,28 +29,19 @@ import { updateUser } from "@/store/user";
 import { createTag, deleteTag } from "@/store/tag";
 import { updateAccount } from "@/store/account";
 
-import { UploadIcon, UploadMain, UploadSub } from "@/components/ui/ImageUpload";
+import { UploadIcon, UploadMain } from "@/components/ui/ImageUpload";
 
 import { db } from "@/plugins/firebase";
-import { doc } from "firebase/firestore";
+import { doc, query, collection, getDocs, where } from "firebase/firestore";
 
 import _ from "lodash";
 import rules from "@/plugins/validation";
 import scheme from "@/helpers/scheme";
 
+import SubImagesForm from "@/components/pages/shop/SubImagesForm";
+
 const ShopForm = () => {
   const [iconUrl, setIconUrl] = useState(null);
-  const [subUrls, setSubUrl] = useState([
-    { key: 0, url: null, caption: null },
-    { key: 1, url: null, caption: null },
-    { key: 2, url: null, caption: null },
-    { key: 3, url: null, caption: null },
-    { key: 4, url: null, caption: null },
-    { key: 5, url: null, caption: null },
-    { key: 6, url: null, caption: null },
-    { key: 7, url: null, caption: null },
-    { key: 8, url: null, caption: null },
-  ]);
   const [mainUrl, setMainUrl] = useState(null);
   const [submitType, setSubmitType] = useState(null);
   const [editShop, setEditShop] = useState(null);
@@ -65,7 +56,6 @@ const ShopForm = () => {
 
   const iconRef = useRef();
   const mainRef = useRef();
-  const subRefs = useRef([]);
 
   useEffect(() => {
     if (router.isReady) {
@@ -95,17 +85,6 @@ const ShopForm = () => {
           setEditShop(null);
           setSubmitType(null);
           setTags(null);
-          setSubUrl([
-            { key: 0, url: null, caption: null },
-            { key: 1, url: null, caption: null },
-            { key: 2, url: null, caption: null },
-            { key: 3, url: null, caption: null },
-            { key: 4, url: null, caption: null },
-            { key: 5, url: null, caption: null },
-            { key: 6, url: null, caption: null },
-            { key: 7, url: null, caption: null },
-            { key: 8, url: null, caption: null },
-          ]);
         };
       }
     }
@@ -125,7 +104,6 @@ const ShopForm = () => {
       }
 
       setSubmitType("update");
-      setSubUrl({ ...shop.images });
       setEditShop(shop);
     }
 
@@ -133,17 +111,6 @@ const ShopForm = () => {
       setEditShop(null);
       setSubmitType(null);
       setTags(null);
-      setSubUrl([
-        { key: 0, url: null, caption: null },
-        { key: 1, url: null, caption: null },
-        { key: 2, url: null, caption: null },
-        { key: 3, url: null, caption: null },
-        { key: 4, url: null, caption: null },
-        { key: 5, url: null, caption: null },
-        { key: 6, url: null, caption: null },
-        { key: 7, url: null, caption: null },
-        { key: 8, url: null, caption: null },
-      ]);
     };
   }, [bindShop]);
 
@@ -171,92 +138,68 @@ const ShopForm = () => {
     setMainUrl(url);
   };
 
-  const uploadSub = (obj) => {
-    console.log(">>>>>>>>>>>>> return sub URL", obj.url);
-    const newSubUrls = _.cloneDeep(subUrls);
-
-    const editSubUrl = _.find(newSubUrls, function (subUrl) {
-      return subUrl.key === obj.index;
-    });
-
-    newSubUrls[editSubUrl.key].url = obj.url;
-
-    setSubUrl(newSubUrls);
-  };
-
   const onChangeSetTags = (e) => {
     setTags(e.target.value);
   };
 
-  const createTags = (tags) => {
-    for (const tag of tags) {
-      const tagId = ftCreateId("tag");
-      const editTag = _.cloneDeep(scheme.tags);
-      editTag.id = tagId;
-      editTag.name = tag;
+  const createTags = async (tagNames) => {
+    const newTags = [];
+    for (const tagName of tagNames) {
+      const sameNameTags = [];
+
+      const q = query(collection(db, "tags"), where("name", "==", tagName));
+      await getDocs(q).then((snapshot) => {
+        snapshot.forEach((doc) => {
+          if (doc.id) {
+            sameNameTags.push(doc.data());
+          }
+        });
+      });
+
+      let tagId = null;
+      if (sameNameTags.length === 0) {
+        const editTag = _.cloneDeep(scheme.tags);
+        editTag.id = ftCreateId("tag");
+        editTag.name = tagName;
+        dispatch(createTag(editTag));
+        tagId = editTag.id;
+      } else {
+        const sameNameTag = sameNameTags[0];
+        tagId = sameNameTag.id;
+      }
+
       const tagToSaveShopsCollection = {
         id: tagId,
-        ref: doc(db, "tags", tagId),
-        name: tag,
+        ref: doc(db, `tags/${tagId.id}`),
+        name: tagName,
       };
-      editShop.tags.push(tagToSaveShopsCollection);
-      dispatch(createTag(editTag));
+      newTags.push(tagToSaveShopsCollection);
     }
+
+    editShop.tags = newTags;
+    // TODO: master_tagのdelate関連は、shop.onUpdateで実施
   };
 
-  const updateTags = (tags) => {
-    const defaultTags = _.map(editShop.tags, (tag) => tag["name"]);
-
-    const newTags = tags.filter((i) => defaultTags.indexOf(i) == -1);
-
-    const removeTags = defaultTags.filter((i) => tags.indexOf(i) == -1);
-
-    if (newTags.length > 0) {
-      for (const newTag of newTags) {
-        const tagId = ftCreateId("tag");
-        const editTag = _.cloneDeep(scheme.tags);
-        editTag.id = tagId;
-        editTag.name = newTag;
-        dispatch(createTag(editTag));
-
-        const tagToSaveShopsCollection = {
-          id: tagId,
-          ref: doc(db, "tags", tagId),
-          name: newTag,
-        };
-        editShop.tags.push(tagToSaveShopsCollection);
-      }
-    }
-
-    if (removeTags.length > 0) {
-      for (const tag of removeTags) {
-        const tags = editShop.tags;
-
-        let res = null;
-        res = _.remove(tags, function (t) {
-          return t.name == tag;
-        });
-
-        dispatch(deleteTag(res[0]));
-      }
-    }
+  const returnImages = (images) => {
+    editShop.images = images;
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (tags) {
-      const tagsDividedByComma = tags.split(",");
+      const replaceTagsName = tags
+        .replaceAll(" ", "")
+        .replaceAll("　", "")
+        .replaceAll("、", ",")
+        .split(",");
+
+      const tagsDividedByComma = _.uniq(replaceTagsName);
+
       if (tagsDividedByComma.length > 10) {
         ftToast("タグは10個以上設定することができません");
         return false;
       }
 
-      if (submitType === "create") {
-        createTags(tagsDividedByComma);
-      }
-
-      if (submitType === "update") {
-        updateTags(tagsDividedByComma);
-      }
+      await createTags(tagsDividedByComma);
     }
 
     if (mainUrl) {
@@ -267,7 +210,6 @@ const ShopForm = () => {
       editShop.icon = iconUrl;
     }
 
-    editShop.images = subUrls;
     editShop.name = data.shopName;
     editShop.address = data.address;
     editShop.email = data.email;
@@ -313,16 +255,13 @@ const ShopForm = () => {
       dispatch(updateShop(editShop));
       ftToast("shopを更新しました");
     }
-    router.push("/");
+
+    console.log(">>>>>>>>> finish submit");
+    router.push(`/shops/${editShop.id}`);
   };
 
   if (editShop) {
     const snsLinks = Object.entries(editShop.links);
-
-    const images = [];
-    editShop.images.length > 0
-      ? (images = editShop.images)
-      : (images = [...Array(9)]);
 
     return (
       <>
@@ -346,8 +285,9 @@ const ShopForm = () => {
             uploadMain={uploadMain}
           ></UploadMain>
         </HStack>
-        <HStack mt={"50px"}>
-          <Stack w={"30%"} h={"220vh"}>
+
+        <HStack mt={"50px"} align="top">
+          <Stack w={"30%"}>
             <VStack>
               <Text mb={"15px"}>Shop Icon Image</Text>
               <Box>
@@ -394,7 +334,8 @@ const ShopForm = () => {
               </Text>
             </VStack>
           </Stack>
-          <Stack w={"40%"} h={"220vh"}>
+
+          <Stack w={"40%"}>
             <VStack>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <FormControl isInvalid={errors.shopName}>
@@ -525,126 +466,14 @@ const ShopForm = () => {
               </form>
             </VStack>
           </Stack>
-          <Stack w={"30%"} h={"220vh"}>
-            <VStack mt={"30px"}>
-              {editShop.images.length > 0 ? (
-                <Wrap>
-                  {images.map((image, index) => {
-                    subRefs.current[index] = createRef();
-                    if (subUrls[index].url) {
-                      return (
-                        <WrapItem key={index}>
-                          <Image
-                            boxSize={"80px"}
-                            rounded={"xl"}
-                            className="ftHover"
-                            onClick={() => {
-                              subRefs.current[index].current?.click();
-                            }}
-                            src={subUrls[index].url}
-                          ></Image>
-                          <UploadSub
-                            ref={subRefs.current[index]}
-                            folderPath={`shops/${editShop.id}/sub/${index}`}
-                            index={index}
-                            uploadSub={uploadSub}
-                          ></UploadSub>
-                        </WrapItem>
-                      );
-                    } else if (image.url) {
-                      return (
-                        <WrapItem key={index}>
-                          <Image
-                            boxSize={"80px"}
-                            rounded={"xl"}
-                            className="ftHover"
-                            onClick={() => {
-                              subRefs.current[index].current?.click();
-                            }}
-                            src={image.url}
-                          ></Image>
-                          <UploadSub
-                            ref={subRefs.current[index]}
-                            folderPath={`shops/${editShop.id}/sub/${index}`}
-                            index={index}
-                            uploadSub={uploadSub}
-                          ></UploadSub>
-                        </WrapItem>
-                      );
-                    } else {
-                      return (
-                        <WrapItem key={index}>
-                          <Image
-                            boxSize={"80px"}
-                            rounded={"xl"}
-                            className="ftHover"
-                            onClick={() => {
-                              subRefs.current[index].current?.click();
-                            }}
-                            src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
-                          ></Image>
-                          <UploadSub
-                            ref={subRefs.current[index]}
-                            folderPath={`shops/${editShop.id}/sub/${index}`}
-                            index={index}
-                            uploadSub={uploadSub}
-                          ></UploadSub>
-                        </WrapItem>
-                      );
-                    }
-                  })}
-                </Wrap>
-              ) : (
-                <Wrap>
-                  {images.map((_, index) => {
-                    subRefs.current[index] = createRef();
-                    if (subUrls[index].url) {
-                      return (
-                        <WrapItem key={index}>
-                          <Image
-                            boxSize={"80px"}
-                            rounded={"xl"}
-                            className="ftHover"
-                            onClick={() => {
-                              subRefs.current[index].current?.click();
-                            }}
-                            src={subUrls[index].url}
-                          ></Image>
-                          <UploadSub
-                            ref={subRefs.current[index]}
-                            folderPath={`shops/${editShop.id}/sub/${index}`}
-                            index={index}
-                            uploadSub={uploadSub}
-                          ></UploadSub>
-                        </WrapItem>
-                      );
-                    } else {
-                      return (
-                        <WrapItem key={index}>
-                          <Image
-                            boxSize={"80px"}
-                            rounded={"xl"}
-                            className="ftHover"
-                            onClick={() => {
-                              subRefs.current[index].current?.click();
-                            }}
-                            src="https://hayamiz.xsrv.jp/wp-content/themes/affinger/images/no-img.png"
-                          ></Image>
-                          <UploadSub
-                            ref={subRefs.current[index]}
-                            folderPath={`shops/${editShop.id}/sub/${index}`}
-                            index={index}
-                            uploadSub={uploadSub}
-                          ></UploadSub>
-                        </WrapItem>
-                      );
-                    }
-                  })}
-                </Wrap>
-              )}
 
-              <Text>お店の紹介画像は最大で9枚まで表示できます</Text>
-            </VStack>
+          <Stack w={"30%"}>
+            <SubImagesForm
+              images={editShop.images}
+              shopId={editShop.id}
+              returnImages={returnImages}
+            ></SubImagesForm>
+            <Text fontSize="sm">お店の紹介画像は最大で9枚まで表示できます</Text>
           </Stack>
         </HStack>
       </>

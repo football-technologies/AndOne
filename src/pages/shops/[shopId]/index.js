@@ -45,7 +45,7 @@ import { fetchShop } from "@/store/shop";
 
 import DialogImage from "@/components/pages/shop/DialogImage";
 import { useRef } from "react";
-import { FtMiddleButton } from "@/components/ui/FtButton";
+import LikeButton from "@/components/ui/LikeButton";
 
 const ShopShow = () => {
   const dispatch = useDispatch();
@@ -85,13 +85,12 @@ const ShopShow = () => {
 
   const openDialogImage = (index) => {
     dialogImage.current.openDialog({
-      images: bindShop.images.filter((img) => img.url),
+      images: bindShop.images,
       index: index,
     });
   };
 
   useEffect(() => {
-    console.log(">>>>>>>>> called useEffect");
     if (router.isReady) {
       console.log(router.query);
       dispatch(
@@ -179,7 +178,14 @@ const ShopShow = () => {
                 </Box>
               </Stack>
 
-              <Heading as="h1">{bindShop.name}</Heading>
+              <Heading as="h1">
+                {bindShop.name}{" "}
+                <LikeButton
+                  target="shop"
+                  id={shopId}
+                  name={bindShop.name}
+                ></LikeButton>
+              </Heading>
 
               <Text fontSize="sm" py="10">
                 {bindShop.description}
@@ -232,28 +238,24 @@ const ShopShow = () => {
 
             <Stack w="20%" className="imagesBlock">
               <Wrap spacing="0">
-                {bindShop.images
-                  .filter((image) => image.url)
-                  .map((img, index) => {
-                    return (
-                      <>
-                        <Box
-                          w="31%"
-                          p="1%"
-                          key={index}
-                          onClick={() => openDialogImage(index)}
-                        >
-                          <AspectRatio ratio={1}>
-                            <Image
-                              rounded="md"
-                              src={img.url}
-                              className="ftHover"
-                            ></Image>
-                          </AspectRatio>
-                        </Box>
-                      </>
-                    );
-                  })}
+                {bindShop.images.map((img, index) => {
+                  return (
+                    <Box
+                      w="31%"
+                      p="1%"
+                      key={index}
+                      onClick={() => openDialogImage(index)}
+                    >
+                      <AspectRatio ratio={1}>
+                        <Image
+                          rounded="md"
+                          src={img.url}
+                          className="ftHover"
+                        ></Image>
+                      </AspectRatio>
+                    </Box>
+                  );
+                })}
               </Wrap>
             </Stack>
           </HStack>
