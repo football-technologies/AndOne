@@ -112,7 +112,7 @@ const ShopShow = () => {
             </AspectRatio>
 
             <Box pos="absolute" top="0" right="0" zIndex="10">
-              <Menu>
+              <Menu arrowPadding="0" offset="0">
                 <MenuButton className="ftHover">
                   <Circle
                     size="50px"
@@ -125,18 +125,22 @@ const ShopShow = () => {
                   </Circle>
                 </MenuButton>
                 <MenuList>
-                  <MenuItem p="5">
+                  <MenuItem m="0" p="0">
                     <NextLink href={`/shops/${shopId}/edit`} passHref>
-                      <a>
-                        <Text fontSize="sm">ショップを編集</Text>
+                      <a className="ftBlock">
+                        <Text fontSize="sm" p="5">
+                          ショップを編集
+                        </Text>
                       </a>
                     </NextLink>
                   </MenuItem>
                   <MenuDivider />
-                  <MenuItem p="5">
+                  <MenuItem m="0" p="0">
                     <NextLink href="/items/new" passHref>
-                      <a>
-                        <Text fontSize="sm">アイテムを作成</Text>
+                      <a className="ftBlock">
+                        <Text fontSize="sm" p="5">
+                          アイテムを作成
+                        </Text>
                       </a>
                     </NextLink>
                   </MenuItem>
