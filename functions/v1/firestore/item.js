@@ -10,10 +10,10 @@ const runtimeOpts = {
 
 exports.onUpdate = functions
   .runWith(runtimeOpts)
-  .firestore.document("/shops/{shopId}")
+  .firestore.document("/items/{itemId}")
   .onUpdate(
     sentryWrapper(async (snapshot, context) => {
-      console.log(">>>>>>>>>>>>> called shop.onUpdate");
+      console.log(">>>>>>>>>>>>> called item.onUpdate");
 
       const before = snapshot.before.data();
       const after = snapshot.after.data();
@@ -25,6 +25,6 @@ exports.onUpdate = functions
         });
       }
 
-      console.log(">>>>>>>>>>>>> finish shop.onUpdate");
+      console.log(">>>>>>>>>>>>> finish item.onUpdate");
     })
   );
