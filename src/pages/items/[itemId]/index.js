@@ -106,7 +106,10 @@ const ItemShow = () => {
             </Stack>
 
             <Box width="30%" p="5" position="relative">
-              <ItemMenu itemId={bindItem.id}></ItemMenu>
+              <ItemMenu
+                itemId={bindItem.id}
+                itemStatus={bindItem.itemStatus}
+              ></ItemMenu>
 
               <Heading as="h1" fontSize="md">
                 {bindItem.name}
@@ -117,10 +120,6 @@ const ItemShow = () => {
                 id={bindItem.id}
                 name={bindItem.name}
               ></LikeButton>
-
-              {/* <FtSmallButtonOutlined ml="2" mt="1">
-                  watch
-                </FtSmallButtonOutlined> */}
 
               <Stack
                 direction="row"
