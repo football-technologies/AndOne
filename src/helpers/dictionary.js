@@ -12,10 +12,34 @@ const dictionary = {
   ],
 
   itemStatus: [
-    { id: 1, key: "private", text: "下書き状態", color: "red.300" },
-    { id: 2, key: "public", text: "公開中", color: "orange.300" },
-    { id: 3, key: "selling", text: "販売中", color: "blue.300" },
-    { id: 9, key: "sod", text: "販売終了", color: "gray.300" },
+    {
+      id: 1,
+      key: "private",
+      text: "下書き状態",
+      icon: "MdEdit",
+      color: "gray.300",
+    },
+    {
+      id: 2,
+      key: "public",
+      text: "公開中",
+      icon: "MdPublic",
+      color: "orange.300",
+    },
+    {
+      id: 3,
+      key: "selling",
+      text: "販売中",
+      icon: "MdAlarmAdd",
+      color: "blue.300",
+    },
+    {
+      id: 3,
+      key: "sold",
+      text: "販売終了",
+      icon: "MdAlarmOff",
+      color: "black.300",
+    },
   ],
 };
 

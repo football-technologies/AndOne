@@ -13,7 +13,24 @@ import {
 import NextLink from "next/link";
 import { MdOutlineMoreVert } from "react-icons/md";
 
+import { updateItem } from "@/store/item";
+import { useDispatch } from "react-redux";
+import useFtToast from "@/components/ui/FtToast";
+
 const ItemMenu = ({ itemId }) => {
+  const dispatch = useDispatch();
+  const { ftToast } = useFtToast();
+
+  const openItem = () => {
+    dispatch(
+      updateItem({
+        id: itemId,
+        itemStatus: 2,
+      })
+    );
+    ftToast("itemを公開しました 🎉");
+  };
+
   return (
     <>
       <Box pos="absolute" top="0" right="0" zIndex="10">
@@ -35,13 +52,11 @@ const ItemMenu = ({ itemId }) => {
             </MenuItem>
             <MenuDivider />
             <MenuItem m="0" p="0">
-              <NextLink href="/items/new" passHref>
-                <a className="ftBlock">
-                  <Text fontSize="sm" p="5">
-                    アイテムを公開
-                  </Text>
-                </a>
-              </NextLink>
+              <Box onClick={() => openItem()}>
+                <Text fontSize="sm" p="5">
+                  アイテムを公開
+                </Text>
+              </Box>
             </MenuItem>
 
             <MenuDivider />
