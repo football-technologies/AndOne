@@ -17,6 +17,7 @@ import {
   Text,
   Image,
   AspectRatio,
+  Icon,
 } from "@chakra-ui/react";
 
 import useFtToast from "@/components/ui/FtToast";
@@ -41,11 +42,13 @@ import rules from "@/plugins/validation";
 import scheme from "@/helpers/scheme";
 
 import SubImagesForm from "@/components/pages/shop/SubImagesForm";
+import NextLink from "next/link";
+import { MdArrowForward } from "react-icons/md";
 
 const ShopForm = () => {
   const [iconUrl, setIconUrl] = useState(null);
   const [mainUrl, setMainUrl] = useState(null);
-  const [submitType, setSubmitType] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [editShop, setEditShop] = useState(null);
   const [tags, setTags] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -70,6 +73,8 @@ const ShopForm = () => {
           })
         );
 
+        setIsEditMode(true);
+
         return () => {
           dispatch(
             fetchShop({
@@ -82,11 +87,10 @@ const ShopForm = () => {
         const shop = _.cloneDeep(scheme.shops);
         shop.id = ftCreateId("shop");
         setEditShop(shop);
-        setSubmitType("create");
+        setIsEditMode(false);
 
         return () => {
           setEditShop(null);
-          setSubmitType(null);
           setTags(null);
         };
       }
@@ -106,13 +110,11 @@ const ShopForm = () => {
         setTags(tags);
       }
 
-      setSubmitType("update");
       setEditShop(shop);
     }
 
     return () => {
       setEditShop(null);
-      setSubmitType(null);
       setTags(null);
     };
   }, [bindShop]);
@@ -232,7 +234,7 @@ const ShopForm = () => {
     editShop.links.homepage = data.homepage;
     editShop.links.others = data.others;
 
-    if (submitType === "create") {
+    if (!isEditMode) {
       editShop.id = editShop.id;
       dispatch(
         updateAccount({
@@ -257,7 +259,7 @@ const ShopForm = () => {
       ftToast("shopが作成されました");
     }
 
-    if (submitType === "update") {
+    if (isEditMode) {
       dispatch(updateShop(editShop));
       ftToast("shopを更新しました");
     }
@@ -272,6 +274,17 @@ const ShopForm = () => {
 
     return (
       <>
+        {isEditMode && (
+          <Box textAlign="right" py="2" px="5">
+            <NextLink href={`/shops/${editShop.id}`}>
+              <Button as="a" variant="link">
+                Back
+                <Icon as={MdArrowForward} ml="1"></Icon>
+              </Button>
+            </NextLink>
+          </Box>
+        )}
+
         <HStack bg={"lightGray"} position="relative" overflow="hidden">
           <Box
             position="absolute"
@@ -492,7 +505,7 @@ const ShopForm = () => {
                     isLoading={isLoading}
                     loadingText=" Submitting..."
                   >
-                    {submitType === "create" ? "作成する" : "更新する"}
+                    {isEditMode ? "更新する" : "作成する"}
                   </FtLargeButton>
                 </VStack>
               </form>
