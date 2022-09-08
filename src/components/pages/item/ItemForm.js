@@ -191,6 +191,7 @@ const ItemForm = () => {
     editItem.shop.id = currentUser.shopId;
     editItem.shop.ref = doc(db, "shops", currentUser.shopId);
     editItem.shop.name = bindShop.name;
+    editItem.shop.icon = bindShop.icon;
 
     await dispatch(createItem(editItem));
 

@@ -57,6 +57,15 @@ img {
   }
 }
 
+.ftHoverBg {
+  &:hover {
+    opacity: 0.8;
+    cursor: pointer;
+    background-color: $lightGray;
+    color: $white;
+  }
+}
+
 .ftTextLink {
   &:hover {
     color: $hover;
@@ -87,9 +96,9 @@ img {
 $HEADER_WIDTH: 256px;
 $MAIN_CONTAINER_PADDING: 50px;
 
-body {
-  background-color: orange;
-}
+// body {
+//   background-color: orange;
+// }
 
 #ftHeader {
   z-index: 1;
