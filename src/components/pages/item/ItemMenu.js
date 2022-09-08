@@ -17,7 +17,7 @@ import { updateItem } from "@/store/item";
 import { useDispatch } from "react-redux";
 import useFtToast from "@/components/ui/FtToast";
 
-const ItemMenu = ({ itemId }) => {
+const ItemMenu = ({ itemId, itemStatus }) => {
   const dispatch = useDispatch();
   const { ftToast } = useFtToast();
 
@@ -29,6 +29,16 @@ const ItemMenu = ({ itemId }) => {
       })
     );
     ftToast("itemを公開しました 🎉");
+  };
+
+  const closeItem = () => {
+    dispatch(
+      updateItem({
+        id: itemId,
+        itemStatus: 1,
+      })
+    );
+    ftToast("itemを下書き状態にしました");
   };
 
   return (
@@ -51,12 +61,22 @@ const ItemMenu = ({ itemId }) => {
               </NextLink>
             </MenuItem>
             <MenuDivider />
+
             <MenuItem m="0" p="0">
-              <Box onClick={() => openItem()}>
-                <Text fontSize="sm" p="5">
-                  アイテムを公開
-                </Text>
-              </Box>
+              {itemStatus === 1 && (
+                <Box onClick={() => openItem()}>
+                  <Text fontSize="sm" p="5">
+                    アイテムを公開
+                  </Text>
+                </Box>
+              )}
+              {itemStatus === 2 && (
+                <Box onClick={() => closeItem()}>
+                  <Text fontSize="sm" p="5">
+                    アイテムを下書きに設定
+                  </Text>
+                </Box>
+              )}
             </MenuItem>
 
             <MenuDivider />

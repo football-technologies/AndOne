@@ -2,9 +2,7 @@ import React from "react";
 import dictionary from "@/helpers/dictionary";
 import _ from "lodash";
 import { Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react";
-
 import { MdEdit, MdPublic, MdAlarmAdd, MdAlarmOff } from "react-icons/md";
-import { RiAuctionLine } from "react-icons/ri";
 
 const DisplayItemStatus = ({ itemStatus = 1 }) => {
   const row = _.find(dictionary.itemStatus, (row) => {
@@ -14,9 +12,6 @@ const DisplayItemStatus = ({ itemStatus = 1 }) => {
   });
 
   const getIcon = (icon) => {
-    // if (icon === "MdEdit") {
-    //   return MdEdit;
-    // }
     switch (icon) {
       case "MdEdit":
         return MdEdit;
