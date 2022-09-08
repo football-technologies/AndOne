@@ -31,7 +31,7 @@ import LikeButton from "@/components/ui/LikeButton";
 import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
 
 import { db } from "@/plugins/firebase";
-import { collection } from "firebase/firestore";
+import { collection, query, orderBy } from "firebase/firestore";
 
 const ItemShow = () => {
   const router = useRouter();
@@ -74,7 +74,10 @@ const ItemShow = () => {
     if (router.isReady) {
       dispatch(
         fetchComments({
-          query: collection(db, `items/${itemId}/comments`),
+          query: query(
+            collection(db, `items/${itemId}/comments`),
+            orderBy("createdAt", "desc")
+          ),
           type: "fetch",
         })
       );
