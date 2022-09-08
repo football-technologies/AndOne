@@ -60,24 +60,17 @@ const fetchItem = (payload) => {
 
 const fetchItems = (payload) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchItems");
-
     const newItems = [];
-    const q = query(
-      collection(db, payload.query),
-      orderBy("createdAt", "desc")
-    );
+    // const q = query(
+    //   collection(db, payload.query),
+    //   orderBy("createdAt", "desc")
+    // );
+
+    const q = payload.query;
 
     const unsubscribe = await onSnapshot(q, async (snapshot) => {
       if (snapshot) {
         await snapshot.docChanges().forEach(async (change) => {
-          // console.log(
-          //   ">>>>>>>>>>>> change.type",
-          //   change.type,
-          //   change.newIndex,
-          //   change.doc.data()
-          // );
-
           if (change.type === "added") {
             if (change.doc.data().id) {
               const newIndex = change.newIndex;
