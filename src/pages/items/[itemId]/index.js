@@ -28,6 +28,8 @@ import LikeButton from "@/components/ui/LikeButton";
 
 import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
 
+import { currentBiddingPrice } from "@/plugins/mixin";
+
 const ItemShow = () => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -129,7 +131,10 @@ const ItemShow = () => {
                 pt="10"
               >
                 <Text fontSize="md" fontWeight="bold" color="primary">
-                  7,800円
+                  {currentBiddingPrice({
+                    itemId: bindItem.id,
+                    startPrice: bindItem.sale.startPrice,
+                  })}
                 </Text>
                 <Spacer></Spacer>
                 <Text fontWeight={700} fontSize="xs">
