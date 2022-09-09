@@ -1,4 +1,4 @@
-import { forwardRef, useState, useImperativeHandle, useRef } from "react";
+import { useState, useRef, useEffect, createRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
@@ -10,6 +10,7 @@ import {
   FtMiddleButtonOutlined,
   FtMiddleButton,
   FtSmallButtonOutlined,
+  FtSmallButton,
 } from "@/components/ui/FtButton";
 
 import { ToFullDate } from "@/plugins/filter";
@@ -42,6 +43,9 @@ import _ from "lodash";
 const ItemComments = () => {
   const [dialog, setDialog] = useState(false);
   const [text, setText] = useState("");
+  const [isSeller, setIsSeller] = useState(false);
+  const [parentComment, setParentComment] = useState(null);
+  const [editMode, setEditMode] = useState(false);
 
   const bindItem = useSelector((state) => state.item.item);
   const bindComments = useSelector((state) => state.comment.comments);
@@ -53,6 +57,12 @@ const ItemComments = () => {
 
   const itemId = router.query.itemId;
 
+  useEffect(() => {
+    if (currentUser.shopId === bindItem.shop.id) {
+      setIsSeller(true);
+    }
+  }, []);
+
   const { ftToast } = useFtToast();
 
   const openDialogItemComment = () => {
@@ -61,15 +71,36 @@ const ItemComments = () => {
 
   const onClose = () => {
     setDialog(false);
+    setEditMode(false);
   };
 
   const onChange = (e) => {
     setText(e.target.value);
   };
 
-  const submit = () => {
-    const comment = _.cloneDeep(scheme.comments);
+  const selectComment = (comment) => {
+    setEditMode(true);
+    setParentComment(comment);
+    initialFocusRef.current.focus();
+  };
 
+  const cancelComment = (comment) => {
+    setEditMode(false);
+    setParentComment(null);
+  };
+
+  const submit = () => {
+    if (isSeller && !parentComment) {
+      ftToast("返信したいコメントを選択してください");
+      return false;
+    }
+
+    if (text === "") {
+      ftToast("空欄のまま送信できません");
+      return false;
+    }
+
+    const comment = _.cloneDeep(scheme.comments);
     comment.id = ftCreateId("comment");
     comment.text = text;
 
@@ -80,18 +111,50 @@ const ItemComments = () => {
     comment.user.id = currentUser.id;
     comment.user.ref = doc(db, `users/${currentUser.id}`);
     comment.user.name = currentUser.name;
+    comment.user.icon = currentUser.icon;
 
+    // 返信用
+    if (isSeller && parentComment) {
+      comment.parent.id = parentComment.parent.id;
+      comment.parent.ref = doc(
+        db,
+        `items/${itemId}/comments/${parentComment.parent.id}`
+      );
+    }
+
+    // 返信用
+    if (!isSeller && parentComment) {
+      comment.parent.id = parentComment.parent.id;
+      comment.parent.ref = doc(
+        db,
+        `items/${itemId}/comments/${parentComment.parent.id}`
+      );
+    }
+
+    // 新規作成
+    if (!isSeller && !parentComment) {
+      comment.parent.id = comment.id;
+      comment.parent.ref = doc(db, `items/${itemId}/comments/${comment.id}`);
+    }
+
+    console.log(comment);
     dispatch(createComment(comment));
-    ftToast("質問を送信しました");
+    ftToast("送信が完了しました");
     onClose();
   };
 
   return (
     <>
       <HStack>
-        <FtMiddleButtonOutlined onClick={openDialogItemComment}>
-          質問する
-        </FtMiddleButtonOutlined>
+        {isSeller ? (
+          <FtMiddleButton onClick={openDialogItemComment}>
+            返信する
+          </FtMiddleButton>
+        ) : (
+          <FtMiddleButton onClick={openDialogItemComment}>
+            質問する
+          </FtMiddleButton>
+        )}
 
         <Button
           variant="outline"
@@ -116,59 +179,87 @@ const ItemComments = () => {
         isOpen={dialog}
         onClose={onClose}
         initialFocusRef={initialFocusRef}
+        scrollBehavior={"inside"}
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>質問する</ModalHeader>
+          {isSeller ? (
+            <ModalHeader>返信する</ModalHeader>
+          ) : (
+            <ModalHeader>質問する</ModalHeader>
+          )}
+
           <ModalCloseButton />
 
           <ModalBody>
             <Textarea
               ref={initialFocusRef}
-              placeholder="質問事項を記入してください"
+              placeholder={
+                isSeller
+                  ? "返答を入力してください"
+                  : "質問事項を記入してください"
+              }
               onChange={onChange}
             ></Textarea>
-          </ModalBody>
-          <ModalFooter>
-            <FtMiddleButton onClick={submit}>送信する</FtMiddleButton>
-          </ModalFooter>
 
-          {bindComments?.map((comment, index) => {
-            return (
-              <HStack
-                key={index}
-                py={"5px"}
-                borderTop={"1px"}
-                borderColor={"lightGray"}
-                w={"400px"}
-                m={"0px auto"}
-              >
-                <Stack w={"10%"}>
-                  {currentUser.icon ? (
-                    <Avatar src={currentUser.icon} />
-                  ) : (
-                    <Avatar name={currentUser.name} />
-                  )}
-                </Stack>
-                <Stack w={"60%"}>
-                  {comment.createdAt && (
-                    <Text fontSize="xs">{ToFullDate(comment.createdAt)}</Text>
-                  )}
-                  <Textarea
-                    readOnly
-                    value={comment.text}
-                    resize={"none"}
-                  ></Textarea>
-                </Stack>
+            <Box my={"15px"} textAlign={"end"}>
+              {isSeller ? (
+                <FtMiddleButton onClick={submit}>返信する</FtMiddleButton>
+              ) : (
+                <FtMiddleButton onClick={submit}>送信する</FtMiddleButton>
+              )}
+            </Box>
 
-                {currentUser.shopId && (
-                  <Stack pl={"10px"}>
-                    <FtSmallButtonOutlined>返信する</FtSmallButtonOutlined>
+            {bindComments?.map((comment, index) => {
+              return (
+                <HStack
+                  key={index}
+                  py={"5px"}
+                  borderTop={"1px"}
+                  borderColor={"lightGray"}
+                  w={"400px"}
+                  m={"0px auto"}
+                >
+                  <Stack w={"10%"}>
+                    {comment.user.icon ? (
+                      <Avatar src={comment.user.icon} />
+                    ) : (
+                      <Avatar name={comment.user.name} />
+                    )}
                   </Stack>
-                )}
-              </HStack>
-            );
-          })}
+
+                  <Stack w={"80%"}>
+                    <Textarea
+                      readOnly
+                      value={comment.text}
+                      resize={"none"}
+                    ></Textarea>
+                    <HStack>
+                      {comment.createdAt && (
+                        <Text fontSize="xs">
+                          {ToFullDate(comment.createdAt)}
+                        </Text>
+                      )}
+
+                      <Stack align={"end"}>
+                        {editMode ? (
+                          <FtSmallButton onClick={() => cancelComment(comment)}>
+                            返信中...
+                          </FtSmallButton>
+                        ) : (
+                          <FtSmallButtonOutlined
+                            onClick={() => selectComment(comment)}
+                          >
+                            返信する
+                          </FtSmallButtonOutlined>
+                        )}
+                      </Stack>
+                    </HStack>
+                  </Stack>
+                </HStack>
+              );
+            })}
+          </ModalBody>
         </ModalContent>
       </Modal>
     </>

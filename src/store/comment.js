@@ -87,7 +87,7 @@ const fetchComments = (payload) => {
       unsubscribe();
     }
   };
-}
+};
 
 export const {
   createComment,
