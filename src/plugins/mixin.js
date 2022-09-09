@@ -29,6 +29,8 @@ const currentBiddingPrice = ({ itemId, startPrice }) => {
     });
   });
 
+  console.log(">>>>>>>>>> biddings.length ", biddings.length);
+
   if (biddings.length === 0) {
     return ToPrice(startPrice);
   } else {

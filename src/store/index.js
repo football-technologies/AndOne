@@ -6,7 +6,7 @@ import secret from "@/store/secret";
 import shop from "@/store/shop";
 import tag from "@/store/tag";
 import item from "@/store/item";
-import artist from "@/store/artist";
+import bidding from "@/store/bidding";
 import like from "@/store/like";
 
 import storage from "redux-persist/lib/storage";
@@ -21,7 +21,7 @@ const reducers = combineReducers({
   shop: shop.reducer,
   tag: tag.reducer,
   item: item.reducer,
-  artist: artist.reducer,
+  bidding: bidding.reducer,
   like: like.reducer,
 });
 
