@@ -15,7 +15,7 @@ const FtDateTimePicker = forwardRef((props, ref) => {
   return (
     <>
       <DatePicker
-        dateFormat="yyyy/MM/dd h:mm"
+        dateFormat="yyyy/MM/dd　H:mm"
         timeIntervals={10}
         customInput={<ExampleCustomInput />}
         ref={ref}

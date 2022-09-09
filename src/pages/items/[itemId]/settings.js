@@ -160,7 +160,7 @@ const ItemSettings = () => {
                     開始価格
                   </Text>
                 </FormLabel>
-                <InputGroup w="180px">
+                <InputGroup w="200px">
                   <InputLeftElement
                     pointerEvents="none"
                     children={<ImCoinYen color="gray.300" />}
@@ -200,7 +200,7 @@ const ItemSettings = () => {
                   </Text>
                 </FormLabel>
 
-                <InputGroup w="180px">
+                <InputGroup w="200px">
                   <InputLeftElement
                     pointerEvents="none"
                     children={<ImCoinYen color="gray.300" />}
