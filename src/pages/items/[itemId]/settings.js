@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { fetchItem } from "@/store/item";
+import { fetchItem, updateItem } from "@/store/item";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import {
@@ -11,17 +11,23 @@ import {
   Box,
   Input,
   VStack,
-  Textarea,
   Stack,
   Text,
-  Button,
-  Icon,
   Container,
   AspectRatio,
   Image,
+  InputGroup,
+  InputLeftElement,
+  InputLeftAddon,
 } from "@chakra-ui/react";
 import _ from "lodash";
 import { FtLargeButton } from "@/components/ui/FtButton";
+
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment/moment";
+import useFtToast from "@/components/ui/FtToast";
+import FtDateTimePicker from "@/components/ui/FtDateTimePicker";
+import { ImCoinYen } from "react-icons/im";
 
 const ItemSettings = () => {
   const router = useRouter();
@@ -35,10 +41,21 @@ const ItemSettings = () => {
   } = useForm();
 
   const [editItem, setEditItem] = useState(null);
-  const [startedDate, setStartedDate] = useState("2022-10-1");
-  const [startedTime, setStartedTime] = useState("22:00");
-  const [finishedDate, setfinishedDate] = useState("2022-10-1");
-  const [finishedTime, setfinishedTime] = useState("22:00");
+
+  const initStartedTime = moment()
+    .startOf("day")
+    .add(1, "d")
+    .add(10, "h")
+    .toDate();
+  const initFinishedTime = moment()
+    .startOf("day")
+    .add(2, "d")
+    .add(21, "h")
+    .toDate();
+  const [startedDate, setStartedDate] = useState(initStartedTime);
+  const [finishedDate, setFinishedDate] = useState(initFinishedTime);
+
+  const { ftToast } = useFtToast();
 
   useEffect(() => {
     if (router.isReady) {
@@ -55,6 +72,13 @@ const ItemSettings = () => {
     if (bindItem) {
       const _item = _.cloneDeep(bindItem);
       setEditItem(_item);
+
+      if (_item.sale.startedAt) {
+        setStartedDate(moment.unix(_item.sale.startedAt.seconds).toDate());
+      }
+      if (_item.sale.finishedAt) {
+        setFinishedDate(moment.unix(_item.sale.finishedAt.seconds).toDate());
+      }
     }
 
     return () => {
@@ -63,14 +87,35 @@ const ItemSettings = () => {
   }, [bindItem]);
 
   const onSubmit = async (data) => {
-    //
+    console.log(">>>>>>>>> submit", data);
+
+    if (startedDate >= finishedDate) {
+      ftToast("終了日時は、開始日時より後ろで設定してください");
+      return false;
+    }
+
+    await dispatch(
+      updateItem({
+        id: editItem.id,
+        itemStatus: 3,
+        sale: {
+          startPrice: data.startPrice,
+          floorPrice: data.floorPrice,
+          startedAt: moment(startedDate).toDate(),
+          finishedAt: moment(finishedDate).toDate(),
+        },
+      })
+    );
+
+    ftToast("itemを更新しました");
+    router.push(`/items/${editItem.id}`);
   };
 
   return (
     <>
       {editItem && (
-        <Container w="500px" mx="auto">
-          <Box>
+        <Container pt="10">
+          <Box w="500px" mx="auto" border="1px" borderColor="lightGray">
             <Stack direction="row" align="center">
               <Box w="100px">
                 <AspectRatio ratio="1">
@@ -83,85 +128,108 @@ const ItemSettings = () => {
             </Stack>
           </Box>
 
-          <Box>
+          <Box ml="35%">
             <form onSubmit={handleSubmit(onSubmit)}>
-              <FormControl isInvalid={errors.startedDate}>
-                <FormLabel>Sales Start Date & Time</FormLabel>
-                <Stack direction="row">
-                  <Input
-                    w="50%"
-                    variant="filled"
-                    placeholder="例）2022年10月1日"
-                    defaultValue={startedDate}
-                  />
-                  <Input
-                    w="20%"
-                    variant="filled"
-                    placeholder="例）22:00"
-                    defaultValue={startedTime}
-                  />
-                </Stack>
-                <FormErrorMessage>
-                  {errors.startedDate && errors.startedDate.message}
-                </FormErrorMessage>
+              <FormControl pt="5" pl="2" isInvalid={errors.StartedDate}>
+                <FormLabel>StartedDate</FormLabel>
+                <FtDateTimePicker
+                  showTimeSelect
+                  selected={startedDate}
+                  onChange={(date) => setStartedDate(date)}
+                ></FtDateTimePicker>{" "}
               </FormControl>
 
-              <FormControl isInvalid={errors.finishedDate}>
-                <FormLabel>Sales Start Date & Time</FormLabel>
-                <Stack direction="row">
-                  <Input
-                    w="50%"
-                    variant="filled"
-                    placeholder="例）2022年10月1日"
-                    defaultValue={finishedDate}
-                  />
-                  <Input
-                    w="20%"
-                    variant="filled"
-                    placeholder="例）22:00"
-                    defaultValue={finishedTime}
-                  />
-                </Stack>
-                <FormErrorMessage>
-                  {errors.finishedDate && errors.finishedDate.message}
-                </FormErrorMessage>
+              <FormControl pt="5" pl="2" isInvalid={errors.FinishedDate}>
+                <FormLabel>FinishedDate</FormLabel>
+                <FtDateTimePicker
+                  showTimeSelect
+                  selected={finishedDate}
+                  onChange={(date) => setFinishedDate(date)}
+                ></FtDateTimePicker>
               </FormControl>
 
-              <FormControl isInvalid={errors.startPrice}>
-                <FormLabel>Start Price</FormLabel>
-                <Input
-                  variant="filled"
-                  placeholder="例）浦和レッズ 2005年モデル Home"
-                  defaultValue={editItem.sale.startPrice}
-                  {...register("startPrice", {
-                    required: "初期価格は必須入力です",
-                  })}
-                />
+              <FormControl pt="5" pl="2" isInvalid={errors.startPrice}>
+                <FormLabel>
+                  Start Price
+                  <Text
+                    display="inline-block"
+                    pl="2"
+                    fontSize="sm"
+                    color="darkGray"
+                  >
+                    開始価格
+                  </Text>
+                </FormLabel>
+                <InputGroup w="180px">
+                  <InputLeftElement
+                    pointerEvents="none"
+                    children={<ImCoinYen color="gray.300" />}
+                  />
+                  <Input
+                    variant="filled"
+                    rounded="none"
+                    placeholder="例 15000"
+                    defaultValue={editItem.sale.startPrice}
+                    {...register("startPrice", {
+                      required: "開始価格は必須入力です",
+                    })}
+                  />
+                  <InputLeftAddon
+                    children="円"
+                    bg="gray.100"
+                    border="0"
+                    rounded="none"
+                  />
+                </InputGroup>
+
                 <FormErrorMessage>
                   {errors.startPrice && errors.startPrice.message}
                 </FormErrorMessage>
               </FormControl>
 
-              <FormControl isInvalid={errors.floorPrice}>
-                <FormLabel>Floor Price</FormLabel>
-                <Input
-                  variant="filled"
-                  placeholder="例）浦和レッズ 2005年モデル Home"
-                  defaultValue={editItem.sale.floorPrice}
-                  {...register("floorPrice", {
-                    required: "最低落札価格は必須入力です",
-                  })}
-                />
+              <FormControl pt="5" pl="2" isInvalid={errors.floorPrice}>
+                <FormLabel>
+                  Floor Price{" "}
+                  <Text
+                    display="inline-block"
+                    pl="2"
+                    fontSize="sm"
+                    color="darkGray"
+                  >
+                    最低落札価格
+                  </Text>
+                </FormLabel>
+
+                <InputGroup w="180px">
+                  <InputLeftElement
+                    pointerEvents="none"
+                    children={<ImCoinYen color="gray.300" />}
+                  />
+                  <Input
+                    variant="filled"
+                    rounded="none"
+                    placeholder="例 15000"
+                    defaultValue={editItem.sale.floorPrice}
+                    {...register("floorPrice", {
+                      required: "最低落札価格は必須入力です",
+                    })}
+                  />
+                  <InputLeftAddon
+                    children="円"
+                    bg="gray.100"
+                    border="0"
+                    rounded="none"
+                  />
+                </InputGroup>
+
                 <FormErrorMessage>
                   {errors.floorPrice && errors.floorPrice.message}
                 </FormErrorMessage>
               </FormControl>
 
-              <VStack my={"30px"}>
-                <FtLargeButton colorScheme="pink" type="submit" my={"20px"}>
-                  販売を開始する
-                </FtLargeButton>
-              </VStack>
+              <FtLargeButton colorScheme="pink" type="submit" my="10">
+                販売を開始する
+              </FtLargeButton>
             </form>
           </Box>
         </Container>
