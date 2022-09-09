@@ -99,18 +99,20 @@ const ShopForm = () => {
 
   useEffect(() => {
     if (bindShop) {
-      const shop = _.cloneDeep(bindShop);
+      if (router.query.shopId) {
+        const shop = _.cloneDeep(bindShop);
 
-      if (shop.tags.length > 0) {
-        const tagNames = [];
-        for (const tag of shop.tags) {
-          tagNames.push(tag.name);
+        if (shop.tags.length > 0) {
+          const tagNames = [];
+          for (const tag of shop.tags) {
+            tagNames.push(tag.name);
+          }
+          const tags = tagNames.join();
+          setTags(tags);
         }
-        const tags = tagNames.join();
-        setTags(tags);
-      }
 
-      setEditShop(shop);
+        setEditShop(shop);
+      }
     }
 
     return () => {

@@ -87,18 +87,19 @@ const ItemForm = () => {
 
   useEffect(() => {
     if (bindItem) {
-      const item = _.cloneDeep(bindItem);
+      if (router.query.itemId) {
+        const item = _.cloneDeep(bindItem);
 
-      if (item.tags.length > 0) {
-        const tagNames = [];
-        for (const tag of item.tags) {
-          tagNames.push(tag.name);
+        if (item.tags.length > 0) {
+          const tagNames = [];
+          for (const tag of item.tags) {
+            tagNames.push(tag.name);
+          }
+          const tags = tagNames.join();
+          item.tags = tags;
         }
-        const tags = tagNames.join();
-        item.tags = tags;
+        setEditItem(item);
       }
-
-      setEditItem(item);
     }
 
     return () => {
