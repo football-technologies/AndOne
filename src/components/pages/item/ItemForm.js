@@ -10,6 +10,7 @@ import {
   Box,
   Input,
   VStack,
+  HStack,
   Textarea,
   Stack,
   Text,
@@ -18,7 +19,11 @@ import {
 } from "@chakra-ui/react";
 
 import useFtToast from "@/components/ui/FtToast";
-import { FtLargeButton } from "@/components/ui/FtButton";
+import {
+  FtLargeButton,
+  FtMiddleButtonOutlined,
+  FtSmallButtonOutlined,
+} from "@/components/ui/FtButton";
 import { ftCreateId } from "@/plugins/mixin";
 import { createItem, fetchItem, updateItem } from "@/store/item";
 import { createTag } from "@/store/tag";
@@ -208,6 +213,13 @@ const ItemForm = () => {
     router.push(`/items/${editItem.id}`);
   };
 
+  const deleteItem = () => {
+    editItem.status = 3;
+    dispatch(updateItem(editItem));
+    ftToast("アイテムを削除しました");
+    router.push(`/items/${editItem.id}`);
+  };
+
   const form = {
     width: "100%",
   };
@@ -228,6 +240,11 @@ const ItemForm = () => {
           )}
 
           <Box w="500px" mx="auto">
+            {isEditMode && (
+              <FtSmallButtonOutlined onClick={deleteItem} align={"end"}>
+                アイテムを削除する
+              </FtSmallButtonOutlined>
+            )}
             <Stack py={"30px"}>
               <Text>Item Images</Text>
               <SubImagesForm
@@ -296,7 +313,7 @@ const ItemForm = () => {
                 </FormControl>
 
                 <VStack my={"30px"}>
-                  <FtLargeButton colorScheme="pink" type="submit" my={"20px"}>
+                  <FtLargeButton colorScheme="pink" type="submit">
                     {isEditMode ? "更新する" : "作成する"}
                   </FtLargeButton>
                 </VStack>
