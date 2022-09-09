@@ -29,6 +29,8 @@ import LikeButton from "@/components/ui/LikeButton";
 import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
 
 import { currentBiddingPrice } from "@/plugins/mixin";
+import { ToFinish } from "@/plugins/filter";
+import moment from "moment/moment";
 
 const ItemShow = () => {
   const router = useRouter();
@@ -138,7 +140,9 @@ const ItemShow = () => {
                 </Text>
                 <Spacer></Spacer>
                 <Text fontWeight={700} fontSize="xs">
-                  残り 23時間42分
+                  {ToFinish({
+                    finishedSeconds: bindItem.sale.finishedAt.seconds,
+                  })}
                 </Text>
               </Stack>
 
