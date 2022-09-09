@@ -3,6 +3,8 @@ import { useRef } from "react";
 import DialogPostBidding from "@/components/dialog/DialogPostBidding";
 
 import { FtMiddleButton } from "@/components/ui/FtButton";
+import { db } from "@/plugins/firebase";
+import { doc, query, collection, orderBy } from "firebase/firestore";
 
 import {
   Box,
@@ -21,6 +23,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { fetchItem } from "@/store/item";
+import { fetchBiddings } from "@/store/bidding";
 import DialogImage from "@/components/pages/shop/DialogImage";
 
 import ItemMenu from "@/components/pages/item/ItemMenu";
@@ -29,8 +32,7 @@ import LikeButton from "@/components/ui/LikeButton";
 import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
 
 import { currentBiddingPrice } from "@/plugins/mixin";
-import { ToFinish } from "@/plugins/filter";
-import moment from "moment/moment";
+import { ToFinish, ToPrice } from "@/plugins/filter";
 
 const ItemShow = () => {
   const router = useRouter();
@@ -38,16 +40,12 @@ const ItemShow = () => {
 
   const { itemId } = router.query;
   const bindItem = useSelector((state) => state.item.item);
+  const bindBiddings = useSelector((state) => state.bidding.biddings);
+
   const dialogPostBidding = useRef(null);
   const dialogImage = useRef();
 
-  // const itemStatus = _.find(dictionary.itemStatus, (row) => {
-  //   if (row.id === bindItem.itemStatus) {
-  //     return row;
-  //   }
-  // });
-
-  console.log(">>>>>>>> bindItem", bindItem);
+  console.log(">>>>>>>> bindBiddings", bindBiddings);
 
   const openDialogImage = (index) => {
     dialogImage.current.openDialog({
@@ -61,6 +59,16 @@ const ItemShow = () => {
       dispatch(
         fetchItem({
           query: `items/${itemId}`,
+          type: "fetch",
+        })
+      );
+
+      dispatch(
+        fetchBiddings({
+          query: query(
+            collection(db, `items/${itemId}/biddings`),
+            orderBy("price", "desc")
+          ),
           type: "fetch",
         })
       );
@@ -133,10 +141,13 @@ const ItemShow = () => {
                 pt="10"
               >
                 <Text fontSize="md" fontWeight="bold" color="primary">
-                  {currentBiddingPrice({
+                  {bindBiddings && bindBiddings.length > 0
+                    ? ToPrice(bindBiddings[0].price)
+                    : ToPrice(bindItem.sale.startPrice)}
+                  {/* {currentBiddingPrice({
                     itemId: bindItem.id,
                     startPrice: bindItem.sale.startPrice,
-                  })}
+                  })} */}
                 </Text>
                 <Spacer></Spacer>
                 <Text fontWeight={700} fontSize="xs">
