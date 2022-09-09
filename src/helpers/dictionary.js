@@ -34,7 +34,7 @@ const dictionary = {
       color: "blue.300",
     },
     {
-      id: 3,
+      id: 4,
       key: "sold",
       text: "販売終了",
       icon: "MdAlarmOff",

@@ -81,7 +81,7 @@ const ItemMenu = ({ itemId, itemStatus }) => {
 
             <MenuDivider />
             <MenuItem m="0" p="0">
-              <NextLink href="/items/new" passHref>
+              <NextLink href={`/items/${itemId}/settings`} passHref>
                 <a className="ftBlock">
                   <Text fontSize="sm" p="5">
                     アイテムの販売開始
