@@ -77,7 +77,7 @@ const ItemShow = () => {
           query: query(
             collection(db, `items/${itemId}/comments`),
             // orderBy("parent.id"),
-            orderBy("createdAt", "asc"),
+            // orderBy("createdAt", "asc"),
           ),
           type: "fetch",
         })

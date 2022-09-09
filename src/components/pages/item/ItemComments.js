@@ -46,6 +46,7 @@ const ItemComments = () => {
   const [isSeller, setIsSeller] = useState(false);
   const [parentComment, setParentComment] = useState(null);
   const [editMode, setEditMode] = useState(false);
+  const [comments, setComments] = useState([]);
 
   const bindItem = useSelector((state) => state.item.item);
   const bindComments = useSelector((state) => state.comment.comments);
@@ -62,6 +63,25 @@ const ItemComments = () => {
       setIsSeller(true);
     }
   }, []);
+
+  useEffect(() => {
+    const groupingWithParentId = _.groupBy(
+      bindComments,
+      (comment) => comment.parent.id
+    );
+
+    const groupingWithParentIdCommentBlock =
+      Object.values(groupingWithParentId);
+
+    const newCommentsBlock = [];
+    for (const groupingWithParentIdComments of groupingWithParentIdCommentBlock) {
+      newCommentsBlock.push(
+        _.sortBy(groupingWithParentIdComments, "createdAt")
+      );
+    }
+
+    setComments([...newCommentsBlock]);
+  }, [bindComments]);
 
   const { ftToast } = useFtToast();
 
@@ -113,7 +133,7 @@ const ItemComments = () => {
     comment.user.name = currentUser.name;
     comment.user.icon = currentUser.icon;
 
-    // 返信用
+    // 返信用BySeller
     if (isSeller && parentComment) {
       comment.parent.id = parentComment.parent.id;
       comment.parent.ref = doc(
@@ -122,7 +142,7 @@ const ItemComments = () => {
       );
     }
 
-    // 返信用
+    // 返信用ByBuyer
     if (!isSeller && parentComment) {
       comment.parent.id = parentComment.parent.id;
       comment.parent.ref = doc(
@@ -137,7 +157,6 @@ const ItemComments = () => {
       comment.parent.ref = doc(db, `items/${itemId}/comments/${comment.id}`);
     }
 
-    console.log(comment);
     dispatch(createComment(comment));
     ftToast("送信が完了しました");
     onClose();
@@ -145,16 +164,11 @@ const ItemComments = () => {
 
   return (
     <>
+      {/* Button */}
       <HStack>
-        {isSeller ? (
-          <FtMiddleButton onClick={openDialogItemComment}>
-            返信する
-          </FtMiddleButton>
-        ) : (
-          <FtMiddleButton onClick={openDialogItemComment}>
-            質問する
-          </FtMiddleButton>
-        )}
+        <FtMiddleButton onClick={openDialogItemComment}>
+          {isSeller ? "返信する" : "質問する"}
+        </FtMiddleButton>
 
         <Button
           variant="outline"
@@ -166,11 +180,7 @@ const ItemComments = () => {
           onClick={openDialogItemComment}
         >
           <Icon as={BiComment} />
-          {bindComments?.length > 0 ? (
-            <Text mx={"4px"}>{bindComments.length}</Text>
-          ) : (
-            <Text mx={"4px"}>0</Text>
-          )}
+          <Text mx="4px">{comments.length > 0 ? bindComments.length : 0}</Text>
         </Button>
       </HStack>
 
@@ -183,83 +193,95 @@ const ItemComments = () => {
       >
         <ModalOverlay />
         <ModalContent>
-          {isSeller ? (
-            <ModalHeader>返信する</ModalHeader>
-          ) : (
-            <ModalHeader>質問する</ModalHeader>
-          )}
+          <ModalHeader>
+            {isSeller ? "返信する" : "質問する"}
+            <Text color="red.300" fontSize="xs">
+              *返信する場合は「返信する」の選択が必須です
+            </Text>
+          </ModalHeader>
 
           <ModalCloseButton />
 
           <ModalBody>
+            {comments.map((parentComments, index) => {
+              return (
+                <Stack
+                  key={index}
+                  p="5px 0px 30px"
+                  w="400px"
+                  m="0px auto"
+                  borderTop="1px"
+                  borderColor="lightGray"
+                >
+                  <Text as="b">＜質問：{index + 1}＞</Text>
+                  {parentComments.map((comment, index) => {
+                    return (
+                      <HStack key={index} py="5px">
+                        <Stack w={index > 0 ? "25%" : "15%"} align="end">
+                          {comment.user.icon ? (
+                            <Avatar src={comment.user.icon} />
+                          ) : (
+                            <Avatar name={comment.user.name} />
+                          )}
+                        </Stack>
+
+                        <Stack w={index > 0 ? "70%" : "80%"}>
+                          <Textarea
+                            readOnly
+                            value={comment.text}
+                            resize="none"
+                          ></Textarea>
+                          <HStack>
+                            {comment.createdAt && (
+                              <Text fontSize="xs">
+                                {ToFullDate(comment.createdAt)}
+                              </Text>
+                            )}
+
+                            <Stack align={"end"}>
+                              {editMode ? (
+                                <FtSmallButton
+                                  onClick={() => cancelComment(comment)}
+                                >
+                                  返信中...
+                                </FtSmallButton>
+                              ) : (
+                                <FtSmallButtonOutlined
+                                  onClick={() => selectComment(comment)}
+                                >
+                                  返信する
+                                </FtSmallButtonOutlined>
+                              )}
+                            </Stack>
+                          </HStack>
+                        </Stack>
+                      </HStack>
+                    );
+                  })}
+                </Stack>
+              );
+            })}
+          </ModalBody>
+
+          <ModalFooter>
             <Textarea
               ref={initialFocusRef}
+              rows={1}
               placeholder={
                 isSeller
                   ? "返答を入力してください"
                   : "質問事項を記入してください"
               }
               onChange={onChange}
+              mr="5px"
             ></Textarea>
 
-            <Box my={"15px"} textAlign={"end"}>
-              {isSeller ? (
-                <FtMiddleButton onClick={submit}>返信する</FtMiddleButton>
-              ) : (
-                <FtMiddleButton onClick={submit}>送信する</FtMiddleButton>
-              )}
+            <Box>
+              <FtSmallButton onClick={submit}>
+                {isSeller ? "返信する" : "質問する"}
+              </FtSmallButton>
             </Box>
-
-            {bindComments?.map((comment, index) => {
-              return (
-                <HStack
-                  key={index}
-                  py={"5px"}
-                  borderTop={"1px"}
-                  borderColor={"lightGray"}
-                  w={"400px"}
-                  m={"0px auto"}
-                >
-                  <Stack w={"10%"}>
-                    {comment.user.icon ? (
-                      <Avatar src={comment.user.icon} />
-                    ) : (
-                      <Avatar name={comment.user.name} />
-                    )}
-                  </Stack>
-
-                  <Stack w={"80%"}>
-                    <Textarea
-                      readOnly
-                      value={comment.text}
-                      resize={"none"}
-                    ></Textarea>
-                    <HStack>
-                      {comment.createdAt && (
-                        <Text fontSize="xs">
-                          {ToFullDate(comment.createdAt)}
-                        </Text>
-                      )}
-
-                      <Stack align={"end"}>
-                        {editMode ? (
-                          <FtSmallButton onClick={() => cancelComment(comment)}>
-                            返信中...
-                          </FtSmallButton>
-                        ) : (
-                          <FtSmallButtonOutlined
-                            onClick={() => selectComment(comment)}
-                          >
-                            返信する
-                          </FtSmallButtonOutlined>
-                        )}
-                      </Stack>
-                    </HStack>
-                  </Stack>
-                </HStack>
-              );
-            })}
-          </ModalBody>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </>
