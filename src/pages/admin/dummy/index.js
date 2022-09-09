@@ -3,7 +3,8 @@ import { functions } from "@/plugins/firebase";
 import { httpsCallable } from "firebase/functions";
 import FtUiPallet from "@/components/ui/FtUiPallet";
 
-import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
+import GetCurrentSeconds from "@/helpers/clock";
+import { useEffect } from "react";
 
 const DummyIndex = () => {
   const helloOnCall = async () => {
@@ -13,8 +14,14 @@ const DummyIndex = () => {
     console.log(">>>>>> Return: ->", result);
   };
 
+  useEffect(() => {
+    console.log(">>>>>>> hello");
+  }, []);
+
   return (
     <>
+      <h1>{GetCurrentSeconds(1000)}</h1>
+
       <Box p="10" bg="paleGray">
         <Box>
           <h3>functions</h3>
@@ -27,8 +34,6 @@ const DummyIndex = () => {
           <FtUiPallet></FtUiPallet>
         </Box>
       </Box>
-
-      <ItemMiddleCard></ItemMiddleCard>
     </>
   );
 };

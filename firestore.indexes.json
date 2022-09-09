@@ -1,6 +1,34 @@
 {
   "indexes": [
     {
+      "collectionGroup": "biddings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "item.id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "price",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "items",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "shop.id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "likes",
       "queryScope": "COLLECTION_GROUP",
       "fields": [
@@ -25,21 +53,6 @@
         {
           "fieldPath": "user.id",
           "order": "ASCENDING"
-        }
-      ]
-    },
-
-    {
-      "collectionGroup": "items",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "shop.id",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
         }
       ]
     }

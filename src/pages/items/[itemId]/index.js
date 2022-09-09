@@ -27,6 +27,12 @@ import ItemMenu from "@/components/pages/item/ItemMenu";
 import LikeButton from "@/components/ui/LikeButton";
 
 import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
+import { currentBiddingPrice } from "@/plugins/mixin";
+
+import { ToFinish } from "@/plugins/filter";
+import GetCurrentSeconds from "@/helpers/clock";
+
+import { useState } from "react";
 
 const ItemShow = () => {
   const router = useRouter();
@@ -37,11 +43,8 @@ const ItemShow = () => {
   const dialogPostBidding = useRef(null);
   const dialogImage = useRef();
 
-  // const itemStatus = _.find(dictionary.itemStatus, (row) => {
-  //   if (row.id === bindItem.itemStatus) {
-  //     return row;
-  //   }
-  // });
+  const [seconds, setSeconds] = useState();
+  // setSeconds(GetCurrentSeconds(1000));
 
   console.log(">>>>>>>> bindItem", bindItem);
 
@@ -71,6 +74,8 @@ const ItemShow = () => {
     <>
       {bindItem && (
         <>
+          <h1>{seconds}</h1>
+
           <HStack align="start" position="relative">
             <Box position="absolute" top="-30px" right="0" zIndex="2">
               <DisplayItemStatus
@@ -110,38 +115,43 @@ const ItemShow = () => {
                 itemId={bindItem.id}
                 itemStatus={bindItem.itemStatus}
               ></ItemMenu>
-
               <Heading as="h1" fontSize="md">
                 {bindItem.name}
               </Heading>
-
               <LikeButton
                 target="item"
                 id={bindItem.id}
                 name={bindItem.name}
               ></LikeButton>
 
-              <Stack
-                direction="row"
-                borderBottom="2px"
-                borderColor="primary"
-                align="end"
-                pt="10"
-              >
-                <Text fontSize="md" fontWeight="bold" color="primary">
-                  7,800円
-                </Text>
-                <Spacer></Spacer>
-                <Text fontWeight={700} fontSize="xs">
-                  残り 23時間42分
-                </Text>
-              </Stack>
-
-              <Center pt="2">
-                <FtMiddleButton onClick={openDialogBidding}>
-                  入札する
-                </FtMiddleButton>
-              </Center>
+              {bindItem.sale.startedAt && (
+                <>
+                  <Stack
+                    direction="row"
+                    borderBottom="2px"
+                    borderColor="primary"
+                    align="end"
+                    pt="10"
+                  >
+                    <Text fontSize="md" fontWeight="bold" color="primary">
+                      {currentBiddingPrice({
+                        itemId: bindItem.id,
+                        startPrice: bindItem.sale.startPrice,
+                      })}
+                    </Text>
+                    <Spacer></Spacer>
+                    <Text fontWeight={700} fontSize="xs">
+                      {/* 残り 23時間42分 */}
+                      {/* {ToFinish(bindItem.sale.finishedAt)} */}
+                    </Text>
+                  </Stack>
+                  <Center pt="2">
+                    <FtMiddleButton onClick={openDialogBidding}>
+                      入札する
+                    </FtMiddleButton>
+                  </Center>
+                </>
+              )}
 
               {bindItem.createdYear && (
                 <Box pt="10">
@@ -156,7 +166,6 @@ const ItemShow = () => {
                   </Text>
                 </Box>
               )}
-
               <Box pt={5}>
                 {bindItem.tags.map((tag) => {
                   return (
@@ -168,7 +177,6 @@ const ItemShow = () => {
                   );
                 })}
               </Box>
-
               <Box pt="5">
                 <NextLink href={`/shops/${bindItem.shop.id}`} passHref>
                   <a>

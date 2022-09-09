@@ -1,6 +1,16 @@
 // 共通化したい処理
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
+import { db } from "@/plugins/firebase";
+import {
+  getDocs,
+  where,
+  collection,
+  query,
+  orderBy,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 
 const ftCreateId = (idName) => {
   const now = moment();
@@ -9,4 +19,27 @@ const ftCreateId = (idName) => {
   return id;
 };
 
-export { ftCreateId };
+const currentBiddingPrice = ({ itemId, startPrice }) => {
+  const biddings = [];
+  const q = query(
+    collection(db, `items/${itemId}/biddings`),
+    where("item.id", "==", itemId),
+    orderBy("price", "desc")
+  );
+
+  getDocs(q).then((snapshot) => {
+    snapshot.forEach((doc) => {
+      if (doc.id) {
+        biddings.push(doc.data());
+      }
+    });
+  });
+
+  if (biddings.length === 0) {
+    return startPrice;
+  } else {
+    return biddings[0].price;
+  }
+};
+
+export { ftCreateId, currentBiddingPrice };

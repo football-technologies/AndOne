@@ -1,4 +1,29 @@
 import moment from "moment";
+import GetCurrentSeconds from "@/helpers/clock";
+
+const ToFinish = ({ currentSeconds, finishedSeconds }) => {
+  // console.log(GetCurrentSeconds(1000));
+
+  const currentDate = moment.unix(currentSeconds);
+  const targetDate = moment.unix(finishedSeconds);
+  const diffSeconds = Math.floor(currentDate.diff(targetDate) / 1000); // msec -> sec
+
+  const diffMins = Math.floor(currentDate.diff(targetDate) / 60000); // msec -> min
+
+  if (diffMins <= 0) {
+    return `残り ${diffSeconds}秒`;
+  } else if (diffMins < 60) {
+    return `残り ${diffMins}分${diffSeconds}秒`;
+  } else if (diffMins < 60 * 24) {
+    const diffHour = Math.floor(diffMins / 60);
+    return `残り ${diffHour}時間${diffMins}分`;
+  } else if (diffMins < 60 * 24 * 30) {
+    const diffDay = Math.floor(diffMins / (60 * 24));
+    return `残り ${diffDay}日`;
+  } else {
+    return moment.unix(seconds).format("YYYY/MM/DD");
+  }
+};
 
 const ToAgo = ({ seconds }) => {
   const currentDate = moment();
@@ -47,4 +72,4 @@ const ToPrice = (number) => {
   }
 };
 
-export { ToFullDate, ToDateTime, ToDate, ToTime, ToAgo, ToPrice };
+export { ToFullDate, ToDateTime, ToDate, ToTime, ToAgo, ToPrice, ToFinish };
