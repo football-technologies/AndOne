@@ -391,7 +391,7 @@ const ShopForm = () => {
                   <FormLabel>Shop Name</FormLabel>
                   <Input
                     variant="filled"
-                    placeholder="芝浦World Football Gallery"
+                    placeholder="例）Football Gallery 芝浦"
                     defaultValue={editShop.name}
                     {...register("shopName", {
                       required: "お店の名前は必須入力です",
@@ -406,7 +406,7 @@ const ShopForm = () => {
                   <FormLabel>Original URL</FormLabel>
                   <Input
                     variant="filled"
-                    placeholder="shibaura-world-football-gallery"
+                    placeholder="例）football-gallery-shibaura"
                     defaultValue={editShop.delegate}
                     {...register("originalUrl", {
                       pattern: rules.url,
@@ -427,7 +427,8 @@ const ShopForm = () => {
                   <Textarea
                     variant="filled"
                     height="10em"
-                    placeholder="bio"
+                    rows={6}
+                    placeholder="例）サッカーユニフォーム専門のショップです！主にJリーグのユニフォームを中心に取り扱っており、Jリーグ初期のユニフォームなども取り扱っています！このショップで激レアなユニフォームが手に入るかも？？"
                     defaultValue={editShop.description}
                     {...register("description")}
                   ></Textarea>
@@ -438,7 +439,7 @@ const ShopForm = () => {
                   <Textarea
                     variant="filled"
                     height="2em"
-                    placeholder="東京都港区芝浦1-11-1"
+                    placeholder="例）東京都港区芝浦1-11-1"
                     defaultValue={editShop.address}
                     {...register("address")}
                   ></Textarea>
@@ -448,7 +449,7 @@ const ShopForm = () => {
                   <FormLabel>Phone</FormLabel>
                   <Input
                     variant="filled"
-                    placeholder="090-1111-1111"
+                    placeholder="例）090-1111-1111"
                     defaultValue={editShop.phone}
                     {...register("phone", {
                       pattern: rules.phone,
@@ -463,7 +464,7 @@ const ShopForm = () => {
                   <FormLabel>Email</FormLabel>
                   <Input
                     variant="filled"
-                    placeholder="shop@apple.com"
+                    placeholder="例）shop@apple.com"
                     defaultValue={editShop.email}
                     {...register("email", {
                       pattern: rules.email,
@@ -478,7 +479,7 @@ const ShopForm = () => {
                   <FormLabel>Open Hour</FormLabel>
                   <Input
                     variant="filled"
-                    placeholder="10時 - 20時"
+                    placeholder="例）10時 - 20時"
                     defaultValue={editShop.openHour}
                     {...register("openHour")}
                   />
@@ -488,7 +489,7 @@ const ShopForm = () => {
                   <FormLabel>Holidays</FormLabel>
                   <Input
                     variant="filled"
-                    placeholder="月曜日"
+                    placeholder="例）月曜日"
                     defaultValue={editShop.holidays}
                     {...register("holidays")}
                   />
@@ -501,7 +502,7 @@ const ShopForm = () => {
                       <FormLabel>{sns[0]}</FormLabel>
                       <Input
                         variant="filled"
-                        placeholder={`https://${sns[0]}.com/shibauraG2913`}
+                        placeholder={`例）https://${sns[0]}.com/shibauraG2913`}
                         defaultValue={sns[1]}
                         {...register(sns[0])}
                       />
