@@ -6,9 +6,7 @@ import {
   setDoc,
   serverTimestamp,
   onSnapshot,
-  query,
-  collection,
-  orderBy,
+  getDoc,
 } from "firebase/firestore";
 
 const item = createSlice({
@@ -38,59 +36,78 @@ const item = createSlice({
   },
 });
 
-const fetchItem = (payload) => {
+const fetchItem = ({ query, type, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
     console.log(">>>>>>>>> called fetchItem");
 
-    const unsubscribe = await onSnapshot(
-      doc(db, payload.query),
-      async (doc) => {
+    let unsubscribe = null;
+
+    // query = `items/123`
+    if (isOnSnapshot) {
+      unsubscribe = await onSnapshot(doc(db, query), async (doc) => {
         if (doc.id) {
           dispatch(readItem(doc.data()));
         }
-      }
-    );
+      });
+    }
 
-    if (payload.type === "delete") {
-      console.log(">>>>>>>>> called deleteItem");
+    if (!isOnSnapshot) {
+      await getDoc(doc(db, query)).then((doc) => {
+        if (doc.id) {
+          dispatch(readItem(doc.data()));
+        }
+      });
+    }
+
+    if (type === "delete") {
       unsubscribe();
     }
   };
 };
 
-const fetchItems = (payload) => {
+const fetchItems = ({ type, query, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
+    console.log(">>>>>>>>> called fetchItems");
+
+    // const q = query(collection(db, "items"), where("status", "==", 1), orderBy("createdAt","desc"));
+
+    let unsubscribe = null;
     const newItems = [];
-    // const q = query(
-    //   collection(db, payload.query),
-    //   orderBy("createdAt", "desc")
-    // );
 
-    const q = payload.query;
-
-    const unsubscribe = await onSnapshot(q, async (snapshot) => {
-      if (snapshot) {
-        await snapshot.docChanges().forEach(async (change) => {
-          if (change.type === "added") {
-            if (change.doc.data().id) {
-              const newIndex = change.newIndex;
-              newItems.splice(newIndex, 0, change.doc.data());
+    if (isOnSnapshot) {
+      unsubscribe = await onSnapshot(query, async (snapshot) => {
+        if (snapshot) {
+          await snapshot.docChanges().forEach(async (change) => {
+            if (change.type === "added") {
+              if (change.doc.data().id) {
+                const newIndex = change.newIndex;
+                newItems.splice(newIndex, 0, change.doc.data());
+              }
             }
-          }
-
-          if (change.type === "modified") {
-            if (change.doc.data().id) {
-              const newIndex = change.newIndex;
-              newItems.splice(newIndex, 1, change.doc.data());
+            if (change.type === "modified") {
+              if (change.doc.data().id) {
+                const newIndex = change.newIndex;
+                newItems.splice(newIndex, 1, change.doc.data());
+              }
             }
+          });
+        }
+        dispatch(readItems(newItems));
+      });
+    }
+
+    if (!isOnSnapshot) {
+      await getDocs(query).then((snapshot) => {
+        snapshot.forEach((doc) => {
+          if (doc.id) {
+            newItems.push(doc.data());
           }
         });
-      }
-
+      });
       dispatch(readItems(newItems));
-    });
+    }
 
-    if (payload.type === "delete") {
+    if (type === "delete") {
       unsubscribe();
     }
   };

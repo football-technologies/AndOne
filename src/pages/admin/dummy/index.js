@@ -28,7 +28,7 @@ const DummyIndex = () => {
         </Box>
       </Box>
 
-      <ItemMiddleCard></ItemMiddleCard>
+      {/* <ItemMiddleCard></ItemMiddleCard> */}
     </>
   );
 };

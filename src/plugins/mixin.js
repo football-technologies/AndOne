@@ -9,4 +9,18 @@ const ftCreateId = (idName) => {
   return id;
 };
 
-export { ftCreateId };
+const currentBiddingPrice = ({ biddings = [], startPrice }) => {
+  if (biddings.length === 0) {
+    return startPrice;
+  } else {
+    const highestPrice = 0;
+    for (const bidding of biddings) {
+      if (bidding.price > highestPrice) {
+        highestPrice = bidding.price;
+      }
+    }
+    return highestPrice;
+  }
+};
+
+export { ftCreateId, currentBiddingPrice };

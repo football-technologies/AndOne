@@ -19,6 +19,7 @@ const ItemIndex = () => {
     dispatch(
       fetchItems({
         query: query(collection(db, "items"), orderBy("createdAt", "desc")),
+        isOnSnapshot: true,
         type: "fetch",
       })
     );

@@ -13,6 +13,7 @@ const colors = {
   teritiary: "#FFC107",
   link: "#436BF8",
   hover: "#FF9900",
+  input: "#E2E8F0",
   black: "#333",
   darkGray: "#777777",
   lightGray: "#CCCCCC",

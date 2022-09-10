@@ -2,8 +2,11 @@ import { useRouter } from "next/router";
 import { useRef } from "react";
 import DialogPostBidding from "@/components/dialog/DialogPostBidding";
 import ItemComments from "@/components/pages/item/ItemComments";
+import DialogBiddingHistory from "@/components/dialog/DialogBiddingHistory";
 
 import { FtMiddleButton } from "@/components/ui/FtButton";
+import { db } from "@/plugins/firebase";
+import { doc, query, collection, orderBy } from "firebase/firestore";
 
 import {
   Box,
@@ -23,6 +26,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { fetchItem } from "@/store/item";
 import { fetchComments } from "@/store/comment";
+import { fetchBiddings } from "@/store/bidding";
 import DialogImage from "@/components/pages/shop/DialogImage";
 
 import ItemMenu from "@/components/pages/item/ItemMenu";
@@ -30,8 +34,9 @@ import LikeButton from "@/components/ui/LikeButton";
 
 import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
 
-import { db } from "@/plugins/firebase";
-import { collection, query, orderBy } from "firebase/firestore";
+import { currentBiddingPrice } from "@/plugins/mixin";
+import { ToFinish, ToPrice } from "@/plugins/filter";
+import { bind } from "lodash";
 
 const ItemShow = () => {
   const router = useRouter();
@@ -40,17 +45,16 @@ const ItemShow = () => {
   const { itemId } = router.query;
   const bindItem = useSelector((state) => state.item.item);
   const bindComments = useSelector((state) => state.comment.comments);
-  const dialogPostBidding = useRef(null);
-  const dialogImage = useRef();
+  const bindBiddings = useSelector((state) => state.bidding.biddings);
 
-  // const itemStatus = _.find(dictionary.itemStatus, (row) => {
-  //   if (row.id === bindItem.itemStatus) {
-  //     return row;
-  //   }
-  // });
+  const dialogPostBidding = useRef(null);
+  const dialogBiddingHistory = useRef(null);
+
+  const dialogImage = useRef();
 
   console.log(">>>>>>>> bindItem", bindItem);
   console.log(">>>>>>>> bindComments", bindComments);
+  console.log(">>>>>>>> bindBiddings", bindBiddings);
 
   const openDialogImage = (index) => {
     dialogImage.current.openDialog({
@@ -64,6 +68,18 @@ const ItemShow = () => {
       dispatch(
         fetchItem({
           query: `items/${itemId}`,
+          isOnSnapshot: true,
+          type: "fetch",
+        })
+      );
+
+      dispatch(
+        fetchBiddings({
+          query: query(
+            collection(db, `items/${itemId}/biddings`),
+            orderBy("price", "desc")
+          ),
+          isOnSnapshot: true,
           type: "fetch",
         })
       );
@@ -85,9 +101,13 @@ const ItemShow = () => {
     dialogPostBidding.current.openDialog();
   };
 
+  const openDialogBiddingHistory = () => {
+    dialogBiddingHistory.current.openDialog();
+  };
+
   return (
     <>
-      {bindItem && (
+      {bindItem && bindBiddings && (
         <>
           <HStack align="start" position="relative">
             <Box position="absolute" top="-30px" right="0" zIndex="2">
@@ -139,27 +159,44 @@ const ItemShow = () => {
                 name={bindItem.name}
               ></LikeButton>
 
-              <Stack
-                direction="row"
-                borderBottom="2px"
-                borderColor="primary"
-                align="end"
-                pt="10"
-              >
-                <Text fontSize="md" fontWeight="bold" color="primary">
-                  7,800円
-                </Text>
-                <Spacer></Spacer>
-                <Text fontWeight={700} fontSize="xs">
-                  残り 23時間42分
-                </Text>
-              </Stack>
+              {bindItem.sale.startedAt && (
+                <Box>
+                  <Stack
+                    direction="row"
+                    borderBottom="2px"
+                    borderColor="primary"
+                    align="end"
+                    pt="10"
+                  >
+                    <Text fontSize="md" fontWeight="bold" color="primary">
+                      {ToPrice(
+                        currentBiddingPrice({
+                          biddings: bindBiddings,
+                          startPrice: bindItem.sale.startPrice,
+                        })
+                      )}
+                    </Text>
+                    <Spacer></Spacer>
+                    <Text fontWeight={700} fontSize="xs">
+                      {ToFinish({
+                        finishedSeconds: bindItem.sale.finishedAt.seconds,
+                      })}
+                    </Text>
+                  </Stack>
 
-              <Center pt="2">
-                <FtMiddleButton onClick={openDialogBidding}>
-                  入札する
-                </FtMiddleButton>
-              </Center>
+                  <Center pt="2">
+                    <FtMiddleButton onClick={openDialogBidding}>
+                      入札する
+                    </FtMiddleButton>
+                  </Center>
+
+                  <Box>
+                    <Button onClick={() => openDialogBiddingHistory()}>
+                      history {bindBiddings ? bindBiddings.length : 0}
+                    </Button>
+                  </Box>
+                </Box>
+              )}
 
               {bindItem.createdYear && (
                 <Box pt="10">
@@ -230,7 +267,15 @@ const ItemShow = () => {
             <Text fontSize="sm">{bindItem.description}</Text>
           </Box>
           {/* dialog */}
-          <DialogPostBidding ref={dialogPostBidding}></DialogPostBidding>
+
+          {bindItem.sale.startedAt && (
+            <>
+              <DialogPostBidding ref={dialogPostBidding}></DialogPostBidding>
+              <DialogBiddingHistory
+                ref={dialogBiddingHistory}
+              ></DialogBiddingHistory>
+            </>
+          )}
 
           <DialogImage ref={dialogImage}></DialogImage>
         </>

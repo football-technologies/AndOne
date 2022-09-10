@@ -99,18 +99,20 @@ const ShopForm = () => {
 
   useEffect(() => {
     if (bindShop) {
-      const shop = _.cloneDeep(bindShop);
+      if (router.query.shopId) {
+        const shop = _.cloneDeep(bindShop);
 
-      if (shop.tags.length > 0) {
-        const tagNames = [];
-        for (const tag of shop.tags) {
-          tagNames.push(tag.name);
+        if (shop.tags.length > 0) {
+          const tagNames = [];
+          for (const tag of shop.tags) {
+            tagNames.push(tag.name);
+          }
+          const tags = tagNames.join();
+          setTags(tags);
         }
-        const tags = tagNames.join();
-        setTags(tags);
-      }
 
-      setEditShop(shop);
+        setEditShop(shop);
+      }
     }
 
     return () => {
@@ -306,7 +308,7 @@ const ShopForm = () => {
             </FtMiddleButtonOutlined>
           </Box>
 
-          <AspectRatio w={"100%"} h={"auto"} ratio={2.5}>
+          <AspectRatio w="100%" h="auto" ratio={2.5}>
             <Image
               src={
                 mainUrl
@@ -361,9 +363,9 @@ const ShopForm = () => {
             <VStack>
               <Text>Tags</Text>
               <Textarea
-                w={"80%"}
+                w="80%"
                 height="8em"
-                variant={"filled"}
+                variant="filled"
                 onChange={onChangeSetTags}
                 defaultValue={tags}
                 placeholder="例） 2011,英国,サッカー,football"
