@@ -8,8 +8,65 @@ import {
   AspectRatio,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { currentBiddingPrice } from "@/plugins/mixin";
+import { ToFinish, ToPrice } from "@/plugins/filter";
+import { useEffect } from "react";
+import { db } from "@/plugins/firebase";
+import { query, collection, orderBy, onSnapshot } from "firebase/firestore";
+
+import { useState } from "react";
 
 const ItemMiddleCard = ({ item }) => {
+  const [bindBiddings, setBindBiddings] = useState();
+  const [currentPrice, setCurrentPrice] = useState();
+
+  const getCurrentPrice = async () => {
+    if (bindBiddings) {
+      const _currentPrice = await currentBiddingPrice({
+        biddings: bindBiddings,
+        startPrice: item.sale.startPrice,
+      });
+      setCurrentPrice(_currentPrice);
+    }
+  };
+
+  const getBiddings = async () => {
+    const biddings = [];
+    const q = query(
+      collection(db, `items/${item.id}/biddings`),
+      orderBy("price", "desc")
+    );
+
+    await onSnapshot(q, async (snapshot) => {
+      if (snapshot) {
+        await snapshot.docChanges().forEach(async (change) => {
+          if (change.type === "added") {
+            if (change.doc.data().id) {
+              const newIndex = change.newIndex;
+              biddings.splice(newIndex, 0, change.doc.data());
+            }
+          }
+          if (change.type === "modified") {
+            if (change.doc.data().id) {
+              const newIndex = change.newIndex;
+              biddings.splice(newIndex, 1, change.doc.data());
+            }
+          }
+        });
+
+        setBindBiddings([...biddings]);
+      }
+    });
+  };
+
+  useEffect(() => {
+    getBiddings();
+  }, []);
+
+  useEffect(() => {
+    getCurrentPrice();
+  }, [bindBiddings]);
+
   return (
     <>
       <Stack
@@ -45,17 +102,23 @@ const ItemMiddleCard = ({ item }) => {
                 </Text>
               </Stack>
 
-              <Stack
-                direction="row"
-                align="center"
-                justify="space-between"
-                pt="2"
-              >
-                <Text fontSize="md" fontWeight="bold" color="primary">
-                  7,800円
-                </Text>
-                <Text fontSize="xs">残り 23時間42分</Text>
-              </Stack>
+              {item.sale.startedAt && bindBiddings && (
+                <Stack
+                  direction="row"
+                  align="center"
+                  justify="space-between"
+                  pt="2"
+                >
+                  <Text fontSize="md" fontWeight="bold" color="primary">
+                    {ToPrice(currentPrice)}
+                  </Text>
+                  <Text fontSize="xs">
+                    {ToFinish({
+                      finishedSeconds: item.sale.finishedAt.seconds,
+                    })}
+                  </Text>
+                </Stack>
+              )}
             </Box>
           </a>
         </NextLink>

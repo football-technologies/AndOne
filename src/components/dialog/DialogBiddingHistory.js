@@ -55,9 +55,11 @@ const DialogBiddingHistory = forwardRef((props, ref) => {
                     </Box>
 
                     <Box w="100px">
-                      <Text fontSize="xs" color="darkGray" align="right">
-                        {ToAgo(bidding.createdAt)}
-                      </Text>
+                      {bidding.createdAt && (
+                        <Text fontSize="xs" color="darkGray" align="right">
+                          {ToAgo(bidding.createdAt)}
+                        </Text>
+                      )}
                     </Box>
                   </Stack>
 

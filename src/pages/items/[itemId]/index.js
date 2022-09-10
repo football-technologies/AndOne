@@ -6,7 +6,7 @@ import DialogBiddingHistory from "@/components/dialog/DialogBiddingHistory";
 
 import { FtMiddleButton } from "@/components/ui/FtButton";
 import { db } from "@/plugins/firebase";
-import { doc, query, collection, orderBy } from "firebase/firestore";
+import { query, collection, orderBy } from "firebase/firestore";
 
 import {
   Box,
@@ -36,7 +36,6 @@ import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
 
 import { currentBiddingPrice } from "@/plugins/mixin";
 import { ToFinish, ToPrice } from "@/plugins/filter";
-import { bind } from "lodash";
 
 const ItemShow = () => {
   const router = useRouter();
@@ -51,10 +50,6 @@ const ItemShow = () => {
   const dialogBiddingHistory = useRef(null);
 
   const dialogImage = useRef();
-
-  console.log(">>>>>>>> bindItem", bindItem);
-  console.log(">>>>>>>> bindComments", bindComments);
-  console.log(">>>>>>>> bindBiddings", bindBiddings);
 
   const openDialogImage = (index) => {
     dialogImage.current.openDialog({
