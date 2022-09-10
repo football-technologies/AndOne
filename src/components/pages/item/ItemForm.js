@@ -10,15 +10,22 @@ import {
   Box,
   Input,
   VStack,
+  HStack,
   Textarea,
   Stack,
   Text,
   Button,
   Icon,
+  Flex,
+  Spacer,
 } from "@chakra-ui/react";
 
 import useFtToast from "@/components/ui/FtToast";
-import { FtLargeButton } from "@/components/ui/FtButton";
+import {
+  FtLargeButton,
+  FtMiddleButtonOutlined,
+  FtSmallButtonOutlined,
+} from "@/components/ui/FtButton";
 import { ftCreateId } from "@/plugins/mixin";
 import { createItem, fetchItem, updateItem } from "@/store/item";
 import { createTag } from "@/store/tag";
@@ -82,18 +89,19 @@ const ItemForm = () => {
 
   useEffect(() => {
     if (bindItem) {
-      const item = _.cloneDeep(bindItem);
+      if (router.query.itemId) {
+        const item = _.cloneDeep(bindItem);
 
-      if (item.tags.length > 0) {
-        const tagNames = [];
-        for (const tag of item.tags) {
-          tagNames.push(tag.name);
+        if (item.tags.length > 0) {
+          const tagNames = [];
+          for (const tag of item.tags) {
+            tagNames.push(tag.name);
+          }
+          const tags = tagNames.join();
+          item.tags = tags;
         }
-        const tags = tagNames.join();
-        item.tags = tags;
+        setEditItem(item);
       }
-
-      setEditItem(item);
     }
 
     return () => {
@@ -208,6 +216,13 @@ const ItemForm = () => {
     router.push(`/items/${editItem.id}`);
   };
 
+  const deleteItem = () => {
+    editItem.status = 3;
+    dispatch(updateItem(editItem));
+    ftToast("アイテムを削除しました");
+    router.push(`/items/${editItem.id}`);
+  };
+
   const form = {
     width: "100%",
   };
@@ -217,14 +232,22 @@ const ItemForm = () => {
       {editItem && (
         <>
           {isEditMode && (
-            <Box textAlign="right" p="5">
-              <NextLink href={`/items/${editItem.id}`}>
-                <Button as="a" variant="link">
-                  Back
-                  <Icon as={MdArrowForward} ml="1"></Icon>
-                </Button>
-              </NextLink>
-            </Box>
+            <Flex p="5">
+              <Box>
+                <FtSmallButtonOutlined onClick={deleteItem}>
+                  アイテムを削除する
+                </FtSmallButtonOutlined>
+              </Box>
+              <Spacer />
+              <Box>
+                <NextLink href={`/items/${editItem.id}`}>
+                  <Button as="a" variant="link">
+                    Back
+                    <Icon as={MdArrowForward} ml="1"></Icon>
+                  </Button>
+                </NextLink>
+              </Box>
+            </Flex>
           )}
 
           <Box w="500px" mx="auto">
@@ -296,7 +319,7 @@ const ItemForm = () => {
                 </FormControl>
 
                 <VStack my={"30px"}>
-                  <FtLargeButton colorScheme="pink" type="submit" my={"20px"}>
+                  <FtLargeButton colorScheme="pink" type="submit">
                     {isEditMode ? "更新する" : "作成する"}
                   </FtLargeButton>
                 </VStack>
