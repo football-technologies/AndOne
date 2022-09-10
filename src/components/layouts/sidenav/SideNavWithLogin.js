@@ -58,7 +58,14 @@ const SideNavWithoutLogin = () => {
   const bindBiddingItems = useSelector((state) => state.account.biddingItems);
 
   const links = [
-    { id: 1, name: "My Collections", url: "/", icon: MdOutlineCollections },
+    {
+      id: 1,
+      name: "My Collections",
+
+      url: `/users/${currentUser.id}/collections`,
+
+      icon: MdOutlineCollections,
+    },
     {
       id: 2,
       name: "Bidding Items",

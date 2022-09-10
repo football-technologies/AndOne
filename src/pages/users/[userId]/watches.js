@@ -5,6 +5,7 @@ import { query, collection, where, getDocs } from "firebase/firestore";
 import { useState } from "react";
 import ItemSmallCard from "@/components/cards/ItemSmallCard";
 import _ from "lodash";
+import { Text } from "@chakra-ui/react";
 
 const Watches = () => {
   const currentUser = useSelector((state) => state.account);
@@ -66,10 +67,15 @@ const Watches = () => {
 
   return (
     <>
-      {items &&
+      {items && items.length > 0 ? (
         items.map((item) => {
           return <ItemSmallCard item={item} key={item.id}></ItemSmallCard>;
-        })}
+        })
+      ) : (
+        <Text display="block" textAlign="center" p="10">
+          Watch中のアイテムは、まだありません。
+        </Text>
+      )}
     </>
   );
 };
