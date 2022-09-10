@@ -8,8 +8,65 @@ import {
   AspectRatio,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { currentBiddingPrice } from "@/plugins/mixin";
+import { ToFinish, ToPrice } from "@/plugins/filter";
+import { useEffect } from "react";
+import { db } from "@/plugins/firebase";
+import { query, collection, orderBy, onSnapshot } from "firebase/firestore";
 
-const ItemSmallCard = () => {
+import { useState } from "react";
+
+const ItemSmallCard = ({ item }) => {
+  const [bindBiddings, setBindBiddings] = useState();
+  const [currentPrice, setCurrentPrice] = useState();
+
+  const getCurrentPrice = async () => {
+    if (bindBiddings) {
+      const _currentPrice = await currentBiddingPrice({
+        biddings: bindBiddings,
+        startPrice: item.sale.startPrice,
+      });
+      setCurrentPrice(_currentPrice);
+    }
+  };
+
+  const getBiddings = async () => {
+    const biddings = [];
+    const q = query(
+      collection(db, `items/${item.id}/biddings`),
+      orderBy("price", "desc")
+    );
+
+    await onSnapshot(q, async (snapshot) => {
+      if (snapshot) {
+        await snapshot.docChanges().forEach(async (change) => {
+          if (change.type === "added") {
+            if (change.doc.data().id) {
+              const newIndex = change.newIndex;
+              biddings.splice(newIndex, 0, change.doc.data());
+            }
+          }
+          if (change.type === "modified") {
+            if (change.doc.data().id) {
+              const newIndex = change.newIndex;
+              biddings.splice(newIndex, 1, change.doc.data());
+            }
+          }
+        });
+
+        setBindBiddings([...biddings]);
+      }
+    });
+  };
+
+  useEffect(() => {
+    getBiddings();
+  }, []);
+
+  useEffect(() => {
+    getCurrentPrice();
+  }, [bindBiddings]);
+
   return (
     <>
       <Stack
@@ -20,7 +77,7 @@ const ItemSmallCard = () => {
         _hover={{ bg: "paleGray", borderColor: "darkGrey" }}
       >
         <NextLink
-          href="/items/123"
+          href={`/items/${item.id}`}
           passHref
           _hover={{ textDecoration: "none" }}
         >
@@ -28,19 +85,16 @@ const ItemSmallCard = () => {
             <Stack direction={["column", "row"]} align="center">
               <Box w="100px">
                 <AspectRatio ratio={1}>
-                  <Image
-                    src="https://d17x1wu3749i2y.cloudfront.net/2021/02/15/23/44/16/274ac8e2-9729-4223-9c34-4e336cacf00f/file.jpg"
-                    borderRadius="10px"
-                  ></Image>
+                  <Image src={item.images[0].url} borderRadius="10px"></Image>
                 </AspectRatio>
               </Box>
 
               <Box w="40%" px="5">
                 <Heading as="h3" fontSize="md" noOfLines={2}>
-                  Nike International 2012 Black Edition ああああああああああああ
+                  {item.name}
                 </Heading>
                 <Text fontSize="xs" noOfLines={4} pt="2">
-                  ミッドソールに開けたウインドウから適度な圧が解放されるようになり、エアバッグにより多量のエアを充填できることとなった。このことから、エアマックスに搭載されているエアバッグは「マキシマムエア」や「マックスエア」と呼称されることとなる。この「エアマックス」という製品名に関してかなり厳格であり、舗装路用ランニングシューズでビジブルエア搭載かつ最大容量のエア搭載の最上位モデルにその名が冠せられることとなった。ただしこのネーミングに関しては、当時からエア・スタブやエア180、エアクラシックBWなどの例外も存在し、エアマックスCB34やエアノモマックスなどランニングシューズ以外にも適応されるようになっている。また現在では、最上位モデルのシューズでない所謂廉価版シューズであってもエアマックスと冠するシューズが存在するなど、その呼称に関しては当時ほど厳格ではない。
+                  {item.description}{" "}
                 </Text>
               </Box>
 
@@ -48,11 +102,11 @@ const ItemSmallCard = () => {
                 <Stack direction="row" align="center">
                   <Avatar
                     size="sm"
-                    name="imoto"
-                    src="https://bit.ly/broken-link"
+                    name={item.shop.name}
+                    src={item.shop.icon}
                   />
                   <Text fontSize="xs" noOfLines={2}>
-                    芝浦World National Grally ３号点
+                    {item.shop.name}
                   </Text>
                 </Stack>
               </Box>
@@ -63,10 +117,18 @@ const ItemSmallCard = () => {
                   justify="space-between"
                   pt="2"
                 >
-                  <Text fontSize="md" fontWeight="bold" color="primary">
-                    7,800円
-                  </Text>
-                  <Text fontSize="xs">残り 23時間42分</Text>
+                  {item.sale.startedAt && bindBiddings && (
+                    <>
+                      <Text fontSize="md" fontWeight="bold" color="primary">
+                        {ToPrice(currentPrice)}
+                      </Text>
+                      <Text fontSize="xs">
+                        {ToFinish({
+                          finishedSeconds: item.sale.finishedAt.seconds,
+                        })}
+                      </Text>
+                    </>
+                  )}
                 </Stack>
               </Box>
             </Stack>
