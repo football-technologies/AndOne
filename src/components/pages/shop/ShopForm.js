@@ -196,14 +196,8 @@ const ShopForm = () => {
   const onSubmit = async (data) => {
     setIsLoading(true);
 
-    if (!mainUrl) {
+    if (!editShop.cover && !mainUrl) {
       ftToast("cover画像が選択されていません");
-      setIsLoading(false);
-      return false;
-    }
-
-    if (editShop.images.length === 0) {
-      ftToast("お店の紹介画像が選択されていません");
       setIsLoading(false);
       return false;
     }
@@ -230,7 +224,10 @@ const ShopForm = () => {
       editShop.icon = iconUrl;
     }
 
-    editShop.cover = mainUrl;
+    if (mainUrl) {
+      editShop.cover = mainUrl;
+    }
+
     editShop.name = data.shopName;
     editShop.address = data.address;
     editShop.email = data.email;
@@ -531,16 +528,12 @@ const ShopForm = () => {
           </Stack>
 
           <Stack w={"30%"}>
-            <FormControl isRequired>
-              <SubImagesForm
-                images={editShop.images}
-                shopId={editShop.id}
-                returnImages={returnImages}
-              ></SubImagesForm>
-              <FormLabel fontSize="sm">
-                お店の紹介画像は最大で9枚まで表示できます
-              </FormLabel>
-            </FormControl>
+            <SubImagesForm
+              images={editShop.images}
+              shopId={editShop.id}
+              returnImages={returnImages}
+            ></SubImagesForm>
+            <Text fontSize="sm">お店の紹介画像は最大で9枚まで表示できます</Text>
           </Stack>
         </HStack>
       </>
