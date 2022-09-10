@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useRef } from "react";
 import DialogPostBidding from "@/components/dialog/DialogPostBidding";
+import DialogBiddingHistory from "@/components/dialog/DialogBiddingHistory";
 
 import { FtMiddleButton } from "@/components/ui/FtButton";
 import { db } from "@/plugins/firebase";
@@ -43,6 +44,8 @@ const ItemShow = () => {
   const bindBiddings = useSelector((state) => state.bidding.biddings);
 
   const dialogPostBidding = useRef(null);
+  const dialogBiddingHistory = useRef(null);
+
   const dialogImage = useRef();
 
   console.log(">>>>>>>> bindBiddings", bindBiddings);
@@ -78,6 +81,10 @@ const ItemShow = () => {
 
   const openDialogBidding = () => {
     dialogPostBidding.current.openDialog();
+  };
+
+  const openDialogBiddingHistory = () => {
+    dialogBiddingHistory.current.openDialog();
   };
 
   return (
@@ -164,6 +171,12 @@ const ItemShow = () => {
                 </FtMiddleButton>
               </Center>
 
+              <Box>
+                <Button onClick={() => openDialogBiddingHistory()}>
+                  history
+                </Button>
+              </Box>
+
               {bindItem.createdYear && (
                 <Box pt="10">
                   <Text
@@ -231,6 +244,9 @@ const ItemShow = () => {
           </Box>
           {/* dialog */}
           <DialogPostBidding ref={dialogPostBidding}></DialogPostBidding>
+          <DialogBiddingHistory
+            ref={dialogBiddingHistory}
+          ></DialogBiddingHistory>
 
           <DialogImage ref={dialogImage}></DialogImage>
         </>
