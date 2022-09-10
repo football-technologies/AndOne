@@ -28,29 +28,29 @@ const scheme = {
   },
 
   // users/xxxxx/bids/xxxxx
-  bids: {
-    id: null,
-    status: 1,
-    price: null,
-    user: {
-      id: null,
-      ref: null,
-      name: null,
-      icon: null,
-    },
-    item: {
-      id: null,
-      ref: null,
-      name: null,
-    },
-    shop: {
-      id: null,
-      ref: null,
-      name: null,
-    },
-    createdAt: null,
-    updatedAt: null,
-  },
+  // bids: {
+  //   id: null,
+  //   status: 1,
+  //   price: null,
+  //   user: {
+  //     id: null,
+  //     ref: null,
+  //     name: null,
+  //     icon: null,
+  //   },
+  //   item: {
+  //     id: null,
+  //     ref: null,
+  //     name: null,
+  //   },
+  //   shop: {
+  //     id: null,
+  //     ref: null,
+  //     name: null,
+  //   },
+  //   createdAt: null,
+  //   updatedAt: null,
+  // },
 
   // users/xxxxx/collections/xxxxx
   // collections: {
@@ -110,12 +110,12 @@ const scheme = {
     description: null,
     images: [], // {caption, url}
     tags: [], // {id, ref, name}
-    artist: {
-      id: null,
-      ref: null,
-      name: null,
-      icon: null,
-    },
+    // artist: {
+    //   id: null,
+    //   ref: null,
+    //   name: null,
+    //   icon: null,
+    // },
     shop: {
       id: null,
       ref: null,
@@ -258,23 +258,23 @@ const scheme = {
   },
 
   // artists/xxxxx
-  artists: {
-    id: null,
-    status: 1,
-    name: null,
-    icon: null,
-    description: null,
-    birthAt: null,
-    country: [], // e.g. 日本、メキシコ、イタリア
-    links: [], // {caption, url}
-    shop: {
-      id: null,
-      ref: null,
-      name: null,
-    },
-    createdAt: null,
-    updatedAt: null,
-  },
+  // artists: {
+  //   id: null,
+  //   status: 1,
+  //   name: null,
+  //   icon: null,
+  //   description: null,
+  //   birthAt: null,
+  //   country: [], // e.g. 日本、メキシコ、イタリア
+  //   links: [], // {caption, url}
+  //   shop: {
+  //     id: null,
+  //     ref: null,
+  //     name: null,
+  //   },
+  //   createdAt: null,
+  //   updatedAt: null,
+  // },
 
   // contacts/xxxxx
   contacts: {
