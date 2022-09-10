@@ -62,7 +62,7 @@ const LikeButton = ({ target, id, name }) => {
           query: query(
             collectionGroup(db, `likes`),
             where("item.id", "==", id),
-            where("user.id", "==", currentUser.id)
+            where("user.id", "==", currentUser.id),
           ),
         })
       );

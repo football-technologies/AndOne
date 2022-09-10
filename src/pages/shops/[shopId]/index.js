@@ -93,6 +93,7 @@ const ShopShow = () => {
       dispatch(
         fetchShop({
           query: `shops/${shopId}`,
+          isOnSnapshot: true,
           type: "fetch",
         })
       );

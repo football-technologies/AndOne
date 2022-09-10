@@ -7,6 +7,8 @@ import {
   serverTimestamp,
   onSnapshot,
   deleteDoc,
+  getDocs,
+  getDoc,
   query,
   collection,
   orderBy,
@@ -51,39 +53,75 @@ const comment = createSlice({
   },
 });
 
-const fetchComments = (payload) => {
+const fetchComment = ({ query, type, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchTags", payload);
+    console.log(">>>>>>>>> called fetchComment");
 
+    let unsubscribe = null;
+
+    if (isOnSnapshot) {
+      unsubscribe = await onSnapshot(doc(db, query), async (doc) => {
+        if (doc.id) {
+          dispatch(readComment(doc.data()));
+        }
+      });
+    }
+
+    if (!isOnSnapshot) {
+      await getDoc(doc(db, query)).then((doc) => {
+        if (doc.id) {
+          dispatch(readComment(doc.data()));
+        }
+      });
+    }
+
+    if (type === "delete") {
+      unsubscribe();
+    }
+  };
+};
+
+const fetchComments = ({ type, query, isOnSnapshot = false }) => {
+  return async (dispatch, getState) => {
+    console.log(">>>>>>>>> called fetchComments");
+
+    let unsubscribe = null;
     const newComments = [];
 
-    const q = payload.query;
-
-    const unsubscribe = await onSnapshot(q, async (snapshot) => {
-      if (snapshot) {
-        await snapshot.docChanges().forEach(async (change) => {
-          console.log(">>>>>>>> change", change);
-
-          if (change.type === "added") {
-            if (change.doc.data().id) {
-              const newIndex = change.newIndex;
-              newComments.splice(newIndex, 0, change.doc.data());
+    if (isOnSnapshot) {
+      unsubscribe = await onSnapshot(query, async (snapshot) => {
+        if (snapshot) {
+          await snapshot.docChanges().forEach(async (change) => {
+            if (change.type === "added") {
+              if (change.doc.data().id) {
+                const newIndex = change.newIndex;
+                newComments.splice(newIndex, 0, change.doc.data());
+              }
             }
-          }
-
-          if (change.type === "modified") {
-            if (change.doc.data().id) {
-              const newIndex = change.newIndex;
-              newComments.splice(newIndex, 1, change.doc.data());
+            if (change.type === "modified") {
+              if (change.doc.data().id) {
+                const newIndex = change.newIndex;
+                newComments.splice(newIndex, 1, change.doc.data());
+              }
             }
+          });
+        }
+        dispatch(readComments(newComments));
+      });
+    }
+
+    if (!isOnSnapshot) {
+      await getDocs(query).then((snapshot) => {
+        snapshot.forEach((doc) => {
+          if (doc.id) {
+            newComments.push(doc.data());
           }
         });
-      }
-
+      });
       dispatch(readComments(newComments));
-    });
+    }
 
-    if (payload.type === "delete") {
+    if (type === "delete") {
       unsubscribe();
     }
   };
@@ -96,5 +134,5 @@ export const {
   readComment,
   readComments,
 } = comment.actions;
-export { fetchComments };
+export { fetchComment, fetchComments };
 export default comment;

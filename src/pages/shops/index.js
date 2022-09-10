@@ -6,6 +6,9 @@ import NextLink from "next/link";
 import { fetchShops } from "@/store/shop";
 import { Box, Button } from "@chakra-ui/react";
 
+import { db } from "@/plugins/firebase";
+import { collection } from "firebase/firestore";
+
 const ShopIndex = () => {
   const bindShops = useSelector((state) => state.shop.shops);
 
@@ -15,7 +18,8 @@ const ShopIndex = () => {
   useEffect(() => {
     dispatch(
       fetchShops({
-        query: `shops`,
+        query: collection(db, "shops"),
+        isOnSnapshot: true,
         type: "fetch",
       })
     );

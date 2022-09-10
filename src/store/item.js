@@ -7,6 +7,7 @@ import {
   serverTimestamp,
   onSnapshot,
   getDoc,
+  getDocs,
 } from "firebase/firestore";
 
 const item = createSlice({

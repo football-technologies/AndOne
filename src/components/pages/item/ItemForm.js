@@ -60,6 +60,7 @@ const ItemForm = () => {
         dispatch(
           fetchItem({
             query: `items/${router.query.itemId}`,
+            isOnSnapshot: true,
             type: "fetch",
           })
         );
@@ -68,6 +69,7 @@ const ItemForm = () => {
           dispatch(
             fetchItem({
               query: `items/${router.query.itemId}`,
+              isOnSnapshot: true,
               type: "delete",
             })
           );
@@ -113,6 +115,7 @@ const ItemForm = () => {
     dispatch(
       fetchShop({
         query: `shops/${currentUser.shopId}`,
+        isOnSnapshot: true,
         type: "fetch",
       })
     );
@@ -121,6 +124,7 @@ const ItemForm = () => {
       dispatch(
         fetchShop({
           query: `shops/${currentUser.shopId}`,
+          isOnSnapshot: true,
           type: "delete",
         })
       );

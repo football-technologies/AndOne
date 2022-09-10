@@ -8,6 +8,7 @@ import {
   onSnapshot,
   deleteDoc,
   getDocs,
+  getDoc,
 } from "firebase/firestore";
 
 const like = createSlice({
@@ -45,26 +46,75 @@ const like = createSlice({
   },
 });
 
-const fetchLike = (payload) => {
-  return async (dispatch, getState) => {};
-};
-
-const fetchLikes = (payload) => {
+const fetchLike = ({ query, type, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    const newlikes = [];
-    const q = payload.query;
+    console.log(">>>>>>>>> called fetchLike");
 
-    await getDocs(q).then((snapshot) => {
-      snapshot.forEach((doc) => {
+    let unsubscribe = null;
+
+    if (isOnSnapshot) {
+      unsubscribe = await onSnapshot(doc(db, query), async (doc) => {
         if (doc.id) {
-          newlikes.push(doc.data());
+          dispatch(readLike(doc.data()));
         }
       });
-    });
+    }
 
-    dispatch(readLikes(newlikes));
+    if (!isOnSnapshot) {
+      await getDoc(doc(db, query)).then((doc) => {
+        if (doc.id) {
+          dispatch(readLike(doc.data()));
+        }
+      });
+    }
 
-    if (payload.type === "delete") {
+    if (type === "delete") {
+      unsubscribe();
+    }
+  };
+};
+
+const fetchLikes = ({ type, query, isOnSnapshot = false }) => {
+  return async (dispatch, getState) => {
+    console.log(">>>>>>>>> called fetchLikes");
+
+    let unsubscribe = null;
+    const newLikes = [];
+
+    if (isOnSnapshot) {
+      unsubscribe = await onSnapshot(query, async (snapshot) => {
+        if (snapshot) {
+          await snapshot.docChanges().forEach(async (change) => {
+            if (change.type === "added") {
+              if (change.doc.data().id) {
+                const newIndex = change.newIndex;
+                newLikes.splice(newIndex, 0, change.doc.data());
+              }
+            }
+            if (change.type === "modified") {
+              if (change.doc.data().id) {
+                const newIndex = change.newIndex;
+                newLikes.splice(newIndex, 1, change.doc.data());
+              }
+            }
+          });
+        }
+        dispatch(readLikes(newLikes));
+      });
+    }
+
+    if (!isOnSnapshot) {
+      await getDocs(query).then((snapshot) => {
+        snapshot.forEach((doc) => {
+          if (doc.id) {
+            newLikes.push(doc.data());
+          }
+        });
+      });
+      dispatch(readLikes(newLikes));
+    }
+
+    if (type === "delete") {
       unsubscribe();
     }
   };

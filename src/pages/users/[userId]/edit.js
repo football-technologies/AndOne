@@ -28,8 +28,10 @@ import { UploadIcon } from "@/components/ui/ImageUpload";
 import _ from "lodash";
 import rules from "@/plugins/validation";
 
-const Edit = ({ query }) => {
+const Edit = () => {
   const [url, setUrl] = useState(null);
+  const [user, setUser] = useState(null);
+  const [secret, setSecret] = useState(null);
 
   const bindUser = useSelector((state) => state.user.user);
   const bindSecret = useSelector((state) => state.secret.secret);
@@ -39,9 +41,6 @@ const Edit = ({ query }) => {
   const iconRef = useRef();
   const dispatch = useDispatch();
 
-  const user = _.cloneDeep(bindUser);
-  const secret = _.cloneDeep(bindSecret);
-
   const {
     register,
     handleSubmit,
@@ -49,36 +48,55 @@ const Edit = ({ query }) => {
   } = useForm();
 
   useEffect(() => {
-    dispatch(
-      fetchUser({
-        query: query.userId,
-        type: "fetch",
-      })
-    );
+    if (router.isReady) {
+      if (router.query.userId) {
+        dispatch(
+          fetchUser({
+            query: `users/${router.query.userId}`,
+            isOnSnapshot: true,
+            type: "fetch",
+          })
+        );
 
-    dispatch(
-      fetchSecret({
-        query: query.userId,
-        type: "fetch",
-      })
-    );
+        dispatch(
+          fetchSecret({
+            query: `users/${router.query.userId}/secrets/${router.query.userId}`,
+            isOnSnapshot: true,
+            type: "fetch",
+          })
+        );
 
-    return () => {
-      dispatch(
-        fetchUser({
-          query: query.userId,
-          type: "delete",
-        })
-      );
+        return () => {
+          dispatch(
+            fetchUser({
+              query: `users/${router.query.userId}`,
+              isOnSnapshot: true,
+              type: "delete",
+            })
+          );
 
-      dispatch(
-        fetchSecret({
-          query: query.userId,
-          type: "delete",
-        })
-      );
-    };
-  }, [dispatch]);
+          dispatch(
+            fetchSecret({
+              query: `users/${router.query.userId}/secrets/${router.query.userId}`,
+              isOnSnapshot: true,
+              type: "delete",
+            })
+          );
+        };
+      }
+    }
+  }, [router.isReady]);
+
+  useEffect(() => {
+    if (bindUser && bindSecret) {
+      if (router.query.userId) {
+        const user = _.cloneDeep(bindUser);
+        const secret = _.cloneDeep(bindSecret);
+        setUser(user);
+        setSecret(secret);
+      } 
+    }
+  }, [bindUser, bindSecret]);
 
   const openIconRef = () => {
     iconRef.current.click();
@@ -248,11 +266,5 @@ const Edit = ({ query }) => {
     );
   }
 };
-
-export async function getServerSideProps({ query }) {
-  return {
-    props: { query },
-  };
-}
 
 export default Edit;

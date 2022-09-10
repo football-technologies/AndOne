@@ -16,6 +16,7 @@ const TagIndex = () => {
     dispatch(
       fetchTags({
         query: query(collection(db, `tags`)),
+        isOnSnapshot: true,
         type: "fetch",
       })
     );
