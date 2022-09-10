@@ -43,12 +43,13 @@ const Watches = () => {
 
   useEffect(() => {
     if (itemIds && itemIds.length > 0) {
+      // TODO: itemIds.length > 10 の場合の処理が必要
       dispatch(
         fetchItems({
           query: query(
             collection(db, "items"),
-            where("id", "in", itemIds),
-            orderBy("createdAt", "desc")
+            where("id", "in", itemIds)
+            // orderBy("createdAt", "desc")
           ),
           isOnSnapshot: true,
           type: "fetch",
@@ -61,7 +62,7 @@ const Watches = () => {
     <>
       {bindItems &&
         bindItems.map((item) => {
-          return <ItemSmallCard item={item}></ItemSmallCard>;
+          return <ItemSmallCard item={item} key={item.id}></ItemSmallCard>;
         })}
     </>
   );

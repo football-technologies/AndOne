@@ -66,7 +66,12 @@ const SideNavWithoutLogin = () => {
       url: `/users/${currentUser.id}/watches`,
       icon: MdOutlineAlarmOn,
     },
-    { id: 4, name: "Likes", url: "/", icon: RiHeartAddLine },
+    {
+      id: 4,
+      name: "Likes",
+      url: `/users/${currentUser.id}/likes`,
+      icon: RiHeartAddLine,
+    },
     {
       id: 5,
       name: "Notifications",
