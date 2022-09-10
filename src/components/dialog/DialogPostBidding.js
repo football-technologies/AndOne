@@ -55,13 +55,39 @@ const DialogPostBidding = forwardRef((props, ref) => {
   };
 
   const submit = async () => {
-    currentBiddingPrice({
+    const currentPrice = currentBiddingPrice({
       biddings: bindBiddings,
       startPrice: bindItem.sale.startPrice,
     });
 
     console.log(">>>>>>>>>> currentPrice", currentPrice, Number(price));
-    return false;
+
+    if (currentPrice > Number(price)) {
+      ftToast("現在の最高入札額よりも、高い価格を設定してください");
+      return false;
+    }
+
+    const editBidding = _.cloneDeep(scheme.biddings);
+    editBidding.id = ftCreateId("bidding");
+    editBidding.price = Number(price);
+
+    editBidding.item.id = bindItem.id;
+    editBidding.item.name = bindItem.name;
+    editBidding.item.ref = doc(db, `items/${bindItem.id}`);
+    editBidding.shop.id = bindItem.shop.id;
+    editBidding.shop.name = bindItem.shop.name;
+    editBidding.shop.ref = doc(db, `shops/${bindItem.shop.id}`);
+    editBidding.user.id = currentUser.id;
+    editBidding.user.name = currentUser.name;
+    editBidding.user.ref = doc(db, `user/${currentUser.id}`);
+    editBidding.user.icon = currentUser.icon;
+
+    await dispatch(createBidding(editBidding));
+
+    ftToast("入札を受け付けました。");
+
+    setPrice("");
+    onClose();
   };
 
   return (

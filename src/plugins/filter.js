@@ -23,10 +23,6 @@ const ToFinish = ({ finishedSeconds }) => {
 };
 
 const ToAgo = ({ seconds }) => {
-  if (!seconds) {
-    return "";
-  }
-
   const currentDate = moment();
   const targetDate = moment.unix(seconds);
   const diffMins = Math.floor(currentDate.diff(targetDate) / 60000); // msec -> min

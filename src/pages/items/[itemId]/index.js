@@ -143,40 +143,44 @@ const ItemShow = () => {
                 name={bindItem.name}
               ></LikeButton>
 
-              <Stack
-                direction="row"
-                borderBottom="2px"
-                borderColor="primary"
-                align="end"
-                pt="10"
-              >
-                <Text fontSize="md" fontWeight="bold" color="primary">
-                  {ToPrice(
-                    currentBiddingPrice({
-                      biddings: bindBiddings,
-                      startPrice: bindItem.sale.startPrice,
-                    })
-                  )}
-                </Text>
-                <Spacer></Spacer>
-                <Text fontWeight={700} fontSize="xs">
-                  {ToFinish({
-                    finishedSeconds: bindItem.sale.finishedAt.seconds,
-                  })}
-                </Text>
-              </Stack>
+              {bindItem.sale.startedAt && (
+                <Box>
+                  <Stack
+                    direction="row"
+                    borderBottom="2px"
+                    borderColor="primary"
+                    align="end"
+                    pt="10"
+                  >
+                    <Text fontSize="md" fontWeight="bold" color="primary">
+                      {ToPrice(
+                        currentBiddingPrice({
+                          biddings: bindBiddings,
+                          startPrice: bindItem.sale.startPrice,
+                        })
+                      )}
+                    </Text>
+                    <Spacer></Spacer>
+                    <Text fontWeight={700} fontSize="xs">
+                      {ToFinish({
+                        finishedSeconds: bindItem.sale.finishedAt.seconds,
+                      })}
+                    </Text>
+                  </Stack>
 
-              <Center pt="2">
-                <FtMiddleButton onClick={openDialogBidding}>
-                  入札する
-                </FtMiddleButton>
-              </Center>
+                  <Center pt="2">
+                    <FtMiddleButton onClick={openDialogBidding}>
+                      入札する
+                    </FtMiddleButton>
+                  </Center>
 
-              <Box>
-                <Button onClick={() => openDialogBiddingHistory()}>
-                  history {bindBiddings ? bindBiddings.length : 0}
-                </Button>
-              </Box>
+                  <Box>
+                    <Button onClick={() => openDialogBiddingHistory()}>
+                      history {bindBiddings ? bindBiddings.length : 0}
+                    </Button>
+                  </Box>
+                </Box>
+              )}
 
               {bindItem.createdYear && (
                 <Box pt="10">
@@ -244,10 +248,15 @@ const ItemShow = () => {
             <Text fontSize="sm">{bindItem.description}</Text>
           </Box>
           {/* dialog */}
-          <DialogPostBidding ref={dialogPostBidding}></DialogPostBidding>
-          <DialogBiddingHistory
-            ref={dialogBiddingHistory}
-          ></DialogBiddingHistory>
+
+          {bindItem.sale.startedAt && (
+            <>
+              <DialogPostBidding ref={dialogPostBidding}></DialogPostBidding>
+              <DialogBiddingHistory
+                ref={dialogBiddingHistory}
+              ></DialogBiddingHistory>
+            </>
+          )}
 
           <DialogImage ref={dialogImage}></DialogImage>
         </>
