@@ -87,7 +87,7 @@ const SideNavWithoutLogin = () => {
     {
       id: 5,
       name: "Notifications",
-      url: "/",
+      url: `/users/${currentUser.id}/notifications`,
       icon: MdOutlineNotificationsNone,
     },
   ];
