@@ -1,19 +1,14 @@
-import { useState, useRef, useEffect, createRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
-import comment, { createComment } from "@/store/comment";
+import { createComment } from "@/store/comment";
 import { ftCreateId } from "@/plugins/mixin";
 import useFtToast from "@/components/ui/FtToast";
 
-import {
-  FtMiddleButtonOutlined,
-  FtMiddleButton,
-  FtSmallButtonOutlined,
-  FtSmallButton,
-} from "@/components/ui/FtButton";
+import { FtMiddleButton, FtSmallButton } from "@/components/ui/FtButton";
 
-import { ToFullDate } from "@/plugins/filter";
+import DisplayItemComments from "./DisplayItemComments";
 
 import {
   Icon,
@@ -92,7 +87,7 @@ const ItemComments = () => {
 
   const onClose = () => {
     setDialog(false);
-    setText(null);
+    setText("");
     setReplyId(null);
   };
 
@@ -135,10 +130,9 @@ const ItemComments = () => {
       comment.parent.ref = doc(db, `items/${itemId}/comments/${replyId}`);
     }
 
+    initialFocusRef.current.value = "";
     dispatch(createComment(comment));
     ftToast("送信が完了しました");
-    setText(null);
-    setReplyId(null);
   };
 
   return (
@@ -193,73 +187,22 @@ const ItemComments = () => {
                   borderColor="lightGray"
                 >
                   <Text as="b">＜質問：{parentIndex + 1}＞</Text>
-                  <HStack>
-                    <Stack w="15%" align="end">
-                      {parentComment.user.icon ? (
-                        <Avatar src={parentComment.user.icon} />
-                      ) : (
-                        <Avatar name={parentComment.user.name} />
-                      )}
-                    </Stack>
-                    <Stack w="80%">
-                      <Text fontSize="xs">{parentComment.user.name}</Text>
-                      <Textarea
-                        readOnly
-                        value={parentComment.text}
-                        resize="none"
-                      ></Textarea>
-                      <HStack>
-                        {parentComment.createdAt && (
-                          <Text fontSize="xs">
-                            {ToFullDate(parentComment.createdAt)}
-                          </Text>
-                        )}
-
-                        <Stack align={"end"}>
-                          <FtSmallButtonOutlined
-                            onClick={() => selectComment(parentComment.id)}
-                          >
-                            返信する
-                          </FtSmallButtonOutlined>
-                        </Stack>
-                      </HStack>
-                    </Stack>
-                  </HStack>
+                  <DisplayItemComments
+                    comment={parentComment}
+                    type="parent"
+                    replyId={parentComment.id}
+                    selectComment={selectComment}
+                  ></DisplayItemComments>
 
                   {parentComment.children.map((childrenComment, index) => {
                     return (
-                      <HStack key={index}>
-                        <Stack w="25%" align="end">
-                          {childrenComment.user.icon ? (
-                            <Avatar src={childrenComment.user.icon} />
-                          ) : (
-                            <Avatar name={childrenComment.user.name} />
-                          )}
-                        </Stack>
-                        <Stack w="70%">
-                          <Text fontSize="xs">{childrenComment.user.name}</Text>
-                          <Textarea
-                            readOnly
-                            value={childrenComment.text}
-                            resize="none"
-                          ></Textarea>
-                          <HStack>
-                            {childrenComment.createdAt && (
-                              <Text fontSize="xs">
-                                {ToFullDate(childrenComment.createdAt)}
-                              </Text>
-                            )}
-
-                            <Stack align={"end"}>
-                              <FtSmallButtonOutlined
-                                onClick={() => selectComment(parentComment.id)}
-                              >
-                                返信する
-                              </FtSmallButtonOutlined>
-                            </Stack>
-                          </HStack>
-                        </Stack>
-                      </HStack>
+                      <DisplayItemComments
+                        key={index}
+                        comment={childrenComment}
+                        type="children"
+                        replyId={parentComment.id}
+                        selectComment={selectComment}
+                      ></DisplayItemComments>
                     );
                   })}
                 </Stack>
