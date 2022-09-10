@@ -69,6 +69,7 @@ const ShopForm = () => {
         dispatch(
           fetchShop({
             query: `shops/${router.query.shopId}`,
+            isOnSnapshot: true,
             type: "fetch",
           })
         );
@@ -79,6 +80,7 @@ const ShopForm = () => {
           dispatch(
             fetchShop({
               query: `shops/${router.query.shopId}`,
+              isOnSnapshot: true,
               type: "delete",
             })
           );

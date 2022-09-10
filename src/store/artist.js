@@ -6,6 +6,8 @@ import {
   setDoc,
   serverTimestamp,
   onSnapshot,
+  getDocs,
+  getDoc,
   query,
   collection,
   orderBy,
@@ -29,26 +31,80 @@ const artist = createSlice({
   },
 });
 
-const fetchArtist = (payload) => {
+const fetchArtist = ({ query, type, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
     console.log(">>>>>>>>> called fetchArtist");
 
-    const unsubscribe = await onSnapshot(
-      doc(db, payload.query),
-      async (doc) => {
+    let unsubscribe = null;
+
+    if (isOnSnapshot) {
+      unsubscribe = await onSnapshot(doc(db, query), async (doc) => {
         if (doc.id) {
           dispatch(readArtist(doc.data()));
         }
-      }
-    );
+      });
+    }
 
-    if (payload.type === "delete") {
-      console.log(">>>>>>>>> called deleteArtist");
+    if (!isOnSnapshot) {
+      await getDoc(doc(db, query)).then((doc) => {
+        if (doc.id) {
+          dispatch(readArtist(doc.data()));
+        }
+      });
+    }
+
+    if (type === "delete") {
+      unsubscribe();
+    }
+  };
+};
+
+const fetchArtists = ({ type, query, isOnSnapshot = false }) => {
+  return async (dispatch, getState) => {
+    console.log(">>>>>>>>> called fetchArtists");
+
+    let unsubscribe = null;
+    const newArtists = [];
+
+    if (isOnSnapshot) {
+      unsubscribe = await onSnapshot(query, async (snapshot) => {
+        if (snapshot) {
+          await snapshot.docChanges().forEach(async (change) => {
+            if (change.type === "added") {
+              if (change.doc.data().id) {
+                const newIndex = change.newIndex;
+                newArtists.splice(newIndex, 0, change.doc.data());
+              }
+            }
+            if (change.type === "modified") {
+              if (change.doc.data().id) {
+                const newIndex = change.newIndex;
+                newArtists.splice(newIndex, 1, change.doc.data());
+              }
+            }
+          });
+        }
+        dispatch(readArtists(newArtists));
+      });
+    }
+
+    if (!isOnSnapshot) {
+      await getDocs(query).then((snapshot) => {
+        snapshot.forEach((doc) => {
+          if (doc.id) {
+            newArtists.push(doc.data());
+          }
+        });
+      });
+      dispatch(readArtists(newArtists));
+    }
+
+    if (type === "delete") {
       unsubscribe();
     }
   };
 };
 
 export const { createArtist, readArtist } = artist.actions;
-export { fetchArtist };
+export { fetchArtist, fetchArtists };
 export default artist;

@@ -6,6 +6,8 @@ import {
   setDoc,
   serverTimestamp,
   onSnapshot,
+  getDocs,
+  getDoc,
   query,
   collection,
   orderBy,
@@ -38,66 +40,75 @@ const shop = createSlice({
   },
 });
 
-const fetchShop = (payload) => {
+const fetchShop = ({ query, type, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
     console.log(">>>>>>>>> called fetchShop");
 
-    const unsubscribe = await onSnapshot(
-      doc(db, payload.query),
-      async (doc) => {
+    let unsubscribe = null;
+
+    if (isOnSnapshot) {
+      unsubscribe = await onSnapshot(doc(db, query), async (doc) => {
         if (doc.id) {
           dispatch(readShop(doc.data()));
         }
-      }
-    );
+      });
+    }
 
-    if (payload.type === "delete") {
-      console.log(">>>>>>>>> called deleteShop");
+    if (!isOnSnapshot) {
+      await getDoc(doc(db, query)).then((doc) => {
+        if (doc.id) {
+          dispatch(readShop(doc.data()));
+        }
+      });
+    }
+
+    if (type === "delete") {
       unsubscribe();
     }
   };
 };
 
-const fetchShops = (payload) => {
+const fetchShops = ({ type, query, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
     console.log(">>>>>>>>> called fetchShops");
 
+    let unsubscribe = null;
     const newShops = [];
-    const q = query(
-      collection(db, payload.query),
-      orderBy("createdAt", "desc")
-    );
 
-    const unsubscribe = await onSnapshot(q, async (snapshot) => {
-      if (snapshot) {
-        await snapshot.docChanges().forEach(async (change) => {
-          // console.log(
-          //   ">>>>>>>>>>>> change.type",
-          //   change.type,
-          //   change.newIndex,
-          //   change.doc.data()
-          // );
-
-          if (change.type === "added") {
-            if (change.doc.data().id) {
-              const newIndex = change.newIndex;
-              newShops.splice(newIndex, 0, change.doc.data());
+    if (isOnSnapshot) {
+      unsubscribe = await onSnapshot(query, async (snapshot) => {
+        if (snapshot) {
+          await snapshot.docChanges().forEach(async (change) => {
+            if (change.type === "added") {
+              if (change.doc.data().id) {
+                const newIndex = change.newIndex;
+                newShops.splice(newIndex, 0, change.doc.data());
+              }
             }
-          }
-
-          if (change.type === "modified") {
-            if (change.doc.data().id) {
-              const newIndex = change.newIndex;
-              newShops.splice(newIndex, 1, change.doc.data());
+            if (change.type === "modified") {
+              if (change.doc.data().id) {
+                const newIndex = change.newIndex;
+                newShops.splice(newIndex, 1, change.doc.data());
+              }
             }
+          });
+        }
+        dispatch(readShops(newShops));
+      });
+    }
+
+    if (!isOnSnapshot) {
+      await getDocs(query).then((snapshot) => {
+        snapshot.forEach((doc) => {
+          if (doc.id) {
+            newShops.push(doc.data());
           }
         });
-      }
-
+      });
       dispatch(readShops(newShops));
-    });
+    }
 
-    if (payload.type === "delete") {
+    if (type === "delete") {
       unsubscribe();
     }
   };

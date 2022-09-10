@@ -91,6 +91,7 @@ const ItemShow = () => {
       dispatch(
         fetchComments({
           query: query(collection(db, `items/${itemId}/comments`)),
+          isOnSnapshot: true,
           type: "fetch",
         })
       );

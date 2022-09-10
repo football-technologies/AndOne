@@ -7,6 +7,8 @@ import {
   serverTimestamp,
   onSnapshot,
   deleteDoc,
+  getDocs,
+  getDoc,
   query,
   collection,
   orderBy,
@@ -43,58 +45,75 @@ const tag = createSlice({
   },
 });
 
-const fetchTag = (payload) => {
+const fetchTag = ({ query, type, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
     console.log(">>>>>>>>> called fetchTag");
 
-    const unsubscribe = await onSnapshot(
-      doc(db, payload.query),
-      async (doc) => {
+    let unsubscribe = null;
+
+    if (isOnSnapshot) {
+      unsubscribe = await onSnapshot(doc(db, query), async (doc) => {
         if (doc.id) {
           dispatch(readTag(doc.data()));
         }
-      }
-    );
+      });
+    }
 
-    if (payload.type === "delete") {
+    if (!isOnSnapshot) {
+      await getDoc(doc(db, query)).then((doc) => {
+        if (doc.id) {
+          dispatch(readTag(doc.data()));
+        }
+      });
+    }
+
+    if (type === "delete") {
       unsubscribe();
     }
   };
 };
 
-const fetchTags = (payload) => {
+const fetchTags = ({ type, query, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchTags", payload);
+    console.log(">>>>>>>>> called fetchTags");
 
+    let unsubscribe = null;
     const newTags = [];
 
-    const q = payload.query;
-
-    const unsubscribe = await onSnapshot(q, async (snapshot) => {
-      if (snapshot) {
-        await snapshot.docChanges().forEach(async (change) => {
-          console.log(">>>>>>>> change", change);
-
-          if (change.type === "added") {
-            if (change.doc.data().id) {
-              const newIndex = change.newIndex;
-              newTags.splice(newIndex, 0, change.doc.data());
+    if (isOnSnapshot) {
+      unsubscribe = await onSnapshot(query, async (snapshot) => {
+        if (snapshot) {
+          await snapshot.docChanges().forEach(async (change) => {
+            if (change.type === "added") {
+              if (change.doc.data().id) {
+                const newIndex = change.newIndex;
+                newTags.splice(newIndex, 0, change.doc.data());
+              }
             }
-          }
-
-          if (change.type === "modified") {
-            if (change.doc.data().id) {
-              const newIndex = change.newIndex;
-              newTags.splice(newIndex, 1, change.doc.data());
+            if (change.type === "modified") {
+              if (change.doc.data().id) {
+                const newIndex = change.newIndex;
+                newTags.splice(newIndex, 1, change.doc.data());
+              }
             }
+          });
+        }
+        dispatch(readTags(newTags));
+      });
+    }
+
+    if (!isOnSnapshot) {
+      await getDocs(query).then((snapshot) => {
+        snapshot.forEach((doc) => {
+          if (doc.id) {
+            newTags.push(doc.data());
           }
         });
-      }
-
+      });
       dispatch(readTags(newTags));
-    });
+    }
 
-    if (payload.type === "delete") {
+    if (type === "delete") {
       unsubscribe();
     }
   };

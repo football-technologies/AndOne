@@ -8,6 +8,7 @@ import {
   onSnapshot,
   deleteDoc,
   getDocs,
+  getDoc,
 } from "firebase/firestore";
 
 const bidding = createSlice({
