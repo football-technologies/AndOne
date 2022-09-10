@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
-import { Button, Wrap, Stack, Text, Divider } from "@chakra-ui/react";
+import { Button, Wrap, Stack, Divider } from "@chakra-ui/react";
 
 import { fetchItems } from "@/store/item";
 import { useDispatch } from "react-redux";

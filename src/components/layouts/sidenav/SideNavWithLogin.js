@@ -1,8 +1,21 @@
 import { useSelector } from "react-redux";
-import { useRouter, useDispatch } from "next/router";
+import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+
 import useLogout from "../Logout";
 import { fetchUser } from "@/store/user";
 import { fetchSecret } from "@/store/secret";
+
+import { useEffect } from "react";
+import { fetchBiddingItems, fetchBiddingItemIds } from "@/store/account";
+import { db } from "@/plugins/firebase";
+import {
+  query,
+  collection,
+  orderBy,
+  where,
+  collectionGroup,
+} from "firebase/firestore";
 
 import {
   Box,
@@ -36,37 +49,63 @@ import ItemExtraSmallCard from "@/components/cards/ItemExtraSmallCard";
 import NextLink from "next/link";
 
 const SideNavWithoutLogin = () => {
+  const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.account);
   const { logoutAuth } = useLogout();
+  const bindBiddingItemIds = useSelector(
+    (state) => state.account.biddingItemIds
+  );
+  const bindBiddingItems = useSelector((state) => state.account.biddingItems);
 
-  const items = [
-    { id: 1, name: "My Collections", icon: MdOutlineCollections },
-    { id: 2, name: "Bidding Items", icon: FaRegHourglass },
-    { id: 3, name: "Watch Items", icon: MdOutlineAlarmOn },
-    { id: 4, name: "Likes", icon: RiHeartAddLine },
-    { id: 5, name: "Notifications", icon: MdOutlineNotificationsNone },
+  console.log(">>>>>>>>>>>> bindBiddingItems", bindBiddingItems);
+
+  const links = [
+    { id: 1, name: "My Collections", url: "/", icon: MdOutlineCollections },
+    { id: 2, name: "Bidding Items", url: "/", icon: FaRegHourglass },
+    { id: 3, name: "Watch Items", url: "/", icon: MdOutlineAlarmOn },
+    { id: 4, name: "Likes", url: "/", icon: RiHeartAddLine },
+    {
+      id: 5,
+      name: "Notifications",
+      url: "/",
+      icon: MdOutlineNotificationsNone,
+    },
   ];
 
-  const biddingItems = [
-    {
-      id: 1,
-      price: "15,000円",
-      url: "https://www.sskamo.co.jp/puma/club/img/manc22-23-3rd-765734-03-min.jpg",
-      name: "22-23 MANCHESTER CITY AUTHENTIC UNIFORMHOME",
-    },
-    {
-      id: 2,
-      price: "15,000円",
-      url: "https://www.sskamo.co.jp/puma/club/img/manc22-23-3rd-765734-03-min.jpg",
-      name: "22-23 MANCHESTER CITY AUTHENTIC UNIFORMHOME",
-    },
-    {
-      id: 3,
-      price: "15,000円",
-      url: "https://www.sskamo.co.jp/puma/club/img/manc22-23-3rd-765734-03-min.jpg",
-      name: "22-23 MANCHESTER CITY AUTHENTIC UNIFORMHOME",
-    },
-  ];
+  useEffect(() => {
+    if (currentUser.id) {
+      dispatch(
+        fetchBiddingItemIds({
+          query: query(
+            collectionGroup(db, "biddings"),
+            where("user.id", "==", currentUser.id),
+            orderBy("created", "desc")
+            // where("status", "==", 1)
+          ),
+          limit: 5,
+          isOnSnapshot: true,
+          type: "fetch",
+        })
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    if (bindBiddingItemIds && bindBiddingItemIds.length > 0) {
+      console.log(">>>>> read bindBiddingItemIds", bindBiddingItemIds);
+
+      dispatch(
+        fetchBiddingItems({
+          query: query(
+            collection(db, "items"),
+            where("id", "in", bindBiddingItemIds)
+          ),
+          isOnSnapshot: true,
+          type: "fetch",
+        })
+      );
+    }
+  }, [bindBiddingItemIds]);
 
   return (
     <Stack>
@@ -142,13 +181,13 @@ const SideNavWithoutLogin = () => {
 
       <Box py="10" px="3">
         <List spacing={5}>
-          {items.map((item) => (
-            <ListItem key={item.id}>
-              <NextLink href="/" passHref>
+          {links.map((link) => (
+            <ListItem key={link.id}>
+              <NextLink href={link.url} passHref>
                 <a>
                   <Text className="ftTextLink">
-                    <ListIcon as={item.icon} mr="5" />
-                    {item.name}
+                    <ListIcon as={link.icon} mr="5" />
+                    {link.name}
                   </Text>
                 </a>
               </NextLink>
@@ -163,9 +202,10 @@ const SideNavWithoutLogin = () => {
         <Heading my={"10px"} size="sm">
           Bidding Items
         </Heading>
-        {biddingItems.map((item) => (
-          <ItemExtraSmallCard key={item.id}></ItemExtraSmallCard>
-        ))}
+        {bindBiddingItems &&
+          bindBiddingItems.map((item) => (
+            <ItemExtraSmallCard item={item} key={item.id}></ItemExtraSmallCard>
+          ))}
       </Stack>
     </Stack>
   );
