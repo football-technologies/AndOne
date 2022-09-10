@@ -44,9 +44,9 @@ const ItemComments = () => {
   const [dialog, setDialog] = useState(false);
   const [text, setText] = useState("");
   const [isSeller, setIsSeller] = useState(false);
-  const [parentComment, setParentComment] = useState(null);
-  const [editMode, setEditMode] = useState(false);
+  const [returnComment, setReturnComment] = useState(null);
   const [comments, setComments] = useState([]);
+  const [mention, setMention] = useState(null);
 
   const bindItem = useSelector((state) => state.item.item);
   const bindComments = useSelector((state) => state.comment.comments);
@@ -91,7 +91,8 @@ const ItemComments = () => {
 
   const onClose = () => {
     setDialog(false);
-    setEditMode(false);
+    setMention(null);
+    setReturnComment(null);
   };
 
   const onChange = (e) => {
@@ -99,18 +100,13 @@ const ItemComments = () => {
   };
 
   const selectComment = (comment) => {
-    setEditMode(true);
-    setParentComment(comment);
+    setReturnComment(comment);
+    setMention(`@${comment.user.name} `);
     initialFocusRef.current.focus();
   };
 
-  const cancelComment = (comment) => {
-    setEditMode(false);
-    setParentComment(null);
-  };
-
   const submit = () => {
-    if (isSeller && !parentComment) {
+    if (isSeller && !returnComment) {
       ftToast("返信したいコメントを選択してください");
       return false;
     }
@@ -134,25 +130,25 @@ const ItemComments = () => {
     comment.user.icon = currentUser.icon;
 
     // 返信用BySeller
-    if (isSeller && parentComment) {
-      comment.parent.id = parentComment.parent.id;
+    if (isSeller && returnComment) {
+      comment.parent.id = returnComment.parent.id;
       comment.parent.ref = doc(
         db,
-        `items/${itemId}/comments/${parentComment.parent.id}`
+        `items/${itemId}/comments/${returnComment.parent.id}`
       );
     }
 
     // 返信用ByBuyer
-    if (!isSeller && parentComment) {
-      comment.parent.id = parentComment.parent.id;
+    if (!isSeller && returnComment) {
+      comment.parent.id = returnComment.parent.id;
       comment.parent.ref = doc(
         db,
-        `items/${itemId}/comments/${parentComment.parent.id}`
+        `items/${itemId}/comments/${returnComment.parent.id}`
       );
     }
 
     // 新規作成
-    if (!isSeller && !parentComment) {
+    if (!isSeller && !returnComment) {
       comment.parent.id = comment.id;
       comment.parent.ref = doc(db, `items/${itemId}/comments/${comment.id}`);
     }
@@ -203,17 +199,17 @@ const ItemComments = () => {
           <ModalCloseButton />
 
           <ModalBody>
-            {comments.map((parentComments, index) => {
+            {comments.map((parentComments, parentIndex) => {
               return (
                 <Stack
-                  key={index}
+                  key={parentIndex}
                   p="5px 0px 30px"
                   w="400px"
                   m="0px auto"
                   borderTop="1px"
                   borderColor="lightGray"
                 >
-                  <Text as="b">＜質問：{index + 1}＞</Text>
+                  <Text as="b">＜質問：{parentIndex + 1}＞</Text>
                   {parentComments.map((comment, index) => {
                     return (
                       <HStack key={index} py="5px">
@@ -226,6 +222,7 @@ const ItemComments = () => {
                         </Stack>
 
                         <Stack w={index > 0 ? "70%" : "80%"}>
+                          <Text fontSize="xs">{comment.user.name}</Text>
                           <Textarea
                             readOnly
                             value={comment.text}
@@ -239,19 +236,11 @@ const ItemComments = () => {
                             )}
 
                             <Stack align={"end"}>
-                              {editMode ? (
-                                <FtSmallButton
-                                  onClick={() => cancelComment(comment)}
-                                >
-                                  返信中...
-                                </FtSmallButton>
-                              ) : (
-                                <FtSmallButtonOutlined
-                                  onClick={() => selectComment(comment)}
-                                >
-                                  返信する
-                                </FtSmallButtonOutlined>
-                              )}
+                              <FtSmallButtonOutlined
+                                onClick={() => selectComment(comment)}
+                              >
+                                返信する
+                              </FtSmallButtonOutlined>
                             </Stack>
                           </HStack>
                         </Stack>
@@ -268,7 +257,9 @@ const ItemComments = () => {
               ref={initialFocusRef}
               rows={1}
               placeholder={
-                isSeller
+                mention
+                  ? mention
+                  : isSeller
                   ? "返答を入力してください"
                   : "質問事項を記入してください"
               }
