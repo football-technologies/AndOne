@@ -1,23 +1,20 @@
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { fetchShops } from "@/store/shop";
 import { db } from "@/plugins/firebase";
-import { query, collection, orderBy, where, getDocs } from "firebase/firestore";
+import { query, collection, where, getDocs } from "firebase/firestore";
 import { useState } from "react";
 import ShopMiddleCard from "@/components/cards/ShopMiddleCard";
 import _ from "lodash";
 import { Wrap, Stack } from "@chakra-ui/react";
 
 const Likes = () => {
-  const bindShops = useSelector((state) => state.shop.shops);
   const currentUser = useSelector((state) => state.account);
   const [shopIds, setShopIds] = useState();
-
-  const dispatch = useDispatch();
+  const [shops, setShops] = useState();
+  const [likes, setLikes] = useState();
 
   const getShopIds = async () => {
-    const likes = [];
+    const _likes = [];
     const q = query(
       collection(db, `users/${currentUser.id}/likes`),
       where("item.id", "==", null)
@@ -26,16 +23,36 @@ const Likes = () => {
     await getDocs(q).then((snapshot) => {
       snapshot.forEach((doc) => {
         if (doc.id) {
-          likes.push(doc.data());
+          _likes.push(doc.data());
         }
       });
     });
 
-    const _shopIds = _.map(likes, (like) => {
+    const _shopIds = _.map(_likes, (like) => {
       return like.shop.id;
     });
 
     setShopIds(_shopIds);
+  };
+
+  const getShops = async () => {
+    const _shops = [];
+
+    for (const chunkedShopIds of _.chunk(shopIds, 10)) {
+      const q = query(
+        collection(db, `shops`),
+        where("id", "in", chunkedShopIds)
+      );
+      await getDocs(q).then((snapshot) => {
+        snapshot.forEach((doc) => {
+          if (doc.id) {
+            _shops.push(doc.data());
+          }
+        });
+      });
+    }
+
+    setShops(_shops);
   };
 
   useEffect(() => {
@@ -44,22 +61,15 @@ const Likes = () => {
 
   useEffect(() => {
     if (shopIds && shopIds.length > 0) {
-      // TODO: shopIds.length > 10 の場合の処理が必要
-      dispatch(
-        fetchShops({
-          query: query(collection(db, "shops"), where("id", "in", shopIds)),
-          isOnSnapshot: true,
-          type: "fetch",
-        })
-      );
+      getShops();
     }
   }, [shopIds]);
 
   return (
     <>
       <Wrap p="5">
-        {bindShops &&
-          bindShops.map((shop) => {
+        {shops &&
+          shops.map((shop) => {
             return (
               <Stack w="31%" p="1%" key={shop.id}>
                 <ShopMiddleCard shop={shop}></ShopMiddleCard>;
