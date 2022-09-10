@@ -5,13 +5,13 @@ import { query, collection, where, getDocs } from "firebase/firestore";
 import { useState } from "react";
 import ShopMiddleCard from "@/components/cards/ShopMiddleCard";
 import _ from "lodash";
-import { Wrap, Stack } from "@chakra-ui/react";
+import { Wrap, Stack, Text } from "@chakra-ui/react";
 
 const Likes = () => {
   const currentUser = useSelector((state) => state.account);
   const [shopIds, setShopIds] = useState();
   const [shops, setShops] = useState();
-  const [likes, setLikes] = useState();
+  // const [likes, setLikes] = useState();
 
   const getShopIds = async () => {
     const _likes = [];
@@ -68,14 +68,19 @@ const Likes = () => {
   return (
     <>
       <Wrap p="5">
-        {shops &&
+        {shops && shops.length > 0 ? (
           shops.map((shop) => {
             return (
               <Stack w="31%" p="1%" key={shop.id}>
                 <ShopMiddleCard shop={shop}></ShopMiddleCard>;
               </Stack>
             );
-          })}
+          })
+        ) : (
+          <Text display="block" textAlign="center" p="10">
+            Likeしたショップは、まだありません。
+          </Text>
+        )}
       </Wrap>
     </>
   );
