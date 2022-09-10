@@ -37,6 +37,7 @@ const DialogPostBidding = forwardRef((props, ref) => {
   const [dialog, setDialog] = useState(false);
   const [price, setPrice] = useState();
   const bindItem = useSelector((state) => state.item.item);
+  const bindBiddings = useSelector((state) => state.bidding.biddings);
   const currentUser = useSelector((state) => state.account);
 
   const dispatch = useDispatch();
@@ -54,7 +55,18 @@ const DialogPostBidding = forwardRef((props, ref) => {
   };
 
   const submit = async () => {
-    // await dispatch(createItem(editItem));
+    const currentPrice = currentBiddingPrice({
+      biddings: bindBiddings,
+      startPrice: bindItem.sale.startPrice,
+    });
+
+    console.log(">>>>>>>>>> currentPrice", currentPrice, Number(price));
+
+    if (currentPrice > Number(price)) {
+      ftToast("現在の最高入札額よりも、高い価格を設定してください");
+      return false;
+    }
+
     const editBidding = _.cloneDeep(scheme.biddings);
     editBidding.id = ftCreateId("bidding");
     editBidding.price = Number(price);
@@ -68,6 +80,7 @@ const DialogPostBidding = forwardRef((props, ref) => {
     editBidding.user.id = currentUser.id;
     editBidding.user.name = currentUser.name;
     editBidding.user.ref = doc(db, `user/${currentUser.id}`);
+    editBidding.user.icon = currentUser.icon;
 
     await dispatch(createBidding(editBidding));
 
@@ -101,10 +114,12 @@ const DialogPostBidding = forwardRef((props, ref) => {
               borderColor="primary"
             >
               <Text fontSize="md" fontWeight="bold" color="primary">
-                {currentBiddingPrice({
-                  itemId: bindItem.id,
-                  startPrice: bindItem.sale.startPrice,
-                })}
+                {ToPrice(
+                  currentBiddingPrice({
+                    biddings: bindBiddings,
+                    startPrice: bindItem.sale.startPrice,
+                  })
+                )}
               </Text>
               <Spacer></Spacer>
               <Box>

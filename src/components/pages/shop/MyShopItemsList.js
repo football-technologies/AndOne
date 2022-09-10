@@ -50,6 +50,7 @@ const MyShopItemsList = ({ shopId }) => {
           where("shop.id", "==", shopId),
           orderBy("createdAt", "desc")
         ),
+        isOnSnapshot: true,
         type: "fetch",
       })
     );

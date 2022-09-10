@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useRef } from "react";
 import DialogPostBidding from "@/components/dialog/DialogPostBidding";
+import DialogBiddingHistory from "@/components/dialog/DialogBiddingHistory";
 
 import { FtMiddleButton } from "@/components/ui/FtButton";
 import { db } from "@/plugins/firebase";
@@ -33,6 +34,7 @@ import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
 
 import { currentBiddingPrice } from "@/plugins/mixin";
 import { ToFinish, ToPrice } from "@/plugins/filter";
+import { bind } from "lodash";
 
 const ItemShow = () => {
   const router = useRouter();
@@ -43,6 +45,8 @@ const ItemShow = () => {
   const bindBiddings = useSelector((state) => state.bidding.biddings);
 
   const dialogPostBidding = useRef(null);
+  const dialogBiddingHistory = useRef(null);
+
   const dialogImage = useRef();
 
   console.log(">>>>>>>> bindBiddings", bindBiddings);
@@ -70,6 +74,7 @@ const ItemShow = () => {
             collection(db, `items/${itemId}/biddings`),
             orderBy("price", "desc")
           ),
+          isOnSnapshot: true,
           type: "fetch",
         })
       );
@@ -80,9 +85,13 @@ const ItemShow = () => {
     dialogPostBidding.current.openDialog();
   };
 
+  const openDialogBiddingHistory = () => {
+    dialogBiddingHistory.current.openDialog();
+  };
+
   return (
     <>
-      {bindItem && (
+      {bindItem && bindBiddings && (
         <>
           <HStack align="start" position="relative">
             <Box position="absolute" top="-30px" right="0" zIndex="2">
@@ -134,35 +143,44 @@ const ItemShow = () => {
                 name={bindItem.name}
               ></LikeButton>
 
-              <Stack
-                direction="row"
-                borderBottom="2px"
-                borderColor="primary"
-                align="end"
-                pt="10"
-              >
-                <Text fontSize="md" fontWeight="bold" color="primary">
-                  {bindBiddings && bindBiddings.length > 0
-                    ? ToPrice(bindBiddings[0].price)
-                    : ToPrice(bindItem.sale.startPrice)}
-                  {/* {currentBiddingPrice({
-                    itemId: bindItem.id,
-                    startPrice: bindItem.sale.startPrice,
-                  })} */}
-                </Text>
-                <Spacer></Spacer>
-                <Text fontWeight={700} fontSize="xs">
-                  {ToFinish({
-                    finishedSeconds: bindItem.sale.finishedAt.seconds,
-                  })}
-                </Text>
-              </Stack>
+              {bindItem.sale.startedAt && (
+                <Box>
+                  <Stack
+                    direction="row"
+                    borderBottom="2px"
+                    borderColor="primary"
+                    align="end"
+                    pt="10"
+                  >
+                    <Text fontSize="md" fontWeight="bold" color="primary">
+                      {ToPrice(
+                        currentBiddingPrice({
+                          biddings: bindBiddings,
+                          startPrice: bindItem.sale.startPrice,
+                        })
+                      )}
+                    </Text>
+                    <Spacer></Spacer>
+                    <Text fontWeight={700} fontSize="xs">
+                      {ToFinish({
+                        finishedSeconds: bindItem.sale.finishedAt.seconds,
+                      })}
+                    </Text>
+                  </Stack>
 
-              <Center pt="2">
-                <FtMiddleButton onClick={openDialogBidding}>
-                  入札する
-                </FtMiddleButton>
-              </Center>
+                  <Center pt="2">
+                    <FtMiddleButton onClick={openDialogBidding}>
+                      入札する
+                    </FtMiddleButton>
+                  </Center>
+
+                  <Box>
+                    <Button onClick={() => openDialogBiddingHistory()}>
+                      history {bindBiddings ? bindBiddings.length : 0}
+                    </Button>
+                  </Box>
+                </Box>
+              )}
 
               {bindItem.createdYear && (
                 <Box pt="10">
@@ -230,7 +248,15 @@ const ItemShow = () => {
             <Text fontSize="sm">{bindItem.description}</Text>
           </Box>
           {/* dialog */}
-          <DialogPostBidding ref={dialogPostBidding}></DialogPostBidding>
+
+          {bindItem.sale.startedAt && (
+            <>
+              <DialogPostBidding ref={dialogPostBidding}></DialogPostBidding>
+              <DialogBiddingHistory
+                ref={dialogBiddingHistory}
+              ></DialogBiddingHistory>
+            </>
+          )}
 
           <DialogImage ref={dialogImage}></DialogImage>
         </>
