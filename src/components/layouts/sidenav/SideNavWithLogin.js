@@ -59,7 +59,12 @@ const SideNavWithoutLogin = () => {
 
   const links = [
     { id: 1, name: "My Collections", url: "/", icon: MdOutlineCollections },
-    { id: 2, name: "Bidding Items", url: "/", icon: FaRegHourglass },
+    {
+      id: 2,
+      name: "Bidding Items",
+      url: `/users/${currentUser.id}/biddings`,
+      icon: FaRegHourglass,
+    },
     {
       id: 3,
       name: "Watch Items",
@@ -68,7 +73,7 @@ const SideNavWithoutLogin = () => {
     },
     {
       id: 4,
-      name: "Likes",
+      name: "Like Shops",
       url: `/users/${currentUser.id}/likes`,
       icon: RiHeartAddLine,
     },
