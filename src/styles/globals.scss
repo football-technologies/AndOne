@@ -73,6 +73,11 @@ img {
   }
 }
 
+.nl2br {
+  white-space: pre-line;
+  word-wrap: break-word;
+}
+
 * {
   color: #333;
   box-sizing: border-box;

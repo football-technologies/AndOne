@@ -163,12 +163,12 @@ const ItemComments = () => {
         onClose={onClose}
         initialFocusRef={initialFocusRef}
         scrollBehavior={"inside"}
+        size="xl"
       >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
-            {isSeller ? "返信する" : "質問する"}
-            <Text color="red.300" fontSize="xs">
+            <Text color="primary" fontSize="xs">
               *返信する場合は「返信する」の選択が必須です
             </Text>
           </ModalHeader>
@@ -180,13 +180,10 @@ const ItemComments = () => {
               return (
                 <Stack
                   key={parentIndex}
-                  p="5px 0px 30px"
-                  w="400px"
-                  m="0px auto"
+                  p="5"
                   borderTop="1px"
                   borderColor="lightGray"
                 >
-                  <Text as="b">＜質問：{parentIndex + 1}＞</Text>
                   <DisplayItemComments
                     comment={parentComment}
                     type="parent"
