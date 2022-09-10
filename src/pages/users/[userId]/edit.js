@@ -177,7 +177,7 @@ const Edit = () => {
             <FormLabel>Display Name</FormLabel>
             <Input
               variant="filled"
-              placeholder="山下俊朗"
+              placeholder="例）田中太郎"
               defaultValue={user.displayName}
               {...register("displayName", {
                 required: "名前は必須入力です"
@@ -194,7 +194,7 @@ const Edit = () => {
             <Input
               variant="filled"
               defaultValue={user.screenName}
-              placeholder="footballworld"
+              placeholder="例）taro1234"
               {...register("screenName", {
                 pattern: rules.name,
               })}
@@ -209,7 +209,8 @@ const Edit = () => {
             <FormLabel>Bio</FormLabel>
             <Textarea
               variant="filled"
-              placeholder="bio"
+              rows={6}
+              placeholder="例）サッカーファン歴10年。好きなチームは浦和レッズ。色々なチームのユニフォームを集めるのが趣味です。一番の宝物は西川周作のサイン入りユニフォーム。"
               defaultValue={user.description}
               {...register("description")}
             ></Textarea>
@@ -223,7 +224,7 @@ const Edit = () => {
             <FormLabel>Email</FormLabel>
             <Input
               variant="filled"
-              placeholder="steve@apple.com"
+              placeholder="例）steve@apple.com"
               defaultValue={secret.email}
               {...register("email", {
                 required: "メールアドレスは必須入力です",
@@ -243,7 +244,7 @@ const Edit = () => {
             <FormLabel>Address</FormLabel>
             <Textarea
               variant="filled"
-              placeholder="東京都千代田区1-11-1"
+              placeholder="例）東京都千代田区1-11-1"
               defaultValue={secret.address}
               {...register("address", {
                 required: "住所は必須入力です",
