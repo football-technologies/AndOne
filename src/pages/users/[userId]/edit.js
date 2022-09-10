@@ -18,7 +18,7 @@ import {
   Textarea,
   HStack,
   Avatar,
-  Stack,
+  Text,
 } from "@chakra-ui/react";
 import useFtToast from "@/components/ui/FtToast";
 import { FtSmallButtonOutlined } from "@/components/ui/FtButton";
@@ -94,7 +94,7 @@ const Edit = () => {
         const secret = _.cloneDeep(bindSecret);
         setUser(user);
         setSecret(secret);
-      } 
+      }
     }
   }, [bindUser, bindSecret]);
 
@@ -140,7 +140,7 @@ const Edit = () => {
 
   const form = {
     width: "300px",
-    margin: "45px auto",
+    margin: "45px auto 0px",
   };
 
   if (user && secret) {
@@ -173,15 +173,20 @@ const Edit = () => {
             </Box>
           </HStack>
 
-          <FormControl mt={"45px"}>
+          <FormControl isRequired isInvalid={errors.displayName} mt={"45px"}>
             <FormLabel>Display Name</FormLabel>
             <Input
               variant="filled"
               placeholder="山下俊朗"
               defaultValue={user.displayName}
-              {...register("displayName")}
+              {...register("displayName", {
+                required: "名前は必須入力です"
+              })}
             />
             <FormHelperText>他の人に表示されます</FormHelperText>
+            <FormErrorMessage>
+              {errors.displayName && errors.displayName.message}
+            </FormErrorMessage>
           </FormControl>
 
           <FormControl isInvalid={errors.screenName} mt={"45px"}>
@@ -214,7 +219,7 @@ const Edit = () => {
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={errors.email} mt={"45px"}>
+          <FormControl isRequired isInvalid={errors.email} mt={"45px"}>
             <FormLabel>Email</FormLabel>
             <Input
               variant="filled"
@@ -234,13 +239,15 @@ const Edit = () => {
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={errors.address} mt={"45px"}>
+          <FormControl isRequired isInvalid={errors.address} mt={"45px"}>
             <FormLabel>Address</FormLabel>
             <Textarea
               variant="filled"
               placeholder="東京都千代田区1-11-1"
               defaultValue={secret.address}
-              {...register("address")}
+              {...register("address", {
+                required: "住所は必須入力です",
+              })}
             ></Textarea>
             <FormHelperText>
               他の人に表示されません <br />
@@ -262,6 +269,9 @@ const Edit = () => {
             </Button>
           </VStack>
         </form>
+        <Box w="50%" >
+          <Text mb="30px" color="red.400" textAlign={"left"}>*必須</Text>
+        </Box>
       </VStack>
     );
   }

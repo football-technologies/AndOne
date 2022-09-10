@@ -180,6 +180,11 @@ const ItemForm = () => {
   };
 
   const onSubmit = async (data) => {
+    if (editItem.images.length === 0) {
+      ftToast("アイテム画像が選択されていません");
+      return false;
+    }
+
     if (data.tags) {
       const replaceTagsName = data.tags
         .replaceAll(" ", "")
@@ -255,18 +260,18 @@ const ItemForm = () => {
           )}
 
           <Box w="500px" mx="auto">
-            <Stack py={"30px"}>
-              <Text>Item Images</Text>
+            <FormControl isRequired py={"30px"}>
+              <FormLabel>Item Images</FormLabel>
               <SubImagesForm
                 images={editItem.images}
                 itemId={editItem.id}
                 returnImages={returnImages}
               ></SubImagesForm>
-            </Stack>
+            </FormControl>
 
             <VStack>
               <form onSubmit={handleSubmit(onSubmit)} style={form}>
-                <FormControl isInvalid={errors.itemName}>
+                <FormControl isRequired isInvalid={errors.itemName}>
                   <FormLabel>Item Name</FormLabel>
                   <Input
                     variant="filled"
@@ -322,11 +327,16 @@ const ItemForm = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                <VStack my={"30px"}>
+                <VStack mt={"30px"}>
                   <FtLargeButton colorScheme="pink" type="submit">
                     {isEditMode ? "更新する" : "作成する"}
                   </FtLargeButton>
                 </VStack>
+                <Box>
+                  <Text mb="30px" color="red.400">
+                    *必須
+                  </Text>
+                </Box>
               </form>
             </VStack>
           </Box>

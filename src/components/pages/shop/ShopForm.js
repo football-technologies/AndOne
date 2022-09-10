@@ -196,6 +196,18 @@ const ShopForm = () => {
   const onSubmit = async (data) => {
     setIsLoading(true);
 
+    if (!mainUrl) {
+      ftToast("cover画像が選択されていません");
+      setIsLoading(false);
+      return false;
+    }
+
+    if (editShop.images.length === 0) {
+      ftToast("お店の紹介画像が選択されていません");
+      setIsLoading(false);
+      return false;
+    }
+
     if (tags) {
       const replaceTagsName = tags
         .replaceAll(" ", "")
@@ -214,14 +226,11 @@ const ShopForm = () => {
       await createTags(tagsDividedByComma);
     }
 
-    if (mainUrl) {
-      editShop.cover = mainUrl;
-    }
-
     if (iconUrl) {
       editShop.icon = iconUrl;
     }
 
+    editShop.cover = mainUrl;
     editShop.name = data.shopName;
     editShop.address = data.address;
     editShop.email = data.email;
@@ -381,7 +390,7 @@ const ShopForm = () => {
           <Stack w="45%" px="10">
             <Box>
               <form onSubmit={handleSubmit(onSubmit)}>
-                <FormControl isInvalid={errors.shopName}>
+                <FormControl isRequired isInvalid={errors.shopName}>
                   <FormLabel>Shop Name</FormLabel>
                   <Input
                     variant="filled"
@@ -427,7 +436,7 @@ const ShopForm = () => {
                   ></Textarea>
                 </FormControl>
 
-                <FormControl mt={"10px"}>
+                <FormControl isRequired mt={"10px"}>
                   <FormLabel>Address</FormLabel>
                   <Textarea
                     variant="filled"
@@ -438,7 +447,7 @@ const ShopForm = () => {
                   ></Textarea>
                 </FormControl>
 
-                <FormControl isInvalid={errors.phone} mt={"10px"}>
+                <FormControl isRequired isInvalid={errors.phone} mt={"10px"}>
                   <FormLabel>Phone</FormLabel>
                   <Input
                     variant="filled"
@@ -453,7 +462,7 @@ const ShopForm = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                <FormControl isInvalid={errors.email} mt={"10px"}>
+                <FormControl isRequired isInvalid={errors.email} mt={"10px"}>
                   <FormLabel>Email</FormLabel>
                   <Input
                     variant="filled"
@@ -503,7 +512,7 @@ const ShopForm = () => {
                   ))}
                 </Stack>
 
-                <VStack my="10">
+                <VStack mt="10">
                   <FtLargeButton
                     type="submit"
                     isLoading={isLoading}
@@ -512,17 +521,26 @@ const ShopForm = () => {
                     {isEditMode ? "更新する" : "作成する"}
                   </FtLargeButton>
                 </VStack>
+                <Box>
+                  <Text mb="30px" color="red.400">
+                    *必須
+                  </Text>
+                </Box>
               </form>
             </Box>
           </Stack>
 
           <Stack w={"30%"}>
-            <SubImagesForm
-              images={editShop.images}
-              shopId={editShop.id}
-              returnImages={returnImages}
-            ></SubImagesForm>
-            <Text fontSize="sm">お店の紹介画像は最大で9枚まで表示できます</Text>
+            <FormControl isRequired>
+              <SubImagesForm
+                images={editShop.images}
+                shopId={editShop.id}
+                returnImages={returnImages}
+              ></SubImagesForm>
+              <FormLabel fontSize="sm">
+                お店の紹介画像は最大で9枚まで表示できます
+              </FormLabel>
+            </FormControl>
           </Stack>
         </HStack>
       </>
