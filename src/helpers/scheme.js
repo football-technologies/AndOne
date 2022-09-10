@@ -170,6 +170,7 @@ const scheme = {
   // items/xxxxx/comments/xxxxx
   comments: {
     id: null,
+    text: null,
     status: 1,
     commentStatus: 1,
     item: {
@@ -181,6 +182,7 @@ const scheme = {
       id: null,
       ref: null,
       name: null,
+      icon: null,
     },
     parent: {
       id: null,
