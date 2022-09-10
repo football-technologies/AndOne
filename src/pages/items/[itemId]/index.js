@@ -173,7 +173,7 @@ const ItemShow = () => {
 
               <Box>
                 <Button onClick={() => openDialogBiddingHistory()}>
-                  history
+                  history {bindBiddings ? bindBiddings.length : 0}
                 </Button>
               </Box>
 

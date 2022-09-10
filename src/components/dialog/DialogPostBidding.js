@@ -54,7 +54,18 @@ const DialogPostBidding = forwardRef((props, ref) => {
   };
 
   const submit = async () => {
-    // await dispatch(createItem(editItem));
+    const currentPrice = currentBiddingPrice({
+      itemId: bindItem.id,
+      startPrice: bindItem.sale.startPrice,
+    });
+
+    if (price < currentPrice) {
+      ftToast(
+        `現在の価格${currentPrice}よりも、高い値段の設定をお願いします。`
+      );
+      return false;
+    }
+
     const editBidding = _.cloneDeep(scheme.biddings);
     editBidding.id = ftCreateId("bidding");
     editBidding.price = Number(price);
@@ -68,6 +79,7 @@ const DialogPostBidding = forwardRef((props, ref) => {
     editBidding.user.id = currentUser.id;
     editBidding.user.name = currentUser.name;
     editBidding.user.ref = doc(db, `user/${currentUser.id}`);
+    editBidding.user.icon = currentUser.icon;
 
     await dispatch(createBidding(editBidding));
 

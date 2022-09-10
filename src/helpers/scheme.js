@@ -161,6 +161,7 @@ const scheme = {
       id: null,
       ref: null,
       name: null,
+      icon: null,
     },
     createdAt: null,
     updatedAt: null,
