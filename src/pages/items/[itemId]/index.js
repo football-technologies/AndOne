@@ -59,6 +59,7 @@ const ItemShow = () => {
       dispatch(
         fetchItem({
           query: `items/${itemId}`,
+          isOnSnapshot: true,
           type: "fetch",
         })
       );
