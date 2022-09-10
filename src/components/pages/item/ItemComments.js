@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, createRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
-import { createComment } from "@/store/comment";
+import comment, { createComment } from "@/store/comment";
 import { ftCreateId } from "@/plugins/mixin";
 import useFtToast from "@/components/ui/FtToast";
 
@@ -44,9 +44,8 @@ const ItemComments = () => {
   const [dialog, setDialog] = useState(false);
   const [text, setText] = useState("");
   const [isSeller, setIsSeller] = useState(false);
-  const [returnComment, setReturnComment] = useState(null);
+  const [replyId, setReplyId] = useState(null);
   const [comments, setComments] = useState([]);
-  const [mention, setMention] = useState(null);
 
   const bindItem = useSelector((state) => state.item.item);
   const bindComments = useSelector((state) => state.comment.comments);
@@ -65,22 +64,24 @@ const ItemComments = () => {
   }, []);
 
   useEffect(() => {
-    const groupingWithParentId = _.groupBy(
-      bindComments,
-      (comment) => comment.parent.id
-    );
+    if (bindComments) {
+      const arrangeComments = [];
+      const comments = _.cloneDeep(bindComments);
+      const parents = _.filter(comments, (comment) => !comment.parent.id);
+      const sortedParents = _.orderBy(parents, "createdAt", "desc");
 
-    const groupingWithParentIdCommentBlock =
-      Object.values(groupingWithParentId);
-
-    const newCommentsBlock = [];
-    for (const groupingWithParentIdComments of groupingWithParentIdCommentBlock) {
-      newCommentsBlock.push(
-        _.sortBy(groupingWithParentIdComments, "createdAt")
-      );
+      for (const parent of sortedParents) {
+        const children = _.filter(comments, (comment) => {
+          if (comment.parent.id === parent.id) {
+            return comment;
+          }
+        });
+        const sortedChildren = _.sortBy(children, "createdAt");
+        parent["children"] = sortedChildren;
+        arrangeComments.push(parent);
+      }
+      setComments([...arrangeComments]);
     }
-
-    setComments([...newCommentsBlock]);
   }, [bindComments]);
 
   const { ftToast } = useFtToast();
@@ -91,22 +92,21 @@ const ItemComments = () => {
 
   const onClose = () => {
     setDialog(false);
-    setMention(null);
-    setReturnComment(null);
+    setText(null);
+    setReplyId(null);
   };
 
   const onChange = (e) => {
     setText(e.target.value);
   };
 
-  const selectComment = (comment) => {
-    setReturnComment(comment);
-    setMention(`@${comment.user.name} `);
+  const selectComment = (parentId) => {
+    setReplyId(parentId);
     initialFocusRef.current.focus();
   };
 
   const submit = () => {
-    if (isSeller && !returnComment) {
+    if (isSeller && !replyId) {
       ftToast("返信したいコメントを選択してください");
       return false;
     }
@@ -129,33 +129,16 @@ const ItemComments = () => {
     comment.user.name = currentUser.name;
     comment.user.icon = currentUser.icon;
 
-    // 返信用BySeller
-    if (isSeller && returnComment) {
-      comment.parent.id = returnComment.parent.id;
-      comment.parent.ref = doc(
-        db,
-        `items/${itemId}/comments/${returnComment.parent.id}`
-      );
-    }
-
-    // 返信用ByBuyer
-    if (!isSeller && returnComment) {
-      comment.parent.id = returnComment.parent.id;
-      comment.parent.ref = doc(
-        db,
-        `items/${itemId}/comments/${returnComment.parent.id}`
-      );
-    }
-
-    // 新規作成
-    if (!isSeller && !returnComment) {
-      comment.parent.id = comment.id;
-      comment.parent.ref = doc(db, `items/${itemId}/comments/${comment.id}`);
+    // 返信用
+    if (replyId) {
+      comment.parent.id = replyId;
+      comment.parent.ref = doc(db, `items/${itemId}/comments/${replyId}`);
     }
 
     dispatch(createComment(comment));
     ftToast("送信が完了しました");
-    onClose();
+    setText(null);
+    setReplyId(null);
   };
 
   return (
@@ -199,7 +182,7 @@ const ItemComments = () => {
           <ModalCloseButton />
 
           <ModalBody>
-            {comments.map((parentComments, parentIndex) => {
+            {comments.map((parentComment, parentIndex) => {
               return (
                 <Stack
                   key={parentIndex}
@@ -210,34 +193,66 @@ const ItemComments = () => {
                   borderColor="lightGray"
                 >
                   <Text as="b">＜質問：{parentIndex + 1}＞</Text>
-                  {parentComments.map((comment, index) => {
+                  <HStack>
+                    <Stack w="15%" align="end">
+                      {parentComment.user.icon ? (
+                        <Avatar src={parentComment.user.icon} />
+                      ) : (
+                        <Avatar name={parentComment.user.name} />
+                      )}
+                    </Stack>
+                    <Stack w="80%">
+                      <Text fontSize="xs">{parentComment.user.name}</Text>
+                      <Textarea
+                        readOnly
+                        value={parentComment.text}
+                        resize="none"
+                      ></Textarea>
+                      <HStack>
+                        {parentComment.createdAt && (
+                          <Text fontSize="xs">
+                            {ToFullDate(parentComment.createdAt)}
+                          </Text>
+                        )}
+
+                        <Stack align={"end"}>
+                          <FtSmallButtonOutlined
+                            onClick={() => selectComment(parentComment.id)}
+                          >
+                            返信する
+                          </FtSmallButtonOutlined>
+                        </Stack>
+                      </HStack>
+                    </Stack>
+                  </HStack>
+
+                  {parentComment.children.map((childrenComment, index) => {
                     return (
-                      <HStack key={index} py="5px">
-                        <Stack w={index > 0 ? "25%" : "15%"} align="end">
-                          {comment.user.icon ? (
-                            <Avatar src={comment.user.icon} />
+                      <HStack key={index}>
+                        <Stack w="25%" align="end">
+                          {childrenComment.user.icon ? (
+                            <Avatar src={childrenComment.user.icon} />
                           ) : (
-                            <Avatar name={comment.user.name} />
+                            <Avatar name={childrenComment.user.name} />
                           )}
                         </Stack>
-
-                        <Stack w={index > 0 ? "70%" : "80%"}>
-                          <Text fontSize="xs">{comment.user.name}</Text>
+                        <Stack w="70%">
+                          <Text fontSize="xs">{childrenComment.user.name}</Text>
                           <Textarea
                             readOnly
-                            value={comment.text}
+                            value={childrenComment.text}
                             resize="none"
                           ></Textarea>
                           <HStack>
-                            {comment.createdAt && (
+                            {childrenComment.createdAt && (
                               <Text fontSize="xs">
-                                {ToFullDate(comment.createdAt)}
+                                {ToFullDate(childrenComment.createdAt)}
                               </Text>
                             )}
 
                             <Stack align={"end"}>
                               <FtSmallButtonOutlined
-                                onClick={() => selectComment(comment)}
+                                onClick={() => selectComment(parentComment.id)}
                               >
                                 返信する
                               </FtSmallButtonOutlined>
@@ -257,9 +272,7 @@ const ItemComments = () => {
               ref={initialFocusRef}
               rows={1}
               placeholder={
-                mention
-                  ? mention
-                  : isSeller
+                isSeller
                   ? "返答を入力してください"
                   : "質問事項を記入してください"
               }

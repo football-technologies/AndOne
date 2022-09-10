@@ -74,11 +74,7 @@ const ItemShow = () => {
     if (router.isReady) {
       dispatch(
         fetchComments({
-          query: query(
-            collection(db, `items/${itemId}/comments`),
-            // orderBy("parent.id"),
-            // orderBy("createdAt", "asc"),
-          ),
+          query: query(collection(db, `items/${itemId}/comments`)),
           type: "fetch",
         })
       );
