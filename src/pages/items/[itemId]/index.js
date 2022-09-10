@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useRef } from "react";
 import DialogPostBidding from "@/components/dialog/DialogPostBidding";
+import ItemComments from "@/components/pages/item/ItemComments";
 import DialogBiddingHistory from "@/components/dialog/DialogBiddingHistory";
 
 import { FtMiddleButton } from "@/components/ui/FtButton";
@@ -24,6 +25,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { fetchItem } from "@/store/item";
+import { fetchComments } from "@/store/comment";
 import { fetchBiddings } from "@/store/bidding";
 import DialogImage from "@/components/pages/shop/DialogImage";
 
@@ -42,6 +44,7 @@ const ItemShow = () => {
 
   const { itemId } = router.query;
   const bindItem = useSelector((state) => state.item.item);
+  const bindComments = useSelector((state) => state.comment.comments);
   const bindBiddings = useSelector((state) => state.bidding.biddings);
 
   const dialogPostBidding = useRef(null);
@@ -49,6 +52,8 @@ const ItemShow = () => {
 
   const dialogImage = useRef();
 
+  console.log(">>>>>>>> bindItem", bindItem);
+  console.log(">>>>>>>> bindComments", bindComments);
   console.log(">>>>>>>> bindBiddings", bindBiddings);
 
   const openDialogImage = (index) => {
@@ -75,6 +80,17 @@ const ItemShow = () => {
             orderBy("price", "desc")
           ),
           isOnSnapshot: true,
+          type: "fetch",
+        })
+      );
+    }
+  }, [router.isReady]);
+
+  useEffect(() => {
+    if (router.isReady) {
+      dispatch(
+        fetchComments({
+          query: query(collection(db, `items/${itemId}/comments`)),
           type: "fetch",
         })
       );
@@ -240,6 +256,9 @@ const ItemShow = () => {
                     </Stack>
                   </a>
                 </NextLink>
+                <Box>
+                  <ItemComments></ItemComments>
+                </Box>
               </Box>
             </Box>
           </HStack>

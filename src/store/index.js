@@ -8,6 +8,7 @@ import tag from "@/store/tag";
 import item from "@/store/item";
 import bidding from "@/store/bidding";
 import like from "@/store/like";
+import comment from "@/store/comment";
 
 import storage from "redux-persist/lib/storage";
 import { combineReducers } from "redux";
@@ -23,6 +24,7 @@ const reducers = combineReducers({
   item: item.reducer,
   bidding: bidding.reducer,
   like: like.reducer,
+  comment: comment.reducer,
 });
 
 const persistConfig = {
