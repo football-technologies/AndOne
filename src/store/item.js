@@ -97,7 +97,7 @@ const fetchItems = ({ type, query, isOnSnapshot = false }) => {
     }
 
     if (!isOnSnapshot) {
-      await getDocs(q).then((snapshot) => {
+      await getDocs(query).then((snapshot) => {
         snapshot.forEach((doc) => {
           if (doc.id) {
             newItems.push(doc.data());
