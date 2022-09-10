@@ -62,7 +62,7 @@ const LikeButton = ({ target, id, name }) => {
           query: query(
             collectionGroup(db, `likes`),
             where("item.id", "==", id),
-            where("user.id", "==", currentUser.id),
+            where("user.id", "==", currentUser.id)
           ),
         })
       );
@@ -77,7 +77,7 @@ const LikeButton = ({ target, id, name }) => {
       editLike.shop.id = id;
       editLike.shop.name = name;
       editLike.shop.ref = doc(db, `shops/${id}`);
-    } else {
+    } else if (target === "item") {
       editLike.target = 2;
       editLike.item.id = id;
       editLike.item.name = name;
@@ -87,6 +87,7 @@ const LikeButton = ({ target, id, name }) => {
     editLike.user.id = currentUser.id;
     editLike.user.name = currentUser.name;
     editLike.user.ref = doc(db, `users/${currentUser.id}`);
+    editLike.user.icon = currentUser.icon;
 
     await dispatch(createLike(editLike));
 

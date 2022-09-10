@@ -61,6 +61,7 @@ const DialogItemComment = forwardRef((props, ref) => {
     comment.user.id = currentUser.id;
     comment.user.ref = doc(db, `users/${currentUser.id}`);
     comment.user.name = currentUser.name;
+    comment.user.icon = currentUser.icon;
 
     dispatch(createComment(comment));
     ftToast("質問を送信しました");
