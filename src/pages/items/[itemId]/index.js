@@ -5,7 +5,7 @@ import DialogBiddingHistory from "@/components/dialog/DialogBiddingHistory";
 
 import { FtMiddleButton } from "@/components/ui/FtButton";
 import { db } from "@/plugins/firebase";
-import { doc, query, collection, orderBy } from "firebase/firestore";
+import { query, collection, orderBy } from "firebase/firestore";
 
 import {
   Box,
@@ -34,7 +34,6 @@ import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
 
 import { currentBiddingPrice } from "@/plugins/mixin";
 import { ToFinish, ToPrice } from "@/plugins/filter";
-import { bind } from "lodash";
 
 const ItemShow = () => {
   const router = useRouter();

@@ -8,8 +8,32 @@ import {
   AspectRatio,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { fetchBiddings } from "@/store/bidding";
+import { useDispatch } from "react-redux";
+import { currentBiddingPrice } from "@/plugins/mixin";
+import { ToFinish, ToPrice } from "@/plugins/filter";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { db } from "@/plugins/firebase";
+import { query, collection, orderBy } from "firebase/firestore";
 
 const ItemMiddleCard = ({ item }) => {
+  const dispatch = useDispatch();
+  const bindBiddings = useSelector((state) => state.bidding.biddings);
+
+  useEffect(() => {
+    dispatch(
+      fetchBiddings({
+        query: query(
+          collection(db, `items/${item.id}/biddings`),
+          orderBy("price", "desc")
+        ),
+        isOnSnapshot: true,
+        type: "fetch",
+      })
+    );
+  }, []);
+
   return (
     <>
       <Stack
@@ -45,17 +69,28 @@ const ItemMiddleCard = ({ item }) => {
                 </Text>
               </Stack>
 
-              <Stack
-                direction="row"
-                align="center"
-                justify="space-between"
-                pt="2"
-              >
-                <Text fontSize="md" fontWeight="bold" color="primary">
-                  7,800円
-                </Text>
-                <Text fontSize="xs">残り 23時間42分</Text>
-              </Stack>
+              {item.sale.startedAt && bindBiddings && (
+                <Stack
+                  direction="row"
+                  align="center"
+                  justify="space-between"
+                  pt="2"
+                >
+                  <Text fontSize="md" fontWeight="bold" color="primary">
+                    {ToPrice(
+                      currentBiddingPrice({
+                        biddings: bindBiddings,
+                        startPrice: item.sale.startPrice,
+                      })
+                    )}
+                  </Text>
+                  <Text fontSize="xs">
+                    {ToFinish({
+                      finishedSeconds: item.sale.finishedAt.seconds,
+                    })}
+                  </Text>
+                </Stack>
+              )}
             </Box>
           </a>
         </NextLink>
