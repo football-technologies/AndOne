@@ -19,6 +19,7 @@ const currentBiddingPrice = ({ biddings = [], startPrice }) => {
         highestPrice = bidding.price;
       }
     }
+
     return highestPrice;
   }
 };

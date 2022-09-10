@@ -48,8 +48,6 @@ const ItemShow = () => {
 
   const dialogImage = useRef();
 
-  console.log(">>>>>>>> bindBiddings", bindBiddings);
-
   const openDialogImage = (index) => {
     dialogImage.current.openDialog({
       images: bindItem.images,

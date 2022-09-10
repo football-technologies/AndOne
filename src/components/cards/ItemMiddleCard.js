@@ -8,31 +8,64 @@ import {
   AspectRatio,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { fetchBiddings } from "@/store/bidding";
-import { useDispatch } from "react-redux";
 import { currentBiddingPrice } from "@/plugins/mixin";
 import { ToFinish, ToPrice } from "@/plugins/filter";
-import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { db } from "@/plugins/firebase";
-import { query, collection, orderBy } from "firebase/firestore";
+import { query, collection, orderBy, onSnapshot } from "firebase/firestore";
+
+import { useState } from "react";
 
 const ItemMiddleCard = ({ item }) => {
-  const dispatch = useDispatch();
-  const bindBiddings = useSelector((state) => state.bidding.biddings);
+  const [bindBiddings, setBindBiddings] = useState();
+  const [currentPrice, setCurrentPrice] = useState();
+
+  const getCurrentPrice = async () => {
+    if (bindBiddings) {
+      const _currentPrice = await currentBiddingPrice({
+        biddings: bindBiddings,
+        startPrice: item.sale.startPrice,
+      });
+      setCurrentPrice(_currentPrice);
+    }
+  };
+
+  const getBiddings = async () => {
+    const biddings = [];
+    const q = query(
+      collection(db, `items/${item.id}/biddings`),
+      orderBy("price", "desc")
+    );
+
+    await onSnapshot(q, async (snapshot) => {
+      if (snapshot) {
+        await snapshot.docChanges().forEach(async (change) => {
+          if (change.type === "added") {
+            if (change.doc.data().id) {
+              const newIndex = change.newIndex;
+              biddings.splice(newIndex, 0, change.doc.data());
+            }
+          }
+          if (change.type === "modified") {
+            if (change.doc.data().id) {
+              const newIndex = change.newIndex;
+              biddings.splice(newIndex, 1, change.doc.data());
+            }
+          }
+        });
+
+        setBindBiddings([...biddings]);
+      }
+    });
+  };
 
   useEffect(() => {
-    dispatch(
-      fetchBiddings({
-        query: query(
-          collection(db, `items/${item.id}/biddings`),
-          orderBy("price", "desc")
-        ),
-        isOnSnapshot: true,
-        type: "fetch",
-      })
-    );
+    getBiddings();
   }, []);
+
+  useEffect(() => {
+    getCurrentPrice();
+  }, [bindBiddings]);
 
   return (
     <>
@@ -77,12 +110,7 @@ const ItemMiddleCard = ({ item }) => {
                   pt="2"
                 >
                   <Text fontSize="md" fontWeight="bold" color="primary">
-                    {ToPrice(
-                      currentBiddingPrice({
-                        biddings: bindBiddings,
-                        startPrice: item.sale.startPrice,
-                      })
-                    )}
+                    {ToPrice(currentPrice)}
                   </Text>
                   <Text fontSize="xs">
                     {ToFinish({

@@ -77,7 +77,7 @@ const fetchBiddingItemIds = ({
   limit = 5,
 }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchBiddingItemIds");
+    // console.log(">>>>>>>>> called fetchBiddingItemIds");
 
     let unsubscribe = null;
     const newBiddingItemIds = [];
@@ -109,12 +109,9 @@ const fetchBiddingItemIds = ({
           });
         }
 
-        console.log("??????????? newBiddingItemIds", newBiddingItemIds);
-
         newBiddingItemIds = _.uniq(newBiddingItemIds);
         newBiddingItemIds = _.slice(newBiddingItemIds, 0, limit);
 
-        console.log("??????????? newBiddingItemIds", newBiddingItemIds);
         dispatch(readBiddingItemIds(newBiddingItemIds));
       });
     }
@@ -138,7 +135,7 @@ const fetchBiddingItemIds = ({
 
 const fetchBiddingItems = ({ type, query, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchBiddingItems");
+    // console.log(">>>>>>>>> called fetchBiddingItems");
 
     let unsubscribe = null;
     const newBiddingItems = [];

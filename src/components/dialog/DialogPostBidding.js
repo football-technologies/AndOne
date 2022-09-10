@@ -139,7 +139,7 @@ const DialogPostBidding = forwardRef((props, ref) => {
                 <InputGroup>
                   <Input
                     value={price}
-                    autoFocus="true"
+                    autoFocus={true}
                     type="number"
                     valiant="filled"
                     onChange={(ev) => setPrice(ev.target.value)}

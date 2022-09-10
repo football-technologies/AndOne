@@ -57,8 +57,6 @@ const SideNavWithoutLogin = () => {
   );
   const bindBiddingItems = useSelector((state) => state.account.biddingItems);
 
-  console.log(">>>>>>>>>>>> bindBiddingItems", bindBiddingItems);
-
   const links = [
     { id: 1, name: "My Collections", url: "/", icon: MdOutlineCollections },
     { id: 2, name: "Bidding Items", url: "/", icon: FaRegHourglass },
@@ -92,8 +90,6 @@ const SideNavWithoutLogin = () => {
 
   useEffect(() => {
     if (bindBiddingItemIds && bindBiddingItemIds.length > 0) {
-      console.log(">>>>> read bindBiddingItemIds", bindBiddingItemIds);
-
       dispatch(
         fetchBiddingItems({
           query: query(
