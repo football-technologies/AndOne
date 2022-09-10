@@ -16,6 +16,8 @@ import {
   Text,
   Button,
   Icon,
+  Flex,
+  Spacer,
 } from "@chakra-ui/react";
 
 import useFtToast from "@/components/ui/FtToast";
@@ -230,22 +232,25 @@ const ItemForm = () => {
       {editItem && (
         <>
           {isEditMode && (
-            <Box textAlign="right" p="5">
-              <NextLink href={`/items/${editItem.id}`}>
-                <Button as="a" variant="link">
-                  Back
-                  <Icon as={MdArrowForward} ml="1"></Icon>
-                </Button>
-              </NextLink>
-            </Box>
+            <Flex p="5">
+              <Box>
+                <FtSmallButtonOutlined onClick={deleteItem}>
+                  アイテムを削除する
+                </FtSmallButtonOutlined>
+              </Box>
+              <Spacer />
+              <Box>
+                <NextLink href={`/items/${editItem.id}`}>
+                  <Button as="a" variant="link">
+                    Back
+                    <Icon as={MdArrowForward} ml="1"></Icon>
+                  </Button>
+                </NextLink>
+              </Box>
+            </Flex>
           )}
 
           <Box w="500px" mx="auto">
-            {isEditMode && (
-              <FtSmallButtonOutlined onClick={deleteItem} align={"end"}>
-                アイテムを削除する
-              </FtSmallButtonOutlined>
-            )}
             <Stack py={"30px"}>
               <Text>Item Images</Text>
               <SubImagesForm
