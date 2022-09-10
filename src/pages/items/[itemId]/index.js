@@ -34,6 +34,7 @@ import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
 
 import { currentBiddingPrice } from "@/plugins/mixin";
 import { ToFinish, ToPrice } from "@/plugins/filter";
+import { bind } from "lodash";
 
 const ItemShow = () => {
   const router = useRouter();
@@ -73,6 +74,7 @@ const ItemShow = () => {
             collection(db, `items/${itemId}/biddings`),
             orderBy("price", "desc")
           ),
+          isOnSnapshot: true,
           type: "fetch",
         })
       );
@@ -89,7 +91,7 @@ const ItemShow = () => {
 
   return (
     <>
-      {bindItem && (
+      {bindItem && bindBiddings && (
         <>
           <HStack align="start" position="relative">
             <Box position="absolute" top="-30px" right="0" zIndex="2">
@@ -149,13 +151,12 @@ const ItemShow = () => {
                 pt="10"
               >
                 <Text fontSize="md" fontWeight="bold" color="primary">
-                  {bindBiddings && bindBiddings.length > 0
-                    ? ToPrice(bindBiddings[0].price)
-                    : ToPrice(bindItem.sale.startPrice)}
-                  {/* {currentBiddingPrice({
-                    itemId: bindItem.id,
-                    startPrice: bindItem.sale.startPrice,
-                  })} */}
+                  {ToPrice(
+                    currentBiddingPrice({
+                      biddings: bindBiddings,
+                      startPrice: bindItem.sale.startPrice,
+                    })
+                  )}
                 </Text>
                 <Spacer></Spacer>
                 <Text fontWeight={700} fontSize="xs">

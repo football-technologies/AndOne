@@ -37,6 +37,7 @@ const DialogPostBidding = forwardRef((props, ref) => {
   const [dialog, setDialog] = useState(false);
   const [price, setPrice] = useState();
   const bindItem = useSelector((state) => state.item.item);
+  const bindBiddings = useSelector((state) => state.bidding.biddings);
   const currentUser = useSelector((state) => state.account);
 
   const dispatch = useDispatch();
@@ -54,39 +55,13 @@ const DialogPostBidding = forwardRef((props, ref) => {
   };
 
   const submit = async () => {
-    const currentPrice = currentBiddingPrice({
-      itemId: bindItem.id,
+    currentBiddingPrice({
+      biddings: bindBiddings,
       startPrice: bindItem.sale.startPrice,
     });
 
-    if (price < currentPrice) {
-      ftToast(
-        `現在の価格${currentPrice}よりも、高い値段の設定をお願いします。`
-      );
-      return false;
-    }
-
-    const editBidding = _.cloneDeep(scheme.biddings);
-    editBidding.id = ftCreateId("bidding");
-    editBidding.price = Number(price);
-
-    editBidding.item.id = bindItem.id;
-    editBidding.item.name = bindItem.name;
-    editBidding.item.ref = doc(db, `items/${bindItem.id}`);
-    editBidding.shop.id = bindItem.shop.id;
-    editBidding.shop.name = bindItem.shop.name;
-    editBidding.shop.ref = doc(db, `shops/${bindItem.shop.id}`);
-    editBidding.user.id = currentUser.id;
-    editBidding.user.name = currentUser.name;
-    editBidding.user.ref = doc(db, `user/${currentUser.id}`);
-    editBidding.user.icon = currentUser.icon;
-
-    await dispatch(createBidding(editBidding));
-
-    ftToast("入札を受け付けました。");
-
-    setPrice("");
-    onClose();
+    console.log(">>>>>>>>>> currentPrice", currentPrice, Number(price));
+    return false;
   };
 
   return (
@@ -113,10 +88,12 @@ const DialogPostBidding = forwardRef((props, ref) => {
               borderColor="primary"
             >
               <Text fontSize="md" fontWeight="bold" color="primary">
-                {currentBiddingPrice({
-                  itemId: bindItem.id,
-                  startPrice: bindItem.sale.startPrice,
-                })}
+                {ToPrice(
+                  currentBiddingPrice({
+                    biddings: bindBiddings,
+                    startPrice: bindItem.sale.startPrice,
+                  })
+                )}
               </Text>
               <Spacer></Spacer>
               <Box>

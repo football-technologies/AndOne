@@ -82,7 +82,7 @@ const DialogBiddingHistory = forwardRef((props, ref) => {
                     fontSize="xs"
                     fontColor="lightGray"
                   >
-                    {ToAgo(bidding.createdAt)}
+                    {/* {ToAgo(bidding.createdAt)} */}
                   </Text>
 
                   <Divider></Divider>

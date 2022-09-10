@@ -99,8 +99,8 @@ const ItemSettings = () => {
         id: editItem.id,
         itemStatus: 3,
         sale: {
-          startPrice: data.startPrice,
-          floorPrice: data.floorPrice,
+          startPrice: Number(data.startPrice),
+          floorPrice: Number(data.floorPrice),
           startedAt: moment(startedDate).toDate(),
           finishedAt: moment(finishedDate).toDate(),
         },
