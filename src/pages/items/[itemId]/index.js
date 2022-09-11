@@ -19,6 +19,7 @@ import {
   Button,
   Center,
   Spacer,
+  Icon,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useSelector, useDispatch } from "react-redux";
@@ -34,6 +35,7 @@ import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
 
 import { currentBiddingPrice } from "@/plugins/mixin";
 import { ToFinish, ToPrice } from "@/plugins/filter";
+import { GoCommentDiscussion } from "react-icons/go";
 
 const ItemShow = () => {
   const router = useRouter();
@@ -183,11 +185,28 @@ const ItemShow = () => {
                     </FtMiddleButton>
                   </Center>
 
-                  <Box>
-                    <Button onClick={() => openDialogBiddingHistory()}>
+                  {bindBiddings.length > 0 && (
+                    <Box>
+                      {/* <Button onClick={() => openDialogBiddingHistory()}>
                       history {bindBiddings ? bindBiddings.length : 0}
-                    </Button>
-                  </Box>
+                    </Button> */}
+
+                      <Button
+                        variant="link"
+                        size="sm"
+                        mt="5"
+                        onClick={openDialogBiddingHistory}
+                        className="underline"
+                      >
+                        <Icon
+                          as={GoCommentDiscussion}
+                          boxSize="4"
+                          mr="2"
+                        ></Icon>
+                        {bindBiddings.length}件の件の入札履歴を見る
+                      </Button>
+                    </Box>
+                  )}
                 </Box>
               )}
 
