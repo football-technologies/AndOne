@@ -102,9 +102,9 @@ const Signup = () => {
   };
 
   return (
-    <Box bg="white" h={"100vh"} w={"90%"} mx={"auto"}>
+    <Box bg="white" h="100vh" w="90%" mx="auto">
       <form onSubmit={handleSubmit(onSubmit)} style={form}>
-        <Heading py={"50px"} as="h3" size="lg">
+        <Heading py="50px" as="h3" size="lg">
           Signup
         </Heading>
         <FormControl isInvalid={errors.name}>
@@ -122,7 +122,7 @@ const Signup = () => {
             {errors.name && errors.name.message}
           </FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={errors.email} mt={"45px"}>
+        <FormControl isInvalid={errors.email} mt="45px">
           <FormLabel>Email</FormLabel>
           <Input
             type="email"
@@ -137,7 +137,7 @@ const Signup = () => {
             {errors.email && errors.email.message}
           </FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={errors.password} mt={"45px"}>
+        <FormControl isInvalid={errors.password} mt="45px">
           <FormLabel>Password</FormLabel>
           <InputGroup>
             <Input
@@ -165,7 +165,7 @@ const Signup = () => {
           </FormErrorMessage>
         </FormControl>
 
-        <FormControl isInvalid={errors.confirmPassword} mt={"45px"}>
+        <FormControl isInvalid={errors.confirmPassword} mt="45px">
           <FormLabel>Password（確認用）</FormLabel>
           <InputGroup>
             <Input
@@ -200,12 +200,12 @@ const Signup = () => {
             {errors.confirmPassword && errors.confirmPassword.message}
           </FormErrorMessage>
         </FormControl>
-        <VStack mt={"20px"}>
+        <VStack mt="20px">
           <Button
             colorScheme="pink"
             type="submit"
             isLoading={isLoading}
-            mt={"20px"}
+            mt="20px"
           >
             アカウントを作成
           </Button>
