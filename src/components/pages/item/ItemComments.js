@@ -40,7 +40,7 @@ import _ from "lodash";
 const ItemComments = () => {
   const [dialog, setDialog] = useState(false);
   const [text, setText] = useState("");
-  // const [isSeller, setIsSeller] = useState(false);
+  const [isSeller, setIsSeller] = useState(false);
   const [replyId, setReplyId] = useState(null);
   const [comments, setComments] = useState([]);
 
