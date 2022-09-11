@@ -187,10 +187,6 @@ const ItemShow = () => {
 
                   {bindBiddings.length > 0 && (
                     <Box>
-                      {/* <Button onClick={() => openDialogBiddingHistory()}>
-                      history {bindBiddings ? bindBiddings.length : 0}
-                    </Button> */}
-
                       <Button
                         variant="link"
                         size="sm"
