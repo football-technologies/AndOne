@@ -32,7 +32,7 @@ import { updateUser } from "@/store/user";
 import { createTag } from "@/store/tag";
 import { updateAccount } from "@/store/account";
 
-import { UploadIcon, UploadMain } from "@/components/ui/ImageUpload";
+import { UploadSingleImage } from "@/components/ui/ImageUpload";
 
 import { db } from "@/plugins/firebase";
 import { doc, query, collection, getDocs, where } from "firebase/firestore";
@@ -60,8 +60,7 @@ const ShopForm = () => {
   const { ftToast } = useFtToast();
   const router = useRouter();
 
-  const iconRef = useRef();
-  const mainRef = useRef();
+  const inputRefs = useRef([]);
 
   useEffect(() => {
     if (router.isReady) {
@@ -126,25 +125,18 @@ const ShopForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm();
 
-  const openIconRef = () => {
-    iconRef.current.click();
-  };
+  const uploadSingleImage = ({ url, type }) => {
+    console.log(">>>>>>>>>>>>> return singleImage URL", url, type);
+    if (type === "main") {
+      setMainUrl(url);
+    }
 
-  const openMainRef = () => {
-    mainRef.current.click();
-  };
-
-  const uploadIcon = (url) => {
-    console.log(">>>>>>>>>>>>> return icon URL", url);
-    setIconUrl(url);
-  };
-
-  const uploadMain = (url) => {
-    console.log(">>>>>>>>>>>>> return main URL", url);
-    setMainUrl(url);
+    if (type === "icon") {
+      setIconUrl(url);
+    }
   };
 
   const onChangeSetTags = (e) => {
@@ -179,7 +171,7 @@ const ShopForm = () => {
 
       const tagToSaveShopsCollection = {
         id: tagId,
-        ref: doc(db, `tags/${tagId.id}`),
+        ref: doc(db, `tags/${tagId}`),
         name: tagName,
       };
       newTags.push(tagToSaveShopsCollection);
@@ -310,7 +302,9 @@ const ShopForm = () => {
             <FtMiddleButtonOutlined
               borderColor="white"
               color="white"
-              onClick={openMainRef}
+              onClick={() => {
+                inputRefs.current["main"].click();
+              }}
             >
               Cover画像を変更する
             </FtMiddleButtonOutlined>
@@ -328,11 +322,14 @@ const ShopForm = () => {
             ></Image>
           </AspectRatio>
 
-          <UploadMain
-            ref={mainRef}
+          <UploadSingleImage
+            ref={(element) => {
+              inputRefs.current["main"] = element;
+            }}
             folderPath={`shops/${editShop.id}/main`}
-            uploadMain={uploadMain}
-          ></UploadMain>
+            uploadSingleImage={uploadSingleImage}
+            type="main"
+          ></UploadSingleImage>
         </HStack>
 
         <HStack mt="50px" align="top">
@@ -356,12 +353,19 @@ const ShopForm = () => {
               </Box>
               <Box>
                 <VStack mb={"50px"}>
-                  <UploadIcon
-                    ref={iconRef}
+                  <UploadSingleImage
+                    ref={(element) => {
+                      inputRefs.current["icon"] = element;
+                    }}
                     folderPath={`shops/${editShop.id}/icon`}
-                    uploadIcon={uploadIcon}
-                  ></UploadIcon>
-                  <FtSmallButtonOutlined onClick={openIconRef}>
+                    uploadSingleImage={uploadSingleImage}
+                    type="icon"
+                  ></UploadSingleImage>
+                  <FtSmallButtonOutlined
+                    onClick={() => {
+                      inputRefs.current["icon"].click();
+                    }}
+                  >
                     iconを変更する
                   </FtSmallButtonOutlined>
                 </VStack>

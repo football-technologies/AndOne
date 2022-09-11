@@ -23,7 +23,7 @@ import {
 import useFtToast from "@/components/ui/FtToast";
 import { FtSmallButtonOutlined } from "@/components/ui/FtButton";
 
-import { UploadIcon } from "@/components/ui/ImageUpload";
+import { UploadSingleImage } from "@/components/ui/ImageUpload";
 
 import _ from "lodash";
 import rules from "@/plugins/validation";
@@ -102,8 +102,8 @@ const Edit = () => {
     iconRef.current.click();
   };
 
-  const uploadIcon = (url) => {
-    console.log(">>>>>>> return url", url);
+  const uploadSingleImage = ({ url, type }) => {
+    console.log(">>>>>>> return single image url", url, type);
     setUrl(url);
   };
 
@@ -159,11 +159,12 @@ const Edit = () => {
             </Box>
             <Box pl={"10px"}>
               <HStack mb={"5px"}>
-                <UploadIcon
+                <UploadSingleImage
                   ref={iconRef}
                   folderPath={`users/${user.id}/icon`}
-                  uploadIcon={uploadIcon}
-                ></UploadIcon>
+                  uploadSingleImage={uploadSingleImage}
+                  type="icon"
+                ></UploadSingleImage>
               </HStack>
               <HStack>
                 <FtSmallButtonOutlined onClick={openIconRef}>
@@ -180,7 +181,7 @@ const Edit = () => {
               placeholder="例）田中太郎"
               defaultValue={user.displayName}
               {...register("displayName", {
-                required: "名前は必須入力です"
+                required: "名前は必須入力です",
               })}
             />
             <FormHelperText>他の人に表示されます</FormHelperText>
@@ -270,8 +271,10 @@ const Edit = () => {
             </Button>
           </VStack>
         </form>
-        <Box w="50%" >
-          <Text mb="30px" color="red.400" textAlign={"left"}>*必須</Text>
+        <Box w="50%">
+          <Text mb="30px" color="red.400" textAlign={"left"}>
+            *必須
+          </Text>
         </Box>
       </VStack>
     );
