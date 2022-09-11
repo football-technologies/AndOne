@@ -1,37 +1,11 @@
-import React from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { fetchItems } from "@/store/item";
 import { db } from "@/plugins/firebase";
-import {
-  doc,
-  setDoc,
-  serverTimestamp,
-  onSnapshot,
-  query,
-  collection,
-  orderBy,
-  where,
-} from "firebase/firestore";
+import { query, collection, orderBy, where } from "firebase/firestore";
 
-import {
-  AspectRatio,
-  Box,
-  Button,
-  HStack,
-  Icon,
-  Image,
-  Stack,
-  Wrap,
-  Heading,
-  Link,
-  Text,
-  Tabs,
-  TabList,
-  Tab,
-} from "@chakra-ui/react";
+import { Box, Stack, Wrap, Tabs, TabList, Tab } from "@chakra-ui/react";
 
 import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
 

@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { forwardRef, useImperativeHandle } from "react";
+import { useState, forwardRef, useImperativeHandle } from "react";
 
 import {
   Modal,

@@ -9,9 +9,6 @@ import {
   deleteDoc,
   getDocs,
   getDoc,
-  query,
-  collection,
-  orderBy,
 } from "firebase/firestore";
 
 const tag = createSlice({

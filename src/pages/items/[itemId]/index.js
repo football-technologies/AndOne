@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import DialogPostBidding from "@/components/dialog/DialogPostBidding";
 import ItemComments from "@/components/pages/item/ItemComments";
 import DialogBiddingHistory from "@/components/dialog/DialogBiddingHistory";
@@ -21,9 +21,7 @@ import {
   Spacer,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { fetchItem } from "@/store/item";
 import { fetchComments } from "@/store/comment";
 import { fetchBiddings } from "@/store/bidding";
@@ -43,7 +41,6 @@ const ItemShow = () => {
 
   const { itemId } = router.query;
   const bindItem = useSelector((state) => state.item.item);
-  const bindComments = useSelector((state) => state.comment.comments);
   const bindBiddings = useSelector((state) => state.bidding.biddings);
 
   const dialogPostBidding = useRef(null);

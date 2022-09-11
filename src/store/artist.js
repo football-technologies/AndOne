@@ -8,9 +8,6 @@ import {
   onSnapshot,
   getDocs,
   getDoc,
-  query,
-  collection,
-  orderBy,
 } from "firebase/firestore";
 
 const artist = createSlice({

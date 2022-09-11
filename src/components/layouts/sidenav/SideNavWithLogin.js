@@ -1,10 +1,6 @@
-import { useSelector } from "react-redux";
-import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import useLogout from "../Logout";
-import { fetchUser } from "@/store/user";
-import { fetchSecret } from "@/store/secret";
 
 import { useEffect } from "react";
 import { fetchBiddingItems, fetchBiddingItemIds } from "@/store/account";

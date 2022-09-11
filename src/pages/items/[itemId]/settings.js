@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { fetchItem, updateItem } from "@/store/item";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
@@ -10,7 +9,6 @@ import {
   FormErrorMessage,
   Box,
   Input,
-  VStack,
   Stack,
   Text,
   Container,
@@ -24,7 +22,7 @@ import _ from "lodash";
 import { FtLargeButton } from "@/components/ui/FtButton";
 
 import "react-datepicker/dist/react-datepicker.css";
-import moment from "moment/moment";
+import moment from "moment";
 import useFtToast from "@/components/ui/FtToast";
 import FtDateTimePicker from "@/components/ui/FtDateTimePicker";
 import { ImCoinYen } from "react-icons/im";

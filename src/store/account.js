@@ -3,14 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { auth } from "@/plugins/firebase";
 import { signOut } from "firebase/auth";
 
-import { db } from "@/plugins/firebase";
-import {
-  doc,
-  setDoc,
-  serverTimestamp,
-  onSnapshot,
-  getDoc,
-} from "firebase/firestore";
+import { onSnapshot, getDocs } from "firebase/firestore";
 import _ from "lodash";
 
 const account = createSlice({
@@ -77,7 +70,7 @@ const fetchBiddingItemIds = ({
   limit = 5,
 }) => {
   return async (dispatch, getState) => {
-    // console.log(">>>>>>>>> called fetchBiddingItemIds");
+    console.log(">>>>>>>>> called fetchBiddingItemIds");
 
     let unsubscribe = null;
     const newBiddingItemIds = [];
@@ -135,7 +128,7 @@ const fetchBiddingItemIds = ({
 
 const fetchBiddingItems = ({ type, query, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    // console.log(">>>>>>>>> called fetchBiddingItems");
+    console.log(">>>>>>>>> called fetchBiddingItems");
 
     let unsubscribe = null;
     const newBiddingItems = [];

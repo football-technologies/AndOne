@@ -1,9 +1,10 @@
 import SideNavBasic from "@/components/layouts/sidenav/SideNavBasic";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { auth } from "@/plugins/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { login, logout } from "@/store/account";
+import { db } from "@/plugins/firebase";
 import {
   getDocs,
   where,
@@ -12,7 +13,6 @@ import {
   getDoc,
   doc,
 } from "firebase/firestore";
-import { db } from "@/plugins/firebase";
 
 const DefaultLayout = ({ children }) => {
   const dispatch = useDispatch();

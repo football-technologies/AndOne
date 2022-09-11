@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 
 export const CurrentSeconds = (interval) => {
-  // console.log(">>>>>>>> Date.now", Date.now());
-
   const [time, updateTime] = useState(Date.now());
 
   useEffect(() => {

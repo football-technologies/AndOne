@@ -10,9 +10,6 @@ import {
   Heading,
   Link,
   Text,
-  Tabs,
-  TabList,
-  Tab,
 } from "@chakra-ui/react";
 import {
   FaBookOpen,
@@ -29,11 +26,9 @@ import { MdMail } from "react-icons/md";
 
 import { useRouter } from "next/router";
 import NextLink from "next/link";
-import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 
 import { fetchShop } from "@/store/shop";
 

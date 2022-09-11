@@ -43,7 +43,6 @@ const fetchItem = ({ query, type, isOnSnapshot = false }) => {
 
     let unsubscribe = null;
 
-    // query = `items/123`
     if (isOnSnapshot) {
       unsubscribe = await onSnapshot(doc(db, query), async (doc) => {
         if (doc.id) {
@@ -69,8 +68,6 @@ const fetchItem = ({ query, type, isOnSnapshot = false }) => {
 const fetchItems = ({ type, query, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
     console.log(">>>>>>>>> called fetchItems");
-
-    // const q = query(collection(db, "items"), where("status", "==", 1), orderBy("createdAt","desc"));
 
     let unsubscribe = null;
     const newItems = [];

@@ -1,6 +1,5 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 
 import NextLink from "next/link";
 import { fetchItems } from "@/store/item";

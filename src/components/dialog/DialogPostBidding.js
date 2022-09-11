@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { forwardRef, useImperativeHandle } from "react";
+import { useState, forwardRef, useImperativeHandle } from "react";
 import { ToPrice } from "@/plugins/filter";
 
 import {
@@ -22,10 +21,9 @@ import {
 import { FtMiddleButton } from "@/components/ui/FtButton";
 import { currentBiddingPrice, ftCreateId } from "@/plugins/mixin";
 import { ToFinish } from "@/plugins/filter";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { createBidding } from "@/store/bidding";
-import { useDispatch } from "react-redux";
 import scheme from "@/helpers/scheme";
 import _ from "lodash";
 
