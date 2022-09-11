@@ -157,8 +157,8 @@ const Edit = () => {
                 <Avatar name={user.displayName} size="xl" />
               )}
             </Box>
-            <Box pl={"10px"}>
-              <HStack mb={"5px"}>
+            <Box pl="10px">
+              <HStack mb="5px">
                 <UploadIcon
                   ref={iconRef}
                   folderPath={`users/${user.id}/icon`}
@@ -173,7 +173,7 @@ const Edit = () => {
             </Box>
           </HStack>
 
-          <FormControl isRequired isInvalid={errors.displayName} mt={"45px"}>
+          <FormControl isRequired isInvalid={errors.displayName} mt="45px">
             <FormLabel>Display Name</FormLabel>
             <Input
               variant="filled"
@@ -189,7 +189,7 @@ const Edit = () => {
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={errors.screenName} mt={"45px"}>
+          <FormControl isInvalid={errors.screenName} mt="45px">
             <FormLabel>Screen Name</FormLabel>
             <Input
               variant="filled"
@@ -205,7 +205,7 @@ const Edit = () => {
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={errors.bio} mt={"45px"}>
+          <FormControl isInvalid={errors.bio} mt="45px">
             <FormLabel>Bio</FormLabel>
             <Textarea
               variant="filled"
@@ -220,7 +220,7 @@ const Edit = () => {
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl isRequired isInvalid={errors.email} mt={"45px"}>
+          <FormControl isRequired isInvalid={errors.email} mt="45px">
             <FormLabel>Email</FormLabel>
             <Input
               variant="filled"
@@ -240,7 +240,7 @@ const Edit = () => {
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl isRequired isInvalid={errors.address} mt={"45px"}>
+          <FormControl isRequired isInvalid={errors.address} mt="45px">
             <FormLabel>Address</FormLabel>
             <Textarea
               variant="filled"
@@ -259,19 +259,19 @@ const Edit = () => {
             </FormErrorMessage>
           </FormControl>
 
-          <VStack mt={"20px"}>
+          <VStack mt="20px">
             <Button
               colorScheme="pink"
               type="submit"
               isLoading={isSubmitting}
-              mt={"20px"}
+              mt="20px"
             >
               更新する
             </Button>
           </VStack>
         </form>
         <Box w="50%" >
-          <Text mb="30px" color="red.400" textAlign={"left"}>*必須</Text>
+          <Text mb="30px" color="red.400" textAlign="left">*必須</Text>
         </Box>
       </VStack>
     );

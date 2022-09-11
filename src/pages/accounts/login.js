@@ -108,9 +108,9 @@ const Login = () => {
   };
 
   return (
-    <Box bg="white" h={"100vh"} w={"90%"} mx={"auto"}>
+    <Box bg="white" h="100vh" w="90%" mx="auto">
       <form onSubmit={handleSubmit(onSubmit)} style={form}>
-        <Heading py={"50px"} as="h3" size="lg">
+        <Heading py="50px" as="h3" size="lg">
           Login
         </Heading>
         <FormControl isInvalid={errors.email}>
@@ -128,7 +128,7 @@ const Login = () => {
             {errors.email && errors.email.message}
           </FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={errors.password} mt={"45px"}>
+        <FormControl isInvalid={errors.password} mt="45px">
           <FormLabel>Password</FormLabel>
           <InputGroup>
             <Input
@@ -151,12 +151,12 @@ const Login = () => {
           </FormErrorMessage>
         </FormControl>
 
-        <VStack mt={"20px"}>
+        <VStack mt="20px">
           <Button
             colorScheme="pink"
             type="submit"
             isLoading={isLoading}
-            mt={"20px"}
+            mt="20px"
           >
             ログインする
           </Button>

@@ -254,7 +254,7 @@ const ItemForm = () => {
           )}
 
           <Box w="500px" mx="auto">
-            <FormControl isRequired py={"30px"}>
+            <FormControl isRequired py="30px">
               <FormLabel>Item Images</FormLabel>
               <SubImagesForm
                 images={editItem.images}

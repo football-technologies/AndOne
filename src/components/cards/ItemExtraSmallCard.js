@@ -72,7 +72,7 @@ const ItemExtraSmallCard = ({ item }) => {
           _hover={{ textDecoration: "none" }}
         >
           <a>
-            <Stack direction={"row"} align="center">
+            <Stack direction="row" align="center">
               <Box w="50px">
                 <AspectRatio ratio={1}>
                   <Image src={item.images[0].url} borderRadius="5px"></Image>

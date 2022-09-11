@@ -33,17 +33,17 @@ const SideNavWithoutLogin = () => {
     <Stack>
       <HStack>
         <Box>
-          <Text my={"30px"}>好きなものに囲まれて生活する</Text>
+          <Text my="30px">好きなものに囲まれて生活する</Text>
 
-          <Text mb={"30px"}>
+          <Text mb="30px">
             オークション形式で、お気に入りのアイテムを購入して、日常の生活に+1してみませんか。
           </Text>
         </Box>
       </HStack>
 
-      <VStack align={"stretch"} spacing={5}>
+      <VStack align="stretch" spacing={5}>
         <Stack>
-          <Button display={"block"} colorScheme="pink" onClick={toSignupPage}>
+          <Button display="block" colorScheme="pink" onClick={toSignupPage}>
             アカウント作成をする
           </Button>
         </Stack>
@@ -55,7 +55,7 @@ const SideNavWithoutLogin = () => {
       </VStack>
 
       <HStack>
-        <List mt={"50px"} spacing={5}>
+        <List mt="50px" spacing={5}>
           {items.map((item) => (
             <ListItem key={item.id}>{item.name}</ListItem>
           ))}
