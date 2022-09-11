@@ -56,11 +56,10 @@ const bidding = createSlice({
 
 const fetchBidding = ({ query, type, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    // console.log(">>>>>>>>> called fetchBidding");
+    console.log(">>>>>>>>> called fetchBidding");
 
     let unsubscribe = null;
 
-    // query = `items/432/biddings/123`
     if (isOnSnapshot) {
       unsubscribe = await onSnapshot(doc(db, query), async (doc) => {
         if (doc.id) {
@@ -85,9 +84,7 @@ const fetchBidding = ({ query, type, isOnSnapshot = false }) => {
 
 const fetchBiddings = ({ type, query, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    // console.log(">>>>>>>>> called fetchBiddings");
-
-    // const q = query(collectionGroup(db, "biddings"), where("status", "==", 1), orderBy("createdAt","desc"));
+    console.log(">>>>>>>>> called fetchBiddings");
 
     let unsubscribe = null;
     const newBiddings = [];

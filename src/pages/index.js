@@ -4,8 +4,7 @@ import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
 import { Button, Wrap, Stack, Divider } from "@chakra-ui/react";
 
 import { fetchItems } from "@/store/item";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { db } from "@/plugins/firebase";
 import { query, collection, orderBy } from "firebase/firestore";
 

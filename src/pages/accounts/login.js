@@ -20,10 +20,16 @@ import useFtToast from "@/components/ui/FtToast";
 
 import { BiHide, BiShow } from "react-icons/bi";
 
-import { auth } from "@/plugins/firebase";
+import { db, auth } from "@/plugins/firebase";
+import {
+  getDocs,
+  where,
+  collection,
+  query,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { db } from "@/plugins/firebase";
-import { getDocs, where, collection, query, doc, getDoc } from "firebase/firestore";
 
 import { login } from "@/store/account";
 
@@ -40,7 +46,7 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm();
 
   const onSubmit = (data) => {
@@ -112,7 +118,7 @@ const Login = () => {
           <Input
             type="email"
             variant="filled"
-            placeholder="steve@apple.com"
+            placeholder="例）steve@apple.com"
             {...register("email", {
               required: "メールアドレスは必須入力です",
               pattern: rules.email,
@@ -128,6 +134,7 @@ const Login = () => {
             <Input
               type={show ? "text" : "password"}
               variant="filled"
+              placeholder="例）xxxxxx"
               {...register("password", {
                 required: "パスワードは必須入力です",
                 pattern: rules.password,

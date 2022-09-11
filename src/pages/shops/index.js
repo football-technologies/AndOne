@@ -1,10 +1,9 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 
 import NextLink from "next/link";
 import { fetchShops } from "@/store/shop";
-import { Box, Button } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 
 import { db } from "@/plugins/firebase";
 import { collection } from "firebase/firestore";

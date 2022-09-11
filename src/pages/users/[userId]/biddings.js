@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { db } from "@/plugins/firebase";
 import {
   query,
@@ -8,7 +8,6 @@ import {
   getDocs,
   collectionGroup,
 } from "firebase/firestore";
-import { useState } from "react";
 import ItemSmallCard from "@/components/cards/ItemSmallCard";
 import _ from "lodash";
 import { Text } from "@chakra-ui/react";

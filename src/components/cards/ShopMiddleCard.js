@@ -3,7 +3,6 @@ import {
   Image,
   Heading,
   Avatar,
-  Center,
   Box,
   AspectRatio,
 } from "@chakra-ui/react";

@@ -1,5 +1,4 @@
 const functions = require("firebase-functions").region("asia-northeast1");
-const admin = require("firebase-admin");
 const sentryWrapper = require("../../common/sentryErrorWrapper");
 const deleteMasterTag = require("../module/deleteMasterTag");
 

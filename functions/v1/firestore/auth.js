@@ -1,7 +1,5 @@
 const functions = require("firebase-functions").region("asia-northeast1");
-const admin = require("firebase-admin");
 
-const { v4: uuidv4 } = require("uuid");
 const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Tokyo");

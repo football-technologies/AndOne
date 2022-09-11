@@ -46,7 +46,7 @@ const Signup = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     getValues,
     trigger,
   } = useForm();
@@ -112,7 +112,7 @@ const Signup = () => {
           <Input
             type="name"
             variant="filled"
-            placeholder="johndoe"
+            placeholder="例）taro1234"
             {...register("name", {
               required: "User Nameは必須入力です",
               pattern: rules.name,
@@ -127,7 +127,7 @@ const Signup = () => {
           <Input
             type="email"
             variant="filled"
-            placeholder="steve@apple.com"
+            placeholder="例）steve@apple.com"
             {...register("email", {
               required: "メールアドレスは必須入力です",
               pattern: rules.email,
@@ -143,6 +143,7 @@ const Signup = () => {
             <Input
               type={show ? "text" : "password"}
               variant="filled"
+              placeholder="例）xxxxxx"
               {...register("password", {
                 required: "パスワードは必須入力です",
                 onBlur: () => {
@@ -170,6 +171,7 @@ const Signup = () => {
             <Input
               type={showConfirm ? "text" : "password"}
               variant="filled"
+              placeholder="例）xxxxxx"
               {...register("confirmPassword", {
                 required: "確認のためパスワードを再入力してください",
                 validate: (value) => {

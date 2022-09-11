@@ -1,5 +1,4 @@
 const functions = require("firebase-functions").region("asia-northeast1");
-const admin = require("firebase-admin");
 const sentryErrorWrapper = require("../../common/sentryErrorWrapper");
 
 const runtimeOpts = {

@@ -6,7 +6,7 @@ import {
   FtSmallButton,
   FtSmallButtonOutlined,
 } from "@/components/ui/FtButton";
-import { Divider, VStack, Stack, Box, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 
 const FtUiPallet = () => {
   return (

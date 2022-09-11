@@ -10,9 +10,7 @@ import {
   Box,
   Input,
   VStack,
-  HStack,
   Textarea,
-  Stack,
   Text,
   Button,
   Icon,
@@ -21,11 +19,7 @@ import {
 } from "@chakra-ui/react";
 
 import useFtToast from "@/components/ui/FtToast";
-import {
-  FtLargeButton,
-  FtMiddleButtonOutlined,
-  FtSmallButtonOutlined,
-} from "@/components/ui/FtButton";
+import { FtLargeButton, FtSmallButtonOutlined } from "@/components/ui/FtButton";
 import { ftCreateId } from "@/plugins/mixin";
 import { createItem, fetchItem, updateItem } from "@/store/item";
 import { createTag } from "@/store/tag";

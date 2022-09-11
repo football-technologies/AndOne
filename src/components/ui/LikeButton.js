@@ -1,7 +1,6 @@
 import { FtSmallButtonOutlined } from "./FtButton";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { createLike, deleteLike, fetchLikes } from "@/store/like";
-import { useDispatch } from "react-redux";
 import { ftCreateId } from "@/plugins/mixin";
 import { db } from "@/plugins/firebase";
 import { doc, query, collectionGroup, where } from "firebase/firestore";
