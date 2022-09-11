@@ -1,7 +1,5 @@
 import { FtSmallButtonOutlined } from "@/components/ui/FtButton";
-
 import { ToFullDate } from "@/plugins/filter";
-
 import { Stack, HStack, Text, Avatar } from "@chakra-ui/react";
 
 const DisplayItemComments = ({ comment, type, replyId, selectComment }) => {
