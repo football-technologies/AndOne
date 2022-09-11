@@ -37,9 +37,12 @@ import { currentBiddingPrice } from "@/plugins/mixin";
 import { ToFinish, ToPrice } from "@/plugins/filter";
 import { GoCommentDiscussion } from "react-icons/go";
 
+import useSyncTime from "@/helpers/clock";
+
 const ItemShow = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  useSyncTime(1000);
 
   const { itemId } = router.query;
   const bindItem = useSelector((state) => state.item.item);
@@ -199,7 +202,7 @@ const ItemShow = () => {
                           boxSize="4"
                           mr="2"
                         ></Icon>
-                        {bindBiddings.length}件の件の入札履歴を見る
+                        {bindBiddings.length}件の入札履歴を見る
                       </Button>
                     </Box>
                   )}

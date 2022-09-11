@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export const CurrentSeconds = (interval) => {
+export const useSyncTime = (interval) => {
   const [time, updateTime] = useState(Date.now());
 
   useEffect(() => {
@@ -13,4 +13,4 @@ export const CurrentSeconds = (interval) => {
   return Math.floor(time / 1000); // msec -> sec に変換
 };
 
-export default CurrentSeconds;
+export default useSyncTime;

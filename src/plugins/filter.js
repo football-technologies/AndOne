@@ -4,12 +4,19 @@ const ToFinish = ({ finishedSeconds }) => {
   const currentDate = moment();
   const targetDate = moment.unix(finishedSeconds);
   const diffSeconds = Math.floor(targetDate.diff(currentDate) / 1000); // msec -> sec
-
   const diffMins = Math.floor(targetDate.diff(currentDate) / 60000); // msec -> min
 
-  if (diffMins <= 0) {
-    return `残り
+  console.log(">>>>>>>>>> diffSeconds", diffSeconds);
+
+  if (diffMins < 0) {
+    return "終了";
+  } else if (diffMins === 0) {
+    if (diffSeconds === 0) {
+      return "終了";
+    } else {
+      return `残り
     ${diffSeconds}秒`;
+    }
   } else if (diffMins < 60) {
     return `残り
     ${diffMins}分${diffSeconds % 60}秒`;
