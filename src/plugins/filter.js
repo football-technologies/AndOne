@@ -27,7 +27,7 @@ const ToFinish = ({ finishedSeconds }) => {
     return `残り
     ${diffDay}日`;
   } else {
-    return moment.unix(seconds).format("YYYY/MM/DD");
+    return moment.unix(finishedSeconds).format("YYYY/MM/DD");
   }
 };
 
