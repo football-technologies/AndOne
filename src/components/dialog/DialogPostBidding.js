@@ -17,8 +17,6 @@ import {
   Spacer,
   InputRightAddon,
   InputGroup,
-  FormControl,
-  FormErrorMessage,
 } from "@chakra-ui/react";
 import { FtLargeButton } from "@/components/ui/FtButton";
 import { currentBiddingPrice, ftCreateId } from "@/plugins/mixin";
@@ -32,25 +30,16 @@ import _ from "lodash";
 import { db } from "@/plugins/firebase";
 import { doc } from "firebase/firestore";
 import useFtToast from "@/components/ui/FtToast";
-import { useForm } from "react-hook-form";
 
 const DialogPostBidding = forwardRef((props, ref) => {
   const [dialog, setDialog] = useState(false);
-  const [price, setPrice] = useState();
+  const [price, setPrice] = useState("");
   const bindItem = useSelector((state) => state.item.item);
   const bindBiddings = useSelector((state) => state.bidding.biddings);
   const currentUser = useSelector((state) => state.account);
 
   const dispatch = useDispatch();
   const { ftToast } = useFtToast();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    getValues,
-    trigger,
-  } = useForm();
 
   useImperativeHandle(ref, () => ({
     openDialog() {
@@ -64,12 +53,15 @@ const DialogPostBidding = forwardRef((props, ref) => {
   };
 
   const submit = async () => {
+    if (!price) {
+      ftToast("入札価格の登録は、必須です。");
+      return false;
+    }
+
     const currentPrice = currentBiddingPrice({
       biddings: bindBiddings,
       startPrice: bindItem.sale.startPrice,
     });
-
-    console.log(">>>>>>>>>> currentPrice", currentPrice, Number(price));
 
     if (currentPrice > Number(price)) {
       ftToast("現在の最高入札額よりも、高い価格を設定してください");
@@ -102,104 +94,96 @@ const DialogPostBidding = forwardRef((props, ref) => {
   return (
     <Modal isOpen={dialog} onClose={onClose}>
       <ModalOverlay />
-      <form onSubmit={handleSubmit(submit)}>
-        <ModalContent p="10">
-          {/* <ModalHeader>Create Your Tweet</ModalHeader> */}
-          <ModalCloseButton />
-          <ModalBody>
-            <Stack direction="row">
-              <Box width="100px">
-                <AspectRatio ratio={1}>
-                  <Image src={bindItem.images[0].url}></Image>
-                </AspectRatio>
+
+      <ModalContent p="10">
+        {/* <ModalHeader>Create Your Tweet</ModalHeader> */}
+        <ModalCloseButton />
+        <ModalBody>
+          <Stack direction="row">
+            <Box width="100px">
+              <AspectRatio ratio={1}>
+                <Image src={bindItem.images[0].url}></Image>
+              </AspectRatio>
+            </Box>
+            <Text>{bindItem.name}</Text>
+          </Stack>
+
+          <Box w="300px" mx="auto" pt="5">
+            <Stack
+              direction="row"
+              align="end"
+              borderBottom="2px"
+              borderColor="primary"
+            >
+              <Text fontSize="md" fontWeight="bold" color="primary">
+                {ToPrice(
+                  currentBiddingPrice({
+                    biddings: bindBiddings,
+                    startPrice: bindItem.sale.startPrice,
+                  })
+                )}
+              </Text>
+              <Spacer></Spacer>
+              <Box>
+                <Text fontSize="md" fontWeight="bold">
+                  {ToFinish({
+                    finishedSeconds: bindItem.sale.finishedAt.seconds,
+                  })}
+                </Text>
               </Box>
-              <Text>{bindItem.name}</Text>
             </Stack>
 
-            <Box w="300px" mx="auto" pt="5">
-              <Stack
-                direction="row"
-                align="end"
-                borderBottom="2px"
-                borderColor="primary"
-              >
-                <Text fontSize="md" fontWeight="bold" color="primary">
-                  {ToPrice(
-                    currentBiddingPrice({
-                      biddings: bindBiddings,
-                      startPrice: bindItem.sale.startPrice,
-                    })
-                  )}
+            <Box pt="10">
+              <Box w="200px" mx="auto" pl="2">
+                <Text fontSize="sm" fontWeight="700">
+                  新しい入札価格
                 </Text>
-                <Spacer></Spacer>
-                <Box>
-                  <Text fontSize="md" fontWeight="bold">
-                    {ToFinish({
-                      finishedSeconds: bindItem.sale.finishedAt.seconds,
-                    })}
-                  </Text>
-                </Box>
-              </Stack>
 
-              <Box pt="10">
-                <Box w="200px" mx="auto" pl="2">
-                  <Text fontSize="sm" fontWeight="700">
-                    新しい入札価格
-                  </Text>
-
-                  <FormControl isInvalid={errors.price}>
-                    <InputGroup>
-                      <Input
-                        value={price}
-                        autoFocus={true}
-                        type="number"
-                        valiant="filled"
-                        onChange={(ev) => setPrice(ev.target.value)}
-                        placeholder="e.g 15000"
-                        bg="paleGray"
-                        {...register("price", {
-                          required: "入札価格を埋めてください",
-                        })}
-                      />
-                      <InputRightAddon
-                        children="円"
-                        bg="white"
-                        border="none"
-                      ></InputRightAddon>
-                    </InputGroup>
-                    <FormErrorMessage>
-                      {errors.price && errors.price.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                </Box>
-
-                {price && (
-                  <Box bg="darkGray" p="3" mt="10">
-                    <Text
-                      fontSize="sm"
-                      fontWeight="700"
-                      color="white"
-                      align="center"
-                    >
-                      送信ボタンを押す前に確認してください！
-                      <br />
-                      {ToPrice(price)}
-                      <br />
-                      の入札をしようとしています。
-                    </Text>
-                  </Box>
-                )}
+                <InputGroup>
+                  <Input
+                    value={price}
+                    autoFocus={true}
+                    type="number"
+                    valiant="filled"
+                    onChange={(ev) => setPrice(ev.target.value)}
+                    placeholder="例） 15000"
+                    bg="paleGray"
+                    rounded="none"
+                  />
+                  <InputRightAddon
+                    children="円"
+                    bg="white"
+                    border="none"
+                  ></InputRightAddon>
+                </InputGroup>
               </Box>
-            </Box>
-          </ModalBody>
 
-          <ModalFooter pt="10">
-            <Spacer></Spacer>
-            <FtLargeButton onClick={submit}>入札を送信する</FtLargeButton>
-            <Spacer></Spacer>
-          </ModalFooter>
-        </ModalContent>
-      </form>
+              {price && (
+                <Box bg="darkGray" p="3" mt="10" rounded="md">
+                  <Text
+                    fontSize="sm"
+                    fontWeight="700"
+                    color="white"
+                    align="center"
+                  >
+                    送信ボタンを押す前に確認してください！
+                    <br />
+                    {ToPrice(price)}
+                    <br />
+                    の入札をしようとしています。
+                  </Text>
+                </Box>
+              )}
+            </Box>
+          </Box>
+        </ModalBody>
+
+        <ModalFooter pt="10">
+          <Spacer></Spacer>
+          <FtLargeButton onClick={submit}>入札を送信する</FtLargeButton>
+          <Spacer></Spacer>
+        </ModalFooter>
+      </ModalContent>
     </Modal>
   );
 });
