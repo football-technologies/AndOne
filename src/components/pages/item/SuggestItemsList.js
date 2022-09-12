@@ -11,20 +11,13 @@ import _ from "lodash";
 
 const SuggestItemsList = ({ itemId }) => {
   const bindItems = useSelector((state) => state.item.items);
-  const shuffledItems = _.shuffle(_.cloneDeep(bindItems));
-
-  console.log(">>>>>>>>> bindItems", bindItems);
-  // console.log(">>>>>>>>> bindItems", bindItems);
+  const shuffledItems = _.shuffle(bindItems);
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(
       fetchItems({
-        query: query(
-          collection(db, "items"),
-          where("id", "!=", itemId)
-          // orderBy("createdAt", "desc")
-        ),
+        query: query(collection(db, "items"), where("id", "!=", itemId)),
         isOnSnapshot: false,
         type: "fetch",
       })

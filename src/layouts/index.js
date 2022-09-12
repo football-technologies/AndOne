@@ -14,6 +14,8 @@ import {
   doc,
 } from "firebase/firestore";
 
+import FtSearchBox from "@/components/ui/FtSearchBox";
+
 const DefaultLayout = ({ children }) => {
   const dispatch = useDispatch();
 
@@ -71,6 +73,7 @@ const DefaultLayout = ({ children }) => {
       </header>
 
       <article id="ftMain">
+        <FtSearchBox></FtSearchBox>
         <main id="ftMainContainer">{children}</main>
       </article>
     </>
