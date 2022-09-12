@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
-import { Button, Wrap, Stack, Divider } from "@chakra-ui/react";
+import { Button, Wrap, Box, Divider } from "@chakra-ui/react";
 
 import { fetchItems } from "@/store/item";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,12 +35,12 @@ export default function Home() {
       </Button>
 
       {bindItems && (
-        <Wrap p="5">
+        <Wrap p="1%" spacing="0">
           {bindItems.map((item) => {
             return (
-              <Stack isInline w="23%" p="1%" key={item.id}>
+              <Box w="25%" p="1%" key={item.id}>
                 <ItemMiddleCard item={item}></ItemMiddleCard>
-              </Stack>
+              </Box>
             );
           })}
         </Wrap>
