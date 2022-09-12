@@ -31,6 +31,8 @@ import { db } from "@/plugins/firebase";
 import { doc } from "firebase/firestore";
 import useFtToast from "@/components/ui/FtToast";
 
+import DisplayTimeToFinish from "@/components/pages/item/DisplayTimeToFinish";
+
 const DialogPostBidding = forwardRef((props, ref) => {
   const [dialog, setDialog] = useState(false);
   const [price, setPrice] = useState("");
@@ -126,9 +128,10 @@ const DialogPostBidding = forwardRef((props, ref) => {
               <Spacer></Spacer>
               <Box>
                 <Text fontSize="md" fontWeight="bold">
-                  {ToFinish({
-                    finishedSeconds: bindItem.sale.finishedAt.seconds,
-                  })}
+                  <DisplayTimeToFinish
+                    item={bindItem}
+                    isSync={true}
+                  ></DisplayTimeToFinish>
                 </Text>
               </Box>
             </Stack>

@@ -37,7 +37,7 @@ const Biddings = () => {
       return bidding.item.id;
     });
 
-    setItemIds(_itemIds);
+    setItemIds(_.uniq(_itemIds));
   };
 
   const getItems = async () => {

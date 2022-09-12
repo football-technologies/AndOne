@@ -31,7 +31,7 @@ const Watches = () => {
       return like.item.id;
     });
 
-    setItemIds(_itemIds);
+    setItemIds(_.uniq(_itemIds));
   };
 
   const getItems = async () => {
