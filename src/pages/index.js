@@ -1,15 +1,17 @@
 import { useEffect } from "react";
 
 import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
-import { Button, Wrap, Box, Divider } from "@chakra-ui/react";
+import { Wrap, Box } from "@chakra-ui/react";
 
 import { fetchItems } from "@/store/item";
 import { useDispatch, useSelector } from "react-redux";
 import { db } from "@/plugins/firebase";
 import { query, collection, orderBy } from "firebase/firestore";
+import _ from "lodash";
 
 export default function Home() {
   const bindItems = useSelector((state) => state.item.items);
+  const shuffledItems = _.shuffle(bindItems);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -23,20 +25,9 @@ export default function Home() {
   }, []);
   return (
     <>
-      <Button as="a" m="5" href="/items">
-        items list
-      </Button>
-      <Divider></Divider>
-      <Button as="a" m="5" href="/shops">
-        shops list
-      </Button>
-      <Button as="a" m="5" href="/tags">
-        tags list
-      </Button>
-
-      {bindItems && (
+      {shuffledItems && (
         <Wrap p="1%" spacing="0">
-          {bindItems.map((item) => {
+          {shuffledItems.map((item) => {
             return (
               <Box w="25%" p="1%" key={item.id}>
                 <ItemMiddleCard item={item}></ItemMiddleCard>
