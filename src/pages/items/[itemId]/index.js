@@ -46,13 +46,14 @@ import SuggestItemsList from "@/components/pages/item/SuggestItemsList";
 const ItemShow = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const currentSeconds = useSyncTime(50000);
-
+  // const currentSeconds = useSyncTime(50000);
   const [isSelling, setIsSelling] = useState(false);
 
   const { itemId } = router.query;
   const bindItem = useSelector((state) => state.item.item);
   const bindBiddings = useSelector((state) => state.bidding.biddings);
+
+  console.log(">>>>>>>>>>> bindBiddings", bindBiddings);
 
   const dialogPostBidding = useRef(null);
   const dialogBiddingHistory = useRef(null);
@@ -102,21 +103,21 @@ const ItemShow = () => {
     }
   }, [bindItem]);
 
-  useEffect(() => {
-    if (
-      bindItem &&
-      bindItem.itemStatus === 3 &&
-      bindItem.sale.finishedAt.seconds < currentSeconds
-    ) {
-      dispatch(
-        updateItem({
-          id: bindItem.id,
-          itemStatus: 4,
-        })
-      );
-      setIsSelling(false);
-    }
-  }, [currentSeconds]);
+  // useEffect(() => {
+  //   if (
+  //     bindItem &&
+  //     bindItem.itemStatus === 3 &&
+  //     bindItem.sale.finishedAt.seconds < currentSeconds
+  //   ) {
+  //     dispatch(
+  //       updateItem({
+  //         id: bindItem.id,
+  //         itemStatus: 4,
+  //       })
+  //     );
+  //     setIsSelling(false);
+  //   }
+  // }, [currentSeconds]);
 
   const openDialogBidding = () => {
     dialogPostBidding.current.openDialog();
