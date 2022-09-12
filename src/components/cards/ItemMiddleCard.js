@@ -98,7 +98,7 @@ const ItemMiddleCard = ({ item }) => {
                 </Text>
               </Stack>
 
-              {item.sale.startedAt && bindBiddings && (
+              {item.sale.startedAt && bindBiddings ? (
                 <Stack
                   direction="row"
                   align="end"
@@ -114,6 +114,16 @@ const ItemMiddleCard = ({ item }) => {
                     })}
                   </Text>
                 </Stack>
+              ) : (
+                <Text
+                  fontSize="xs"
+                  fontWeight="700"
+                  pt="3"
+                  display="block"
+                  textAlign="center"
+                >
+                  発売準備中
+                </Text>
               )}
             </Box>
           </a>
