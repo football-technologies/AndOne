@@ -180,7 +180,7 @@ const Edit = () => {
               placeholder="例）田中太郎"
               defaultValue={user.displayName}
               {...register("displayName", {
-                required: "名前は必須入力です"
+                required: "名前は必須入力です",
               })}
             />
             <FormHelperText>他の人に表示されます</FormHelperText>
@@ -240,23 +240,18 @@ const Edit = () => {
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl isRequired isInvalid={errors.address} mt="45px">
+          <FormControl mt="45px">
             <FormLabel>Address</FormLabel>
             <Textarea
               variant="filled"
               placeholder="例）東京都千代田区1-11-1"
               defaultValue={secret.address}
-              {...register("address", {
-                required: "住所は必須入力です",
-              })}
+              {...register("address")}
             ></Textarea>
             <FormHelperText>
               他の人に表示されません <br />
               アイテム購入時に、販売ショップの人のみが確認してすることができます。
             </FormHelperText>
-            <FormErrorMessage>
-              {errors.address && errors.address.message}
-            </FormErrorMessage>
           </FormControl>
 
           <VStack mt="20px">
@@ -270,8 +265,10 @@ const Edit = () => {
             </Button>
           </VStack>
         </form>
-        <Box w="50%" >
-          <Text mb="30px" color="red.400" textAlign="left">*必須</Text>
+        <Box w="50%">
+          <Text mb="30px" color="red.400" textAlign="left">
+            *必須
+          </Text>
         </Box>
       </VStack>
     );
