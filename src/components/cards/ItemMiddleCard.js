@@ -9,12 +9,13 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { currentBiddingPrice } from "@/plugins/mixin";
-import { ToFinish, ToPrice } from "@/plugins/filter";
+import { ToPrice } from "@/plugins/filter";
 import { useEffect } from "react";
 import { db } from "@/plugins/firebase";
 import { query, collection, orderBy, onSnapshot } from "firebase/firestore";
 
 import { useState } from "react";
+import DisplayTimeToFinish from "@/components/pages/item/DisplayTimeToFinish";
 
 const ItemMiddleCard = ({ item }) => {
   const [bindBiddings, setBindBiddings] = useState();
@@ -109,9 +110,7 @@ const ItemMiddleCard = ({ item }) => {
                     {ToPrice(currentPrice)}
                   </Text>
                   <Text fontSize="xs" className="nl2br" textAlign="right">
-                    {ToFinish({
-                      finishedSeconds: item.sale.finishedAt.seconds,
-                    })}
+                    <DisplayTimeToFinish item={item}></DisplayTimeToFinish>
                   </Text>
                 </Stack>
               ) : (

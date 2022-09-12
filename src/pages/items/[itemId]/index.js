@@ -35,25 +35,21 @@ import LikeButton from "@/components/ui/LikeButton";
 import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
 
 import { currentBiddingPrice } from "@/plugins/mixin";
-import { ToFinish, ToPrice } from "@/plugins/filter";
+import { ToPrice } from "@/plugins/filter";
 import { GoCommentDiscussion } from "react-icons/go";
 
-import useSyncTime from "@/helpers/clock";
 import { useState } from "react";
-
 import SuggestItemsList from "@/components/pages/item/SuggestItemsList";
+import DisplayTimeToFinish from "@/components/pages/item/DisplayTimeToFinish";
 
 const ItemShow = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  // const currentSeconds = useSyncTime(50000);
   const [isSelling, setIsSelling] = useState(false);
 
   const { itemId } = router.query;
   const bindItem = useSelector((state) => state.item.item);
   const bindBiddings = useSelector((state) => state.bidding.biddings);
-
-  console.log(">>>>>>>>>>> bindBiddings", bindBiddings);
 
   const dialogPostBidding = useRef(null);
   const dialogBiddingHistory = useRef(null);
@@ -101,23 +97,7 @@ const ItemShow = () => {
     if (bindItem?.itemStatus === 3) {
       setIsSelling(true);
     }
-  }, [bindItem]);
-
-  // useEffect(() => {
-  //   if (
-  //     bindItem &&
-  //     bindItem.itemStatus === 3 &&
-  //     bindItem.sale.finishedAt.seconds < currentSeconds
-  //   ) {
-  //     dispatch(
-  //       updateItem({
-  //         id: bindItem.id,
-  //         itemStatus: 4,
-  //       })
-  //     );
-  //     setIsSelling(false);
-  //   }
-  // }, [currentSeconds]);
+  }, [bindItem?.itemStatus]);
 
   const openDialogBidding = () => {
     dialogPostBidding.current.openDialog();
@@ -199,9 +179,10 @@ const ItemShow = () => {
                     </Text>
                     <Spacer></Spacer>
                     <Text fontWeight={700} fontSize="xs">
-                      {ToFinish({
-                        finishedSeconds: bindItem.sale.finishedAt.seconds,
-                      })}
+                      <DisplayTimeToFinish
+                        item={bindItem}
+                        isSync={true}
+                      ></DisplayTimeToFinish>
                     </Text>
                   </Stack>
 
