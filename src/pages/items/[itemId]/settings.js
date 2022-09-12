@@ -129,7 +129,12 @@ const ItemSettings = () => {
 
           <Box ml="35%">
             <form onSubmit={handleSubmit(onSubmit)}>
-              <FormControl pt="5" pl="2" isInvalid={errors.StartedDate}>
+              <FormControl
+                isRequired
+                pt="5"
+                pl="2"
+                isInvalid={errors.StartedDate}
+              >
                 <FormLabel>StartedDate</FormLabel>
                 <FtDateTimePicker
                   showTimeSelect
@@ -138,7 +143,12 @@ const ItemSettings = () => {
                 ></FtDateTimePicker>{" "}
               </FormControl>
 
-              <FormControl pt="5" pl="2" isInvalid={errors.FinishedDate}>
+              <FormControl
+                isRequired
+                pt="5"
+                pl="2"
+                isInvalid={errors.FinishedDate}
+              >
                 <FormLabel>FinishedDate</FormLabel>
                 <FtDateTimePicker
                   showTimeSelect
@@ -226,10 +236,15 @@ const ItemSettings = () => {
                 </FormErrorMessage>
               </FormControl>
 
-              <FtLargeButton colorScheme="pink" type="submit" my="10">
+              <FtLargeButton colorScheme="pink" type="submit" mt="10">
                 販売を開始する
               </FtLargeButton>
             </form>
+          </Box>
+          <Box ml="15%">
+            <Text mb="30px" color="red.400">
+              *必須
+            </Text>
           </Box>
         </Container>
       )}
