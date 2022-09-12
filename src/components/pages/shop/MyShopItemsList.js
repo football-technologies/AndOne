@@ -5,7 +5,7 @@ import { fetchItems } from "@/store/item";
 import { db } from "@/plugins/firebase";
 import { query, collection, orderBy, where } from "firebase/firestore";
 
-import { Box, Stack, Wrap, Tabs, TabList, Tab } from "@chakra-ui/react";
+import { Box, Wrap, Tabs, TabList, Tab } from "@chakra-ui/react";
 
 import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
 
@@ -48,12 +48,12 @@ const MyShopItemsList = ({ shopId }) => {
           </Box>
 
           <Box pt="5">
-            <Wrap p="5">
+            <Wrap p="1%" spacing="0">
               {bindItems.map((item) => {
                 return (
-                  <Stack isInline w="23%" p="1%" key={item.id}>
+                  <Box w="25%" p="1%" key={item.id}>
                     <ItemMiddleCard item={item}></ItemMiddleCard>
-                  </Stack>
+                  </Box>
                 );
               })}
             </Wrap>

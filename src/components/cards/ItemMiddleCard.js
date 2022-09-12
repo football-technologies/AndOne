@@ -72,6 +72,7 @@ const ItemMiddleCard = ({ item }) => {
     <>
       <Stack
         w="100%"
+        maxW="300px"
         borderWidth="1px"
         borderRadius="10px"
         overflow="hidden"
