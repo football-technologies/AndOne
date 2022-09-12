@@ -136,27 +136,26 @@ const ItemShow = () => {
 
             <Stack width="70%">
               <Stack direction="row">
-                <Box width="100px">
-                  {bindItem.images.map((image, index) => {
-                    return (
-                      <Box key={index} pb="2">
-                        <AspectRatio ratio={1}>
-                          <Image
-                            src={image.url}
-                            className="ftHover"
-                            onClick={() => openDialogImage(index)}
-                          ></Image>
-                        </AspectRatio>
-                      </Box>
-                    );
-                  })}
-                </Box>
+                {bindItem.images.length > 1 && (
+                  <Box width="100px">
+                    {bindItem.images.map((image, index) => {
+                      return (
+                        <Box key={index} pb="2">
+                          <AspectRatio ratio={1}>
+                            <Image
+                              src={image.url}
+                              className="ftHover"
+                              onClick={() => openDialogImage(index)}
+                            ></Image>
+                          </AspectRatio>
+                        </Box>
+                      );
+                    })}
+                  </Box>
+                )}
 
                 <Box>
                   <Image src={bindItem.images[0].url}></Image>
-                  <Text fontSize="xs" pt="2">
-                    caption: ああああああ
-                  </Text>
                 </Box>
               </Stack>
             </Stack>
