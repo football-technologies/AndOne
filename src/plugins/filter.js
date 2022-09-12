@@ -6,8 +6,6 @@ const ToFinish = ({ finishedSeconds }) => {
   const diffSeconds = Math.floor(targetDate.diff(currentDate) / 1000); // msec -> sec
   const diffMins = Math.floor(targetDate.diff(currentDate) / 60000); // msec -> min
 
-  console.log(">>>>>>>>>> diffSeconds", diffSeconds);
-
   if (diffMins < 0) {
     return "終了";
   } else if (diffMins === 0) {
