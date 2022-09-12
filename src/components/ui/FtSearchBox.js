@@ -19,7 +19,7 @@ import { useState } from "react";
 import useFtToast from "./FtToast";
 import { useRouter } from "next/router";
 import { fetchItems } from "@/store/item";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { db } from "@/plugins/firebase";
 import { query, collection } from "firebase/firestore";
@@ -28,14 +28,24 @@ import _ from "lodash";
 const FtSearchBox = () => {
   const { ftToast } = useFtToast();
   const router = useRouter();
-  const bindItems = useSelector((state) => state.item.items);
-  const shuffleItems = _.shuffle(bindItems);
-
-  console.log(">>>>>>> serach : binditems", bindItems);
 
   const [dialog, setDialog] = useState(false);
   const [keyword, setKeyword] = useState("");
   const dispatch = useDispatch();
+
+  // TODO: 検索ログを使って適正なワードに変更
+  const populerWords = [
+    "バルセロナFC",
+    "日本代表",
+    "浦和レッズ",
+    "プレミアリーグ",
+    "マンチェスターCity",
+    "香川真司",
+    "イタリア代表",
+    "イニエスタ",
+    "ケビン・デ・ブライネ",
+    "アズーリ",
+  ];
 
   useEffect(() => {
     dispatch(
@@ -48,7 +58,6 @@ const FtSearchBox = () => {
   }, [dispatch]);
 
   const openSearchBox = () => {
-    console.log(">>>>> click openSearchBox");
     setDialog(true);
   };
 
@@ -59,7 +68,7 @@ const FtSearchBox = () => {
 
   const submit = (ev) => {
     ev.preventDefault();
-
+    onClose();
     router.push(`/`);
     ftToast("検索機能は、今後の実装予定です。");
   };
@@ -103,15 +112,13 @@ const FtSearchBox = () => {
               </form>
             </Box>
 
-            {shuffleItems && (
-              <Box pt="10">
-                <Text fontWeight="700">こんな検索キーワードが人気です</Text>
-                <Divider mb="5"></Divider>
-                {shuffleItems.map((item) => {
-                  return <Text>{item.name}</Text>;
-                })}
-              </Box>
-            )}
+            <Box pt="10">
+              <Text fontWeight="700">こんな検索キーワードが人気です</Text>
+              <Divider mb="5"></Divider>
+              {populerWords.map((word) => {
+                return <Text>{word}</Text>;
+              })}
+            </Box>
           </ModalBody>
         </ModalContent>
       </Modal>
