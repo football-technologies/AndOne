@@ -4,19 +4,28 @@ const ToFinish = ({ finishedSeconds }) => {
   const currentDate = moment();
   const targetDate = moment.unix(finishedSeconds);
   const diffSeconds = Math.floor(targetDate.diff(currentDate) / 1000); // msec -> sec
-
   const diffMins = Math.floor(targetDate.diff(currentDate) / 60000); // msec -> min
 
-  if (diffMins <= 0) {
-    return `残り ${diffSeconds}秒`;
+  if (diffMins < 0) {
+    return "終了";
+  } else if (diffMins === 0) {
+    if (diffSeconds === 0) {
+      return "終了";
+    } else {
+      return `残り
+    ${diffSeconds}秒`;
+    }
   } else if (diffMins < 60) {
-    return `残り ${diffMins}分${diffSeconds}秒`;
+    return `残り
+    ${diffMins}分${diffSeconds % 60}秒`;
   } else if (diffMins < 60 * 24) {
     const diffHour = Math.floor(diffMins / 60);
-    return `残り ${diffHour}時間${diffMins % 60}分`;
+    return `残り
+    ${diffHour}時間${diffMins % 60}分`;
   } else if (diffMins < 60 * 24 * 30) {
     const diffDay = Math.floor(diffMins / (60 * 24));
-    return `残り ${diffDay}日`;
+    return `残り
+    ${diffDay}日`;
   } else {
     return moment.unix(seconds).format("YYYY/MM/DD");
   }

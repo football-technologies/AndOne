@@ -23,7 +23,7 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchItem } from "@/store/item";
+import item, { fetchItem, updateItem } from "@/store/item";
 import { fetchComments } from "@/store/comment";
 import { fetchBiddings } from "@/store/bidding";
 import DialogImage from "@/components/pages/shop/DialogImage";
@@ -37,9 +37,15 @@ import { currentBiddingPrice } from "@/plugins/mixin";
 import { ToFinish, ToPrice } from "@/plugins/filter";
 import { GoCommentDiscussion } from "react-icons/go";
 
+import useSyncTime from "@/helpers/clock";
+import { useState } from "react";
+
 const ItemShow = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const currentSeconds = useSyncTime(1000);
+
+  const [isSelling, setIsSelling] = useState(false);
 
   const { itemId } = router.query;
   const bindItem = useSelector((state) => state.item.item);
@@ -77,11 +83,6 @@ const ItemShow = () => {
           type: "fetch",
         })
       );
-    }
-  }, [router.isReady]);
-
-  useEffect(() => {
-    if (router.isReady) {
       dispatch(
         fetchComments({
           query: query(collection(db, `items/${itemId}/comments`)),
@@ -91,6 +92,28 @@ const ItemShow = () => {
       );
     }
   }, [router.isReady]);
+
+  useEffect(() => {
+    if (bindItem?.itemStatus === 3) {
+      setIsSelling(true);
+    }
+  }, [bindItem]);
+
+  useEffect(() => {
+    if (
+      bindItem &&
+      bindItem.itemStatus === 3 &&
+      bindItem.sale.finishedAt.seconds < currentSeconds
+    ) {
+      dispatch(
+        updateItem({
+          id: bindItem.id,
+          itemStatus: 4,
+        })
+      );
+      setIsSelling(false);
+    }
+  }, [currentSeconds]);
 
   const openDialogBidding = () => {
     dialogPostBidding.current.openDialog();
@@ -179,11 +202,13 @@ const ItemShow = () => {
                     </Text>
                   </Stack>
 
-                  <Center pt="2">
-                    <FtMiddleButton onClick={openDialogBidding}>
-                      入札する
-                    </FtMiddleButton>
-                  </Center>
+                  {isSelling && (
+                    <Center pt="2">
+                      <FtMiddleButton onClick={openDialogBidding}>
+                        入札する
+                      </FtMiddleButton>
+                    </Center>
+                  )}
 
                   {bindBiddings.length > 0 && (
                     <Box>
@@ -199,7 +224,7 @@ const ItemShow = () => {
                           boxSize="4"
                           mr="2"
                         ></Icon>
-                        {bindBiddings.length}件の件の入札履歴を見る
+                        {bindBiddings.length}件の入札履歴を見る
                       </Button>
                     </Box>
                   )}
@@ -278,7 +303,9 @@ const ItemShow = () => {
 
           {bindItem.sale.startedAt && (
             <>
-              <DialogPostBidding ref={dialogPostBidding}></DialogPostBidding>
+              {isSelling && (
+                <DialogPostBidding ref={dialogPostBidding}></DialogPostBidding>
+              )}
               <DialogBiddingHistory
                 ref={dialogBiddingHistory}
               ></DialogBiddingHistory>

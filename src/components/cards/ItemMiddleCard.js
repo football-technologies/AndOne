@@ -105,14 +105,14 @@ const ItemMiddleCard = ({ item }) => {
               {item.sale.startedAt && bindBiddings && (
                 <Stack
                   direction="row"
-                  align="center"
+                  align="end"
                   justify="space-between"
-                  pt="2"
+                  pt="0"
                 >
                   <Text fontSize="md" fontWeight="bold" color="primary">
                     {ToPrice(currentPrice)}
                   </Text>
-                  <Text fontSize="xs">
+                  <Text fontSize="xs" className="nl2br" textAlign="right">
                     {ToFinish({
                       finishedSeconds: item.sale.finishedAt.seconds,
                     })}
