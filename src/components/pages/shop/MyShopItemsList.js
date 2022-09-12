@@ -13,10 +13,7 @@ const MyShopItemsList = ({ shopId }) => {
   const dispatch = useDispatch();
   const bindItems = useSelector((state) => state.item.items);
 
-  console.log(">>>>>>>>>>> bindItems", bindItems);
   useEffect(() => {
-    console.log(">>>>>>>>>>> useEffect", shopId);
-
     dispatch(
       fetchItems({
         query: query(
@@ -38,8 +35,14 @@ const MyShopItemsList = ({ shopId }) => {
             <Tabs isFitted colorScheme="primary">
               <TabList>
                 <Tab>All ({bindItems.length})</Tab>
-                <Tab>On Sale (323)</Tab>
-                <Tab>Sold (513)</Tab>
+                <Tab>
+                  On Sale (
+                  {bindItems.filter((item) => item.itemStatus === 3).length})
+                </Tab>
+                <Tab>
+                  Sold (
+                  {bindItems.filter((item) => item.itemStatus === 4).length})
+                </Tab>
               </TabList>
             </Tabs>
           </Box>

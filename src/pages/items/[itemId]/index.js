@@ -20,10 +20,11 @@ import {
   Center,
   Spacer,
   Icon,
+  Container,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useSelector, useDispatch } from "react-redux";
-import item, { fetchItem, updateItem } from "@/store/item";
+import { fetchItem, updateItem } from "@/store/item";
 import { fetchComments } from "@/store/comment";
 import { fetchBiddings } from "@/store/bidding";
 import DialogImage from "@/components/pages/shop/DialogImage";
@@ -40,10 +41,12 @@ import { GoCommentDiscussion } from "react-icons/go";
 import useSyncTime from "@/helpers/clock";
 import { useState } from "react";
 
+import SuggestItemsList from "@/components/pages/item/SuggestItemsList";
+
 const ItemShow = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const currentSeconds = useSyncTime(1000);
+  const currentSeconds = useSyncTime(50000);
 
   const [isSelling, setIsSelling] = useState(false);
 
@@ -298,8 +301,12 @@ const ItemShow = () => {
           <Box width="600px" mx="auto" p="10">
             <Text fontSize="sm">{bindItem.description}</Text>
           </Box>
-          {/* dialog */}
 
+          <Container w="100%" maxW="1000px">
+            <SuggestItemsList itemId={bindItem.id}></SuggestItemsList>
+          </Container>
+
+          {/* dialog */}
           {bindItem.sale.startedAt && (
             <>
               {isSelling && (

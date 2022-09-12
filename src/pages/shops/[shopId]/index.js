@@ -168,47 +168,57 @@ const ShopShow = () => {
               </Text>
 
               <Box bg="paleGray" p="5">
-                <Text
-                  fontSize="xs"
-                  fontWeight="700"
-                  borderBottom="1px"
-                  borderColor="white"
-                >
-                  <Icon as={FaMapMarked} boxSize="1em" mr="2"></Icon>
-                  {bindShop.address}
-                </Text>
-                <Text
-                  fontSize="xs"
-                  fontWeight="700"
-                  borderBottom="1px"
-                  borderColor="white"
-                  pt="3"
-                >
-                  <Icon as={FaPhone} boxSize="1em" mr="2"></Icon>
-                  {bindShop.phone}
-                </Text>
-                <Text
-                  fontSize="xs"
-                  fontWeight="700"
-                  borderBottom="1px"
-                  borderColor="white"
-                  pt="3"
-                >
-                  <Icon as={MdMail} boxSize="1em" mr="2"></Icon>
-                  {bindShop.email}
-                </Text>
+                {bindShop.address && (
+                  <Text
+                    fontSize="xs"
+                    fontWeight="700"
+                    borderBottom="1px"
+                    borderColor="white"
+                  >
+                    <Icon as={FaMapMarked} boxSize="1em" mr="2"></Icon>
+                    {bindShop.address}
+                  </Text>
+                )}
 
-                <Text
-                  fontSize="xs"
-                  fontWeight="700"
-                  borderBottom="1px"
-                  borderColor="white"
-                  pt="3"
-                >
-                  <Icon as={FaBookOpen} boxSize="1em" mr="2"></Icon>
-                  営業時間： {bindShop.openHour}
-                  、定休：{bindShop.holidays}
-                </Text>
+                {bindShop.phone && (
+                  <Text
+                    fontSize="xs"
+                    fontWeight="700"
+                    borderBottom="1px"
+                    borderColor="white"
+                    pt="3"
+                  >
+                    <Icon as={FaPhone} boxSize="1em" mr="2"></Icon>
+                    {bindShop.phone}
+                  </Text>
+                )}
+
+                {bindShop.email && (
+                  <Text
+                    fontSize="xs"
+                    fontWeight="700"
+                    borderBottom="1px"
+                    borderColor="white"
+                    pt="3"
+                  >
+                    <Icon as={MdMail} boxSize="1em" mr="2"></Icon>
+                    {bindShop.email}
+                  </Text>
+                )}
+
+                {(bindShop.openHour || bindShop.holidays) && (
+                  <Text
+                    fontSize="xs"
+                    fontWeight="700"
+                    borderBottom="1px"
+                    borderColor="white"
+                    pt="3"
+                  >
+                    <Icon as={FaBookOpen} boxSize="1em" mr="2"></Icon>
+                    営業時間： {bindShop.openHour}
+                    、定休：{bindShop.holidays}
+                  </Text>
+                )}
               </Box>
             </Stack>
 
