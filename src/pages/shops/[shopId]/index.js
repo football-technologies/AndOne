@@ -10,6 +10,8 @@ import {
   Heading,
   Link,
   Text,
+  Avatar,
+  Center,
 } from "@chakra-ui/react";
 import {
   FaBookOpen,
@@ -109,6 +111,18 @@ const ShopShow = () => {
 
           <HStack align="start" p="5" className="mainContainer">
             <Stack w="20%" className="tagsBlock">
+              <Center>
+                <Avatar
+                  src={bindShop.icon}
+                  name={bindShop.name}
+                  size="xl"
+                  border="1px"
+                  borderColor="paleGray"
+                  style={{ marginTop: "-70px" }}
+                  mb="10"
+                ></Avatar>
+              </Center>
+
               {bindShop.tags.map((tag) => {
                 return (
                   <NextLink href={`/tags/${tag.id}`} passHref key={tag.id}>

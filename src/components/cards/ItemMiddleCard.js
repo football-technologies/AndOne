@@ -92,11 +92,7 @@ const ItemMiddleCard = ({ item }) => {
               </Heading>
 
               <Stack direction="row" align="center" pt="5">
-                <Avatar
-                  size="sm"
-                  name="imoto"
-                  src="https://bit.ly/broken-link"
-                />
+                <Avatar size="sm" name={item.shop.name} src={item.shop.icon} />
                 <Text fontSize="xs" noOfLines={2}>
                   {item.shop.name}
                 </Text>
@@ -107,7 +103,7 @@ const ItemMiddleCard = ({ item }) => {
                   direction="row"
                   align="end"
                   justify="space-between"
-                  pt="0"
+                  pt="2"
                 >
                   <Text fontSize="md" fontWeight="bold" color="primary">
                     {ToPrice(currentPrice)}
