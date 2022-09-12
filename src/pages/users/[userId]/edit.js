@@ -38,7 +38,7 @@ const Edit = () => {
 
   const router = useRouter();
   const { ftToast } = useFtToast();
-  const iconRef = useRef();
+  const singleSelectInputRef = useRef();
   const dispatch = useDispatch();
 
   const {
@@ -98,8 +98,8 @@ const Edit = () => {
     }
   }, [bindUser, bindSecret]);
 
-  const openIconRef = () => {
-    iconRef.current.click();
+  const openSingleSelectInputRef = () => {
+    singleSelectInputRef.current.click();
   };
 
   const uploadSingleImage = ({ url, type }) => {
@@ -160,14 +160,14 @@ const Edit = () => {
             <Box pl={"10px"}>
               <HStack mb={"5px"}>
                 <UploadSingleImage
-                  ref={iconRef}
+                  ref={singleSelectInputRef}
                   folderPath={`users/${user.id}/icon`}
                   uploadSingleImage={uploadSingleImage}
                   type="icon"
                 ></UploadSingleImage>
               </HStack>
               <HStack>
-                <FtSmallButtonOutlined onClick={openIconRef}>
+                <FtSmallButtonOutlined onClick={openSingleSelectInputRef}>
                   iconを変更する
                 </FtSmallButtonOutlined>
               </HStack>

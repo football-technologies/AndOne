@@ -6,7 +6,7 @@ import { getDownloadURL, ref, uploadString } from "@firebase/storage";
 import LoadingSpinner from "./LoadingSpinner";
 
 const UploadSingleImage = forwardRef(
-  ({ folderPath, uploadSingleImage, type }, inputRef) => {
+  ({ folderPath, uploadSingleImage, type }, singleSelectInputRef) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const { ftToast } = useFtToast();
@@ -62,15 +62,15 @@ const UploadSingleImage = forwardRef(
     return (
       <>
         <Input
-          ref={inputRef}
-          type={"file"}
+          ref={singleSelectInputRef}
+          type="file"
           accept=".jpg, .png"
           hidden
           name="image"
           onChange={onChange}
         ></Input>
         {type === "icon" && (
-          <LoadingSpinner size={"xl"} isLoading={isLoading}></LoadingSpinner>
+          <LoadingSpinner size="xl" isLoading={isLoading}></LoadingSpinner>
         )}
       </>
     );
@@ -138,7 +138,7 @@ const UploadSub = forwardRef(
 
         <Input
           ref={subRef}
-          type={"file"}
+          type="file"
           accept=".jpg, .png"
           hidden
           multiple
