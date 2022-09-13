@@ -53,7 +53,6 @@ const ItemForm = () => {
             type: "fetch",
           })
         );
-        setIsEditMode(true);
 
         return () => {
           dispatch(
@@ -93,6 +92,7 @@ const ItemForm = () => {
           item.tags = tags;
         }
         setEditItem(item);
+        setIsEditMode(true);
       }
 
       return () => {
