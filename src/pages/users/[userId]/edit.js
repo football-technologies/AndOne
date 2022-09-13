@@ -124,7 +124,7 @@ const Edit = () => {
         email: data.email,
         name: data.displayName,
         icon: user.icon,
-        shopId: user.shopId,
+        shopId: user.shop.id,
       })
     );
 
