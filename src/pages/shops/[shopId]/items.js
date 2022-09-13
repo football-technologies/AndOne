@@ -26,7 +26,7 @@ export default function Home() {
             where("shop.id", "==", shopId),
             orderBy("createdAt", "desc")
           ),
-          isOnSnapshot: false,
+          isOnSnapshot: true,
           type: "fetch",
         })
       );

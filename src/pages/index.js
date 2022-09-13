@@ -6,7 +6,7 @@ import { Wrap, Box } from "@chakra-ui/react";
 import { fetchItems } from "@/store/item";
 import { useDispatch, useSelector } from "react-redux";
 import { db } from "@/plugins/firebase";
-import { query, collection, orderBy } from "firebase/firestore";
+import { query, collection, where } from "firebase/firestore";
 import _ from "lodash";
 
 export default function Home() {
@@ -17,7 +17,7 @@ export default function Home() {
   useEffect(() => {
     dispatch(
       fetchItems({
-        query: query(collection(db, "items"), orderBy("createdAt", "desc")),
+        query: query(collection(db, "items"), where("itemStatus", ">=", 2)),
         isOnSnapshot: true,
         type: "fetch",
       })
