@@ -116,7 +116,7 @@ const FtSearchBox = () => {
               <Text fontWeight="700">こんな検索キーワードが人気です</Text>
               <Divider mb="5"></Divider>
               {populerWords.map((word) => {
-                return <Text>{word}</Text>;
+                return <Text key={word}>{word}</Text>;
               })}
             </Box>
           </ModalBody>

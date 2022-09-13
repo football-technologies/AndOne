@@ -70,8 +70,6 @@ const fetchBiddingItemIds = ({
   limit = 5,
 }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchBiddingItemIds");
-
     let unsubscribe = null;
     const newBiddingItemIds = [];
 
@@ -128,8 +126,6 @@ const fetchBiddingItemIds = ({
 
 const fetchBiddingItems = ({ type, query, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchBiddingItems");
-
     let unsubscribe = null;
     const newBiddingItems = [];
 
