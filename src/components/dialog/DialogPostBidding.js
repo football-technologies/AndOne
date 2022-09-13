@@ -60,6 +60,11 @@ const DialogPostBidding = forwardRef((props, ref) => {
   };
 
   const submit = async () => {
+    if (bindItem.itemStatus !== 3) {
+      ftToast("申し訳ありません、アイテムの入札が終了しています。");
+      return false;
+    }
+
     if (!price) {
       ftToast("入札価格の登録は、必須です。");
       return false;

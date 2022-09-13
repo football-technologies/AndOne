@@ -118,8 +118,10 @@ const ItemShow = () => {
   useEffect(() => {
     if (bindItem?.itemStatus === 3) {
       setIsSelling(true);
+    } else {
+      setIsSelling(false);
     }
-  }, [bindItem?.itemStatus]);
+  }, [bindItem?.id, bindItem?.itemStatus]);
 
   const openDialogBidding = () => {
     dialogPostBidding.current.openDialog();
