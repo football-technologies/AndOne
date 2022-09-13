@@ -21,7 +21,7 @@ const DefaultLayout = ({ children }) => {
   useEffect(() => {
     onAuthStateChanged(auth, async (authUser) => {
       if (authUser) {
-        console.log(">>>>>>>>> login user", authUser.uid);
+        console.log(">>>>>>>>> login user");
 
         const q = query(
           collection(db, "users"),

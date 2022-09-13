@@ -1,6 +1,3 @@
-import { FtSmallButtonOutlined } from "@/components/ui/FtButton";
-import useFtToast from "@/components/ui/FtToast";
-import { UploadIcon } from "@/components/ui/ImageUpload";
 import rules from "@/plugins/validation";
 import { updateAccount } from "@/store/account";
 import { fetchSecret, updateSecret } from "@/store/secret";
@@ -19,6 +16,11 @@ import {
   Avatar,
   Text,
 } from "@chakra-ui/react";
+import useFtToast from "@/components/ui/FtToast";
+import { FtSmallButtonOutlined } from "@/components/ui/FtButton";
+
+import { UploadSingleImage } from "@/components/ui/ImageUpload";
+
 import _ from "lodash";
 import { useRouter } from "next/router";
 import { useState, useRef, useEffect } from "react";
@@ -35,7 +37,7 @@ const Edit = () => {
 
   const router = useRouter();
   const { ftToast } = useFtToast();
-  const iconRef = useRef();
+  const singleSelectInputRef = useRef();
   const dispatch = useDispatch();
 
   const {
@@ -95,17 +97,16 @@ const Edit = () => {
     }
   }, [bindUser, bindSecret]);
 
-  const openIconRef = () => {
-    iconRef.current.click();
+  const openSingleSelectInputRef = () => {
+    singleSelectInputRef.current.click();
   };
 
-  const uploadIcon = (url) => {
-    console.log(">>>>>>> return url", url);
+  const uploadSingleImage = ({ url, type }) => {
+    console.log(">>>>>>> return single image url", url, type);
     setUrl(url);
   };
 
   const onSubmit = (data) => {
-
     user.displayName = data.displayName;
     user.screenName = data.screenName;
     user.description = data.description;
@@ -123,7 +124,7 @@ const Edit = () => {
         email: data.email,
         name: data.displayName,
         icon: user.icon,
-        shopId: user.shopId,
+        shopId: user.shop.id,
       })
     );
 
@@ -153,16 +154,17 @@ const Edit = () => {
                 <Avatar name={user.displayName} size="xl" />
               )}
             </Box>
-            <Box pl="10px">
-              <HStack mb="5px">
-                <UploadIcon
-                  ref={iconRef}
+            <Box pl={"10px"}>
+              <HStack mb={"5px"}>
+                <UploadSingleImage
+                  ref={singleSelectInputRef}
                   folderPath={`users/${user.id}/icon`}
-                  uploadIcon={uploadIcon}
-                ></UploadIcon>
+                  uploadSingleImage={uploadSingleImage}
+                  type="icon"
+                ></UploadSingleImage>
               </HStack>
               <HStack>
-                <FtSmallButtonOutlined onClick={openIconRef}>
+                <FtSmallButtonOutlined onClick={openSingleSelectInputRef}>
                   iconを変更する
                 </FtSmallButtonOutlined>
               </HStack>
