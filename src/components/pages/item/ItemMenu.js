@@ -29,7 +29,7 @@ const ItemMenu = ({ item }) => {
     if (currentUser.shopId === item.shop.id) {
       setIsShopOwner(true);
     }
-  }, [currentUser.id]);
+  }, [item.id]);
 
   const openItem = () => {
     dispatch(

@@ -56,7 +56,7 @@ const Watches = () => {
 
   useEffect(() => {
     getItemIds();
-  }, [currentUser.id]);
+  }, []);
 
   useEffect(() => {
     if (itemIds && itemIds.length > 0) {

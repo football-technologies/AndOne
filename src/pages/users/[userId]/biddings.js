@@ -16,7 +16,6 @@ const Biddings = () => {
   const currentUser = useSelector((state) => state.account);
   const [itemIds, setItemIds] = useState();
   const [items, setItems] = useState();
-  // const [likes, setLikes] = useState();
 
   const getItemIds = async () => {
     const _biddings = [];
@@ -62,7 +61,7 @@ const Biddings = () => {
 
   useEffect(() => {
     getItemIds();
-  }, [currentUser.id]);
+  }, []);
 
   useEffect(() => {
     if (itemIds && itemIds.length > 0) {

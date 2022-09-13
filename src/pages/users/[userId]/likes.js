@@ -56,7 +56,7 @@ const Likes = () => {
 
   useEffect(() => {
     getShopIds();
-  }, [currentUser.id]);
+  }, []);
 
   useEffect(() => {
     if (shopIds && shopIds.length > 0) {

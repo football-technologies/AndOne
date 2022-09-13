@@ -29,7 +29,7 @@ const Collections = () => {
 
   useEffect(() => {
     getItems();
-  }, [currentUser.id]);
+  }, []);
 
   return (
     <>

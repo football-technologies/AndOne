@@ -15,7 +15,7 @@ const DisplayItemStatus = ({ item }) => {
     if (currentUser.shopId === item.shop.id) {
       setIsShopOwner(true);
     }
-  }, [currentUser.id]);
+  }, [item.id]);
 
   const row = _.find(dictionary.itemStatus, (row) => {
     if (row.id === item.itemStatus) {

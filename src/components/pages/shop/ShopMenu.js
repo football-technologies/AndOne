@@ -23,7 +23,7 @@ const ShopMenu = ({ shop }) => {
     if (currentUser.shopId === shop.id) {
       setIsShopOwner(true);
     }
-  }, [currentUser.id]);
+  }, [shop.id]);
 
   return (
     <>
