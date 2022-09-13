@@ -11,7 +11,6 @@ import { query, collection, orderBy } from "firebase/firestore";
 const ItemIndex = () => {
   const bindItems = useSelector((state) => state.item.items);
 
-  console.log(">>>>>>>> bindItems", bindItems);
   const dispatch = useDispatch();
 
   useEffect(() => {

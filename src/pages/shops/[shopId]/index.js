@@ -106,7 +106,7 @@ const ShopShow = () => {
               <Image src={bindShop.cover}></Image>
             </AspectRatio>
 
-            <ShopMenu shopId={bindShop.id}></ShopMenu>
+            <ShopMenu shop={bindShop}></ShopMenu>
           </Box>
 
           <HStack align="start" p="5" className="mainContainer">
