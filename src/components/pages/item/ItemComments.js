@@ -141,6 +141,11 @@ const ItemComments = () => {
     if (replyId) {
       comment.parent.id = replyId;
       comment.parent.ref = doc(db, `items/${itemId}/comments/${replyId}`);
+
+      comment.shop.id = bindItem.shop.id;
+      comment.shop.name = bindItem.shop.name;
+      comment.shop.icon = bindItem.shop.icon;
+      comment.shop.ref = doc(db, `shops/${bindItem.shop.id}`);
     }
 
     initialFocusRef.current.value = "";

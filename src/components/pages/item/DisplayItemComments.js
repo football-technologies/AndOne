@@ -6,12 +6,15 @@ const DisplayItemComments = ({ comment, type, replyId, selectComment }) => {
   return (
     <HStack pl={type === "parent" ? "0" : "12"}>
       <Stack>
-        <Avatar src={comment.user.icon} name={comment.user.name} />
+        <Avatar
+          src={type === "parent" ? comment.user.icon : comment.shop.icon}
+          name={comment.user.name}
+        />
       </Stack>
 
       <Stack w="100%" spacing="0">
         <Text fontSize="xs" pl="2">
-          {comment.user.name}
+          {type === "parent" ? comment.user.name : comment.shop.name}
         </Text>
         <Text
           px="5"
