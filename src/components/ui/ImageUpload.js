@@ -1,9 +1,9 @@
-import { Input, Spinner } from "@chakra-ui/react";
-import { forwardRef, useState } from "react";
+import LoadingSpinner from "./LoadingSpinner";
 import useFtToast from "@/components/ui/FtToast";
 import { storage } from "@/plugins/firebase";
+import { Input, Spinner } from "@chakra-ui/react";
 import { getDownloadURL, ref, uploadString } from "@firebase/storage";
-import LoadingSpinner from "./LoadingSpinner";
+import { forwardRef, useState } from "react";
 
 const UploadSingleImage = forwardRef(
   ({ folderPath, uploadSingleImage, type }, singleSelectInputRef) => {
@@ -43,7 +43,6 @@ const UploadSingleImage = forwardRef(
         uploadString(storageRef, e.target.result, "data_url")
           .then((snapshot) => {
             getDownloadURL(snapshot.ref).then((downloadURL) => {
-              console.log(">>>>>>>>>>>> downloadURL", downloadURL);
               uploadSingleImage({
                 url: downloadURL,
                 type: type,
@@ -52,7 +51,6 @@ const UploadSingleImage = forwardRef(
             setIsLoading(false);
           })
           .catch((err) => {
-            console.log(">>>>>>>>>> err", err.message);
             ftToast(err.message);
             setIsLoading(false);
           });
@@ -114,7 +112,6 @@ const UploadSub = forwardRef(
         uploadString(storageRef, e.target.result, "data_url")
           .then((snapshot) => {
             getDownloadURL(snapshot.ref).then((downloadURL) => {
-              console.log(">>>>>>>>>>>> downloadURL", downloadURL);
               returnURL({
                 url: downloadURL,
                 index: index,
@@ -123,7 +120,6 @@ const UploadSub = forwardRef(
             setIsLoading(false);
           })
           .catch((err) => {
-            console.log(">>>>>>>>>> err", err.message);
             ftToast(err.message);
             setIsLoading(false);
           });

@@ -1,12 +1,12 @@
-import { Stack, Image, Text, Box, AspectRatio } from "@chakra-ui/react";
-import NextLink from "next/link";
-import { currentBiddingPrice } from "@/plugins/mixin";
 import { ToPrice } from "@/plugins/filter";
-import { useEffect } from "react";
 import { db } from "@/plugins/firebase";
+import { currentBiddingPrice } from "@/plugins/mixin";
+import { Stack, Image, Text, Box, AspectRatio } from "@chakra-ui/react";
 import { query, collection, orderBy, onSnapshot } from "firebase/firestore";
-
+import NextLink from "next/link";
+import { useEffect } from "react";
 import { useState } from "react";
+
 const ItemExtraSmallCard = ({ item }) => {
   const [bindBiddings, setBindBiddings] = useState();
   const [currentPrice, setCurrentPrice] = useState();
@@ -72,7 +72,7 @@ const ItemExtraSmallCard = ({ item }) => {
           _hover={{ textDecoration: "none" }}
         >
           <a>
-            <Stack direction={"row"} align="center">
+            <Stack direction="row" align="center">
               <Box w="50px">
                 <AspectRatio ratio={1}>
                   <Image src={item.images[0].url} borderRadius="5px"></Image>

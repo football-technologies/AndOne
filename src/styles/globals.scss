@@ -73,6 +73,15 @@ img {
   }
 }
 
+.nl2br {
+  white-space: pre-line;
+  word-wrap: break-word;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
 * {
   color: #333;
   box-sizing: border-box;
@@ -117,12 +126,14 @@ $MAIN_CONTAINER_PADDING: 50px;
   min-height: 100vh;
   padding: $MAIN_CONTAINER_PADDING;
   padding-left: $HEADER_WIDTH + $MAIN_CONTAINER_PADDING;
+  padding-top: 10px;
   background-color: $paleGray;
 }
 
 #ftMainContainer {
   background-color: $white;
   min-height: 100vh;
+  margin-top: 10px;
 }
 
 #ftBasicForm {

@@ -1,13 +1,19 @@
-import { useRouter } from "next/router";
-import { useRef, useEffect } from "react";
-import DialogPostBidding from "@/components/dialog/DialogPostBidding";
-import ItemComments from "@/components/pages/item/ItemComments";
 import DialogBiddingHistory from "@/components/dialog/DialogBiddingHistory";
-
+import DialogPostBidding from "@/components/dialog/DialogPostBidding";
+import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
+import DisplayTimeToFinish from "@/components/pages/item/DisplayTimeToFinish";
+import ItemComments from "@/components/pages/item/ItemComments";
+import ItemMenu from "@/components/pages/item/ItemMenu";
+import SuggestItemsList from "@/components/pages/item/SuggestItemsList";
+import DialogImage from "@/components/pages/shop/DialogImage";
 import { FtMiddleButton } from "@/components/ui/FtButton";
+import LikeButton from "@/components/ui/LikeButton";
+import { ToPrice } from "@/plugins/filter";
 import { db } from "@/plugins/firebase";
-import { query, collection, orderBy } from "firebase/firestore";
-
+import { currentBiddingPrice } from "@/plugins/mixin";
+import { fetchBiddings } from "@/store/bidding";
+import { fetchComments } from "@/store/comment";
+import { fetchItem } from "@/store/item";
 import {
   Box,
   HStack,
@@ -19,25 +25,21 @@ import {
   Button,
   Center,
   Spacer,
+  Icon,
+  Container,
 } from "@chakra-ui/react";
+import { query, collection, orderBy } from "firebase/firestore";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { useRef, useEffect } from "react";
+import { useState } from "react";
+import { GoCommentDiscussion } from "react-icons/go";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchItem } from "@/store/item";
-import { fetchComments } from "@/store/comment";
-import { fetchBiddings } from "@/store/bidding";
-import DialogImage from "@/components/pages/shop/DialogImage";
-
-import ItemMenu from "@/components/pages/item/ItemMenu";
-import LikeButton from "@/components/ui/LikeButton";
-
-import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
-
-import { currentBiddingPrice } from "@/plugins/mixin";
-import { ToFinish, ToPrice } from "@/plugins/filter";
 
 const ItemShow = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const [isSelling, setIsSelling] = useState(false);
 
   const { itemId } = router.query;
   const bindItem = useSelector((state) => state.item.item);
@@ -75,11 +77,7 @@ const ItemShow = () => {
           type: "fetch",
         })
       );
-    }
-  }, [router.isReady]);
 
-  useEffect(() => {
-    if (router.isReady) {
       dispatch(
         fetchComments({
           query: query(collection(db, `items/${itemId}/comments`)),
@@ -87,8 +85,43 @@ const ItemShow = () => {
           type: "fetch",
         })
       );
+
+      return () => {
+        dispatch(
+          fetchItem({
+            query: `items/${itemId}`,
+            isOnSnapshot: true,
+            type: "delete",
+          })
+        );
+
+        dispatch(
+          fetchBiddings({
+            query: query(
+              collection(db, `items/${itemId}/biddings`),
+              orderBy("price", "desc")
+            ),
+            isOnSnapshot: true,
+            type: "delete",
+          })
+        );
+
+        dispatch(
+          fetchComments({
+            query: query(collection(db, `items/${itemId}/comments`)),
+            isOnSnapshot: true,
+            type: "delete",
+          })
+        );
+      };
     }
-  }, [router.isReady]);
+  }, [router.isReady, itemId]);
+
+  useEffect(() => {
+    if (bindItem?.itemStatus === 3) {
+      setIsSelling(true);
+    }
+  }, [bindItem?.itemStatus]);
 
   const openDialogBidding = () => {
     dialogPostBidding.current.openDialog();
@@ -103,44 +136,38 @@ const ItemShow = () => {
       {bindItem && bindBiddings && (
         <>
           <HStack align="start" position="relative">
-            <Box position="absolute" top="-30px" right="0" zIndex="2">
-              <DisplayItemStatus
-                itemStatus={bindItem.itemStatus}
-              ></DisplayItemStatus>
+            <Box position="absolute" top="-30px" right="left" zIndex="2">
+              <DisplayItemStatus item={bindItem}></DisplayItemStatus>
             </Box>
 
             <Stack width="70%">
               <Stack direction="row">
-                <Box width="100px">
-                  {bindItem.images.map((image, index) => {
-                    return (
-                      <Box key={index} pb="2">
-                        <AspectRatio ratio={1}>
-                          <Image
-                            src={image.url}
-                            className="ftHover"
-                            onClick={() => openDialogImage(index)}
-                          ></Image>
-                        </AspectRatio>
-                      </Box>
-                    );
-                  })}
-                </Box>
+                {bindItem.images.length > 1 && (
+                  <Box width="100px">
+                    {bindItem.images.map((image, index) => {
+                      return (
+                        <Box key={index} pb="2">
+                          <AspectRatio ratio={1}>
+                            <Image
+                              src={image.url}
+                              className="ftHover"
+                              onClick={() => openDialogImage(index)}
+                            ></Image>
+                          </AspectRatio>
+                        </Box>
+                      );
+                    })}
+                  </Box>
+                )}
 
                 <Box>
                   <Image src={bindItem.images[0].url}></Image>
-                  <Text fontSize="xs" pt="2">
-                    caption: ああああああ
-                  </Text>
                 </Box>
               </Stack>
             </Stack>
 
             <Box width="30%" p="5" position="relative">
-              <ItemMenu
-                itemId={bindItem.id}
-                itemStatus={bindItem.itemStatus}
-              ></ItemMenu>
+              <ItemMenu item={bindItem}></ItemMenu>
 
               <Heading as="h1" fontSize="md">
                 {bindItem.name}
@@ -171,23 +198,39 @@ const ItemShow = () => {
                     </Text>
                     <Spacer></Spacer>
                     <Text fontWeight={700} fontSize="xs">
-                      {ToFinish({
-                        finishedSeconds: bindItem.sale.finishedAt.seconds,
-                      })}
+                      <DisplayTimeToFinish
+                        item={bindItem}
+                        isSync={true}
+                      ></DisplayTimeToFinish>
                     </Text>
                   </Stack>
 
-                  <Center pt="2">
-                    <FtMiddleButton onClick={openDialogBidding}>
-                      入札する
-                    </FtMiddleButton>
-                  </Center>
+                  {isSelling && (
+                    <Center pt="2">
+                      <FtMiddleButton onClick={openDialogBidding}>
+                        入札する
+                      </FtMiddleButton>
+                    </Center>
+                  )}
 
-                  <Box>
-                    <Button onClick={() => openDialogBiddingHistory()}>
-                      history {bindBiddings ? bindBiddings.length : 0}
-                    </Button>
-                  </Box>
+                  {bindBiddings.length > 0 && (
+                    <Box>
+                      <Button
+                        variant="link"
+                        size="sm"
+                        mt="5"
+                        onClick={openDialogBiddingHistory}
+                        className="underline"
+                      >
+                        <Icon
+                          as={GoCommentDiscussion}
+                          boxSize="4"
+                          mr="2"
+                        ></Icon>
+                        {bindBiddings.length}件の入札履歴を見る
+                      </Button>
+                    </Box>
+                  )}
                 </Box>
               )}
 
@@ -259,11 +302,17 @@ const ItemShow = () => {
           <Box width="600px" mx="auto" p="10">
             <Text fontSize="sm">{bindItem.description}</Text>
           </Box>
-          {/* dialog */}
 
+          <Container w="100%" maxW="1000px">
+            <SuggestItemsList itemId={bindItem.id}></SuggestItemsList>
+          </Container>
+
+          {/* dialog */}
           {bindItem.sale.startedAt && (
             <>
-              <DialogPostBidding ref={dialogPostBidding}></DialogPostBidding>
+              {isSelling && (
+                <DialogPostBidding ref={dialogPostBidding}></DialogPostBidding>
+              )}
               <DialogBiddingHistory
                 ref={dialogBiddingHistory}
               ></DialogBiddingHistory>

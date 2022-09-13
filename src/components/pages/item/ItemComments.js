@@ -1,15 +1,13 @@
-import { useState, useRef, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/router";
-
-import { createComment } from "@/store/comment";
-import { ftCreateId } from "@/plugins/mixin";
-import useFtToast from "@/components/ui/FtToast";
-
-import { FtMiddleButton, FtSmallButton } from "@/components/ui/FtButton";
-
 import DisplayItemComments from "./DisplayItemComments";
-
+import {
+  FtMiddleButtonOutlined,
+  FtSmallButton,
+} from "@/components/ui/FtButton";
+import useFtToast from "@/components/ui/FtToast";
+import scheme from "@/helpers/scheme";
+import { db } from "@/plugins/firebase";
+import { ftCreateId } from "@/plugins/mixin";
+import { createComment } from "@/store/comment";
 import {
   Icon,
   Box,
@@ -25,15 +23,13 @@ import {
   ModalCloseButton,
   Button,
   Textarea,
-  Avatar,
 } from "@chakra-ui/react";
-import { BiComment } from "react-icons/bi";
-
-import { db } from "@/plugins/firebase";
 import { doc } from "firebase/firestore";
-
-import scheme from "@/helpers/scheme";
 import _ from "lodash";
+import { useRouter } from "next/router";
+import { useState, useRef, useEffect } from "react";
+import { GoCommentDiscussion } from "react-icons/go";
+import { useDispatch, useSelector } from "react-redux";
 
 const ItemComments = () => {
   const [dialog, setDialog] = useState(false);
@@ -41,6 +37,8 @@ const ItemComments = () => {
   const [isSeller, setIsSeller] = useState(false);
   const [replyId, setReplyId] = useState(null);
   const [comments, setComments] = useState([]);
+
+  const [isShowInput, setIsShowInput] = useState(false);
 
   const bindItem = useSelector((state) => state.item.item);
   const bindComments = useSelector((state) => state.comment.comments);
@@ -83,12 +81,16 @@ const ItemComments = () => {
 
   const openDialogItemComment = () => {
     setDialog(true);
+    if (bindComments.length === 0) {
+      setIsShowInput(true);
+    }
   };
 
   const onClose = () => {
     setDialog(false);
     setText("");
     setReplyId(null);
+    setIsShowInput(false);
   };
 
   const onChange = (e) => {
@@ -97,14 +99,19 @@ const ItemComments = () => {
 
   const selectComment = (parentId) => {
     setReplyId(parentId);
-    initialFocusRef.current.focus();
+    setIsShowInput(true);
+    // initialFocusRef.current.focus();
+  };
+
+  const addNewComment = () => {
+    setIsShowInput(true);
   };
 
   const submit = () => {
-    if (isSeller && !replyId) {
-      ftToast("返信したいコメントを選択してください");
-      return false;
-    }
+    // if (isSeller && !replyId) {
+    //   ftToast("返信したいコメントを選択してください");
+    //   return false;
+    // }
 
     if (text === "") {
       ftToast("空欄のまま送信できません");
@@ -128,32 +135,36 @@ const ItemComments = () => {
     if (replyId) {
       comment.parent.id = replyId;
       comment.parent.ref = doc(db, `items/${itemId}/comments/${replyId}`);
+
+      comment.shop.id = bindItem.shop.id;
+      comment.shop.name = bindItem.shop.name;
+      comment.shop.icon = bindItem.shop.icon;
+      comment.shop.ref = doc(db, `shops/${bindItem.shop.id}`);
     }
 
     initialFocusRef.current.value = "";
     dispatch(createComment(comment));
-    ftToast("送信が完了しました");
+
+    setIsShowInput(false);
+
+    ftToast("コメントを送信しました");
   };
 
   return (
     <>
       {/* Button */}
       <HStack>
-        <FtMiddleButton onClick={openDialogItemComment}>
-          {isSeller ? "返信する" : "質問する"}
-        </FtMiddleButton>
-
         <Button
-          variant="outline"
-          borderWidth="1px"
-          borderColor="black"
-          color="black"
-          fontSize="14px"
-          height="2.5em"
+          variant="link"
+          size="sm"
+          mt="5"
           onClick={openDialogItemComment}
+          className="underline"
         >
-          <Icon as={BiComment} />
-          <Text mx="4px">{comments.length > 0 ? bindComments.length : 0}</Text>
+          <Icon as={GoCommentDiscussion} boxSize="4" mr="2"></Icon>
+          {bindComments?.length > 0
+            ? `${bindComments.length}件の質問を見る`
+            : "ショップに質問をする"}
         </Button>
       </HStack>
 
@@ -163,15 +174,20 @@ const ItemComments = () => {
         onClose={onClose}
         initialFocusRef={initialFocusRef}
         scrollBehavior={"inside"}
+        size="xl"
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>
-            {isSeller ? "返信する" : "質問する"}
-            <Text color="red.300" fontSize="xs">
-              *返信する場合は「返信する」の選択が必須です
-            </Text>
-          </ModalHeader>
+          {bindComments?.length > 0 && (
+            <ModalHeader>
+              <FtMiddleButtonOutlined onClick={addNewComment}>
+                新規の質問を作る
+              </FtMiddleButtonOutlined>
+              <Text color="primary" fontSize="xs" p="2" pb="0">
+                *返信する場合は「返信する」の選択が必須です
+              </Text>
+            </ModalHeader>
+          )}
 
           <ModalCloseButton />
 
@@ -180,13 +196,10 @@ const ItemComments = () => {
               return (
                 <Stack
                   key={parentIndex}
-                  p="5px 0px 30px"
-                  w="400px"
-                  m="0px auto"
+                  p="5"
                   borderTop="1px"
                   borderColor="lightGray"
                 >
-                  <Text as="b">＜質問：{parentIndex + 1}＞</Text>
                   <DisplayItemComments
                     comment={parentComment}
                     type="parent"
@@ -210,25 +223,24 @@ const ItemComments = () => {
             })}
           </ModalBody>
 
-          <ModalFooter>
-            <Textarea
-              ref={initialFocusRef}
-              rows={1}
-              placeholder={
-                isSeller
-                  ? "返答を入力してください"
-                  : "質問事項を記入してください"
-              }
-              onChange={onChange}
-              mr="5px"
-            ></Textarea>
+          {isShowInput && (
+            <ModalFooter pt="5" pb="8">
+              <Textarea
+                autoFocus={isShowInput}
+                ref={initialFocusRef}
+                rows={5}
+                bg="input"
+                placeholder={"相手をリスペクトして、記入してください。"}
+                onChange={onChange}
+                mr="5"
+                fontSize="sm"
+              ></Textarea>
 
-            <Box>
-              <FtSmallButton onClick={submit}>
-                {isSeller ? "返信する" : "質問する"}
-              </FtSmallButton>
-            </Box>
-          </ModalFooter>
+              <Box>
+                <FtSmallButton onClick={submit}>送信する</FtSmallButton>
+              </Box>
+            </ModalFooter>
+          )}
         </ModalContent>
       </Modal>
     </>

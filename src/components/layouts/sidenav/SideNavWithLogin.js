@@ -1,18 +1,11 @@
-import { useSelector, useDispatch } from "react-redux";
-
 import useLogout from "../Logout";
-
-import { useEffect } from "react";
-import { fetchBiddingItems, fetchBiddingItemIds } from "@/store/account";
+import ItemExtraSmallCard from "@/components/cards/ItemExtraSmallCard";
 import { db } from "@/plugins/firebase";
 import {
-  query,
-  collection,
-  orderBy,
-  where,
-  collectionGroup,
-} from "firebase/firestore";
-
+  fetchBiddingItems,
+  fetchBiddingItemIds,
+  fetchShopItems,
+} from "@/store/account";
 import {
   Box,
   Text,
@@ -30,19 +23,25 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
-  Button,
 } from "@chakra-ui/react";
 import {
-  MdOutlineCollections,
+  query,
+  collection,
+  orderBy,
+  where,
+  collectionGroup,
+} from "firebase/firestore";
+import NextLink from "next/link";
+import { useEffect } from "react";
+import { FaRegImages } from "react-icons/fa";
+import { FaRegHourglass } from "react-icons/fa";
+import {
   MdOutlineAlarmOn,
   MdOutlineNotificationsNone,
   MdOutlineMoreVert,
 } from "react-icons/md";
-import { FaRegHourglass } from "react-icons/fa";
 import { RiHeartAddLine } from "react-icons/ri";
-
-import ItemExtraSmallCard from "@/components/cards/ItemExtraSmallCard";
-import NextLink from "next/link";
+import { useSelector, useDispatch } from "react-redux";
 
 const SideNavWithoutLogin = () => {
   const dispatch = useDispatch();
@@ -52,40 +51,35 @@ const SideNavWithoutLogin = () => {
     (state) => state.account.biddingItemIds
   );
   const bindBiddingItems = useSelector((state) => state.account.biddingItems);
+  const bindShopItems = useSelector((state) => state.account.shopItems);
 
   const links = [
+    // {
+    //   id: 1,
+    //   name: "My Shop Items",
+    //   url: `/shops/${currentUser.shopId}/items`,
+    //   icon: MdOutlineCollections,
+    // },
     {
-      id: 1,
-      name: "My Collections",
-
-      url: `/users/${currentUser.id}/collections`,
-
-      icon: MdOutlineCollections,
-    },
-    {
-      id: 2,
       name: "Bidding Items",
       url: `/users/${currentUser.id}/biddings`,
       icon: FaRegHourglass,
     },
     {
-      id: 3,
       name: "Watch Items",
       url: `/users/${currentUser.id}/watches`,
       icon: MdOutlineAlarmOn,
     },
     {
-      id: 4,
       name: "Like Shops",
       url: `/users/${currentUser.id}/likes`,
       icon: RiHeartAddLine,
     },
-    {
-      id: 5,
-      name: "Notifications",
-      url: `/users/${currentUser.id}/notifications`,
-      icon: MdOutlineNotificationsNone,
-    },
+    // {
+    //   name: "Notifications",
+    //   url: `/users/${currentUser.id}/notifications`,
+    //   icon: MdOutlineNotificationsNone,
+    // },
   ];
 
   useEffect(() => {
@@ -103,6 +97,39 @@ const SideNavWithoutLogin = () => {
           type: "fetch",
         })
       );
+
+      dispatch(
+        fetchShopItems({
+          query: query(
+            collection(db, "items"),
+            where("shop.id", "==", currentUser.shopId)
+          ),
+          isOnSnapshot: true,
+          type: "fetch",
+        })
+      );
+
+      return () => {
+        fetchBiddingItemIds({
+          query: query(
+            collectionGroup(db, "biddings"),
+            where("user.id", "==", currentUser.id),
+            orderBy("created", "desc")
+          ),
+          limit: 5,
+          isOnSnapshot: true,
+          type: "delete",
+        });
+
+        fetchShopItems({
+          query: query(
+            collection(db, "items"),
+            where("shop.id", "==", currentUser.shopId)
+          ),
+          isOnSnapshot: true,
+          type: "delete",
+        });
+      };
     }
   }, []);
 
@@ -118,6 +145,19 @@ const SideNavWithoutLogin = () => {
           type: "fetch",
         })
       );
+
+      return () => {
+        dispatch(
+          fetchBiddingItems({
+            query: query(
+              collection(db, "items"),
+              where("id", "in", bindBiddingItemIds)
+            ),
+            isOnSnapshot: true,
+            type: "delete",
+          })
+        );
+      };
     }
   }, [bindBiddingItemIds]);
 
@@ -195,8 +235,32 @@ const SideNavWithoutLogin = () => {
 
       <Box py="10" px="3">
         <List spacing={5}>
+          {currentUser.shopId && (
+            <ListItem>
+              <NextLink href={`/shops/${currentUser.shopId}/items`} passHref>
+                <a>
+                  <Box className="ftTextLink">
+                    <ListIcon as={FaRegImages} mr="5" />
+                    My Shop Items
+                    <Text
+                      bg="primary"
+                      rounded="full"
+                      px="1.5"
+                      ml="2"
+                      color="white"
+                      fontSize="xs"
+                      display="inline-block"
+                    >
+                      {bindShopItems?.length}
+                    </Text>
+                  </Box>
+                </a>
+              </NextLink>
+            </ListItem>
+          )}
+
           {links.map((link) => (
-            <ListItem key={link.id}>
+            <ListItem key={link.name}>
               <NextLink href={link.url} passHref>
                 <a>
                   <Text className="ftTextLink">

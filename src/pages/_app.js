@@ -25,23 +25,6 @@ const theme = extendTheme({
     heading: `'Noto Sans JP"', sans-serif`,
     body: `'Noto Sans JP"', sans-serif`,
   },
-
-  // components: {
-  // Button: {
-  //   variants: {
-  //     big: {
-  //       bg: colors.primary,
-  //       color: colors.white,
-  //       borderStyle: "solid",
-  //       borderWidth: "2px",
-  //       rounded: "full",
-  //       px: 10,
-  //       py: 5,
-  //       letterSpacing: "0.1em",
-  //     },
-  //   },
-  // },
-  // },
 });
 
 import DefaultLayout from "@/layouts";

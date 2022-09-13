@@ -1,17 +1,14 @@
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
-
-import NextLink from "next/link";
-import { fetchItems } from "@/store/item";
-import { Box, Button } from "@chakra-ui/react";
-
 import { db } from "@/plugins/firebase";
+import { fetchItems } from "@/store/item";
+import { Button } from "@chakra-ui/react";
 import { query, collection, orderBy } from "firebase/firestore";
+import NextLink from "next/link";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 const ItemIndex = () => {
   const bindItems = useSelector((state) => state.item.items);
 
-  console.log(">>>>>>>> bindItems", bindItems);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -22,6 +19,16 @@ const ItemIndex = () => {
         type: "fetch",
       })
     );
+
+    return () => {
+      dispatch(
+        fetchItems({
+          query: query(collection(db, "items"), orderBy("createdAt", "desc")),
+          isOnSnapshot: true,
+          type: "delete",
+        })
+      );
+    };
   }, []);
 
   return (

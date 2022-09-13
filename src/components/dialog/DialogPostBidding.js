@@ -1,6 +1,12 @@
-import { useState, forwardRef, useImperativeHandle } from "react";
+import DisplayTimeToFinish from "@/components/pages/item/DisplayTimeToFinish";
+import { FtLargeButton } from "@/components/ui/FtButton";
+import useFtToast from "@/components/ui/FtToast";
+import scheme from "@/helpers/scheme";
 import { ToPrice } from "@/plugins/filter";
-
+import { ToFinish } from "@/plugins/filter";
+import { db } from "@/plugins/firebase";
+import { currentBiddingPrice, ftCreateId } from "@/plugins/mixin";
+import { createBidding } from "@/store/bidding";
 import {
   Input,
   Modal,
@@ -18,22 +24,14 @@ import {
   InputRightAddon,
   InputGroup,
 } from "@chakra-ui/react";
-import { FtMiddleButton } from "@/components/ui/FtButton";
-import { currentBiddingPrice, ftCreateId } from "@/plugins/mixin";
-import { ToFinish } from "@/plugins/filter";
-import { useSelector, useDispatch } from "react-redux";
-
-import { createBidding } from "@/store/bidding";
-import scheme from "@/helpers/scheme";
-import _ from "lodash";
-
-import { db } from "@/plugins/firebase";
 import { doc } from "firebase/firestore";
-import useFtToast from "@/components/ui/FtToast";
+import _ from "lodash";
+import { useState, forwardRef, useImperativeHandle } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 const DialogPostBidding = forwardRef((props, ref) => {
   const [dialog, setDialog] = useState(false);
-  const [price, setPrice] = useState();
+  const [price, setPrice] = useState("");
   const bindItem = useSelector((state) => state.item.item);
   const bindBiddings = useSelector((state) => state.bidding.biddings);
   const currentUser = useSelector((state) => state.account);
@@ -53,12 +51,15 @@ const DialogPostBidding = forwardRef((props, ref) => {
   };
 
   const submit = async () => {
+    if (!price) {
+      ftToast("入札価格の登録は、必須です。");
+      return false;
+    }
+
     const currentPrice = currentBiddingPrice({
       biddings: bindBiddings,
       startPrice: bindItem.sale.startPrice,
     });
-
-    console.log(">>>>>>>>>> currentPrice", currentPrice, Number(price));
 
     if (currentPrice > Number(price)) {
       ftToast("現在の最高入札額よりも、高い価格を設定してください");
@@ -91,6 +92,7 @@ const DialogPostBidding = forwardRef((props, ref) => {
   return (
     <Modal isOpen={dialog} onClose={onClose}>
       <ModalOverlay />
+
       <ModalContent p="10">
         {/* <ModalHeader>Create Your Tweet</ModalHeader> */}
         <ModalCloseButton />
@@ -122,18 +124,20 @@ const DialogPostBidding = forwardRef((props, ref) => {
               <Spacer></Spacer>
               <Box>
                 <Text fontSize="md" fontWeight="bold">
-                  {ToFinish({
-                    finishedSeconds: bindItem.sale.finishedAt.seconds,
-                  })}
+                  <DisplayTimeToFinish
+                    item={bindItem}
+                    isSync={true}
+                  ></DisplayTimeToFinish>
                 </Text>
               </Box>
             </Stack>
 
             <Box pt="10">
-              <Box w="200px" mx="auto">
+              <Box w="200px" mx="auto" pl="2">
                 <Text fontSize="sm" fontWeight="700">
                   新しい入札価格
                 </Text>
+
                 <InputGroup>
                   <Input
                     value={price}
@@ -141,20 +145,26 @@ const DialogPostBidding = forwardRef((props, ref) => {
                     type="number"
                     valiant="filled"
                     onChange={(ev) => setPrice(ev.target.value)}
-                    placeholder="e.g 15000"
+                    placeholder="例） 15000"
                     bg="paleGray"
+                    rounded="none"
                   />
                   <InputRightAddon
                     children="円"
-                    bg="darkGray"
-                    color="white"
+                    bg="white"
+                    border="none"
                   ></InputRightAddon>
                 </InputGroup>
               </Box>
 
               {price && (
-                <Box bg="paleGray" p="3" mt="10">
-                  <Text fontSize="sm" fontWeight="700" align="center">
+                <Box bg="darkGray" p="3" mt="10" rounded="md">
+                  <Text
+                    fontSize="sm"
+                    fontWeight="700"
+                    color="white"
+                    align="center"
+                  >
                     送信ボタンを押す前に確認してください！
                     <br />
                     {ToPrice(price)}
@@ -167,9 +177,9 @@ const DialogPostBidding = forwardRef((props, ref) => {
           </Box>
         </ModalBody>
 
-        <ModalFooter>
+        <ModalFooter pt="10">
           <Spacer></Spacer>
-          <FtMiddleButton onClick={submit}>入札を送信する</FtMiddleButton>
+          <FtLargeButton onClick={submit}>入札を送信する</FtLargeButton>
           <Spacer></Spacer>
         </ModalFooter>
       </ModalContent>

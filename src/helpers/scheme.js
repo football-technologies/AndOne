@@ -187,6 +187,12 @@ const scheme = {
       name: null,
       icon: null,
     },
+    shop: {
+      id: null,
+      ref: null,
+      name: null,
+      icon: null,
+    },
     parent: {
       id: null,
       ref: null,

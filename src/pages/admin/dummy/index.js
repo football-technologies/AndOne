@@ -1,9 +1,7 @@
-import { Box, Button, Text, Stack } from "@chakra-ui/react";
-import { functions } from "@/plugins/firebase";
-import { httpsCallable } from "firebase/functions";
 import FtUiPallet from "@/components/ui/FtUiPallet";
-
-import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
+import { functions } from "@/plugins/firebase";
+import { Box, Button } from "@chakra-ui/react";
+import { httpsCallable } from "firebase/functions";
 
 const DummyIndex = () => {
   const helloOnCall = async () => {

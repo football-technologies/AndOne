@@ -1,14 +1,14 @@
-import { useRouter } from "next/router";
+import { FtMiddleButtonOutlined } from "@/components/ui/FtButton";
 import {
   Box,
   Text,
-  Button,
   VStack,
   Stack,
   HStack,
   List,
   ListItem,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 const SideNavWithoutLogin = () => {
   const router = useRouter();
@@ -33,29 +33,33 @@ const SideNavWithoutLogin = () => {
     <Stack>
       <HStack>
         <Box>
-          <Text my={"30px"}>好きなものに囲まれて生活する</Text>
-
-          <Text mb={"30px"}>
-            オークション形式で、お気に入りのアイテムを購入して、日常の生活に+1してみませんか。
+          <Text mb="30px" fontSize="sm">
+            We Love Football ⚽️<br></br>
+            オークション形式で、懐かしのユニフォーム、限定ユニフォームが購入できるAnd
+            Oneです。
           </Text>
         </Box>
       </HStack>
 
-      <VStack align={"stretch"} spacing={5}>
+      <VStack align="stretch" spacing={5}>
         <Stack>
-          <Button display={"block"} colorScheme="pink" onClick={toSignupPage}>
+          <FtMiddleButtonOutlined
+            display="block"
+            colorScheme="pink"
+            onClick={toSignupPage}
+          >
             アカウント作成をする
-          </Button>
+          </FtMiddleButtonOutlined>
         </Stack>
         <Stack>
-          <Button colorScheme="pink" onClick={toLoginPage}>
+          <FtMiddleButtonOutlined colorScheme="pink" onClick={toLoginPage}>
             ログインする
-          </Button>
+          </FtMiddleButtonOutlined>
         </Stack>
       </VStack>
 
       <HStack>
-        <List mt={"50px"} spacing={5}>
+        <List mt="50px" spacing={5}>
           {items.map((item) => (
             <ListItem key={item.id}>{item.name}</ListItem>
           ))}

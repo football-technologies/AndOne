@@ -1,8 +1,12 @@
-import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-
+import SubImagesForm from "@/components/pages/shop/SubImagesForm";
+import { FtLargeButton, FtSmallButtonOutlined } from "@/components/ui/FtButton";
+import useFtToast from "@/components/ui/FtToast";
+import scheme from "@/helpers/scheme";
+import { db } from "@/plugins/firebase";
+import { ftCreateId } from "@/plugins/mixin";
+import { createItem, fetchItem, updateItem } from "@/store/item";
+import { fetchShop } from "@/store/shop";
+import { createTag } from "@/store/tag";
 import {
   FormControl,
   FormLabel,
@@ -17,23 +21,14 @@ import {
   Flex,
   Spacer,
 } from "@chakra-ui/react";
-
-import useFtToast from "@/components/ui/FtToast";
-import { FtLargeButton, FtSmallButtonOutlined } from "@/components/ui/FtButton";
-import { ftCreateId } from "@/plugins/mixin";
-import { createItem, fetchItem, updateItem } from "@/store/item";
-import { createTag } from "@/store/tag";
-import SubImagesForm from "@/components/pages/shop/SubImagesForm";
-
-import { fetchShop } from "@/store/shop";
-
-import { db } from "@/plugins/firebase";
 import { doc, query, getDocs, collection, where } from "firebase/firestore";
-
 import _ from "lodash";
-import scheme from "@/helpers/scheme";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { MdArrowForward } from "react-icons/md";
+import { useSelector, useDispatch } from "react-redux";
 
 const ItemForm = () => {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -59,6 +54,7 @@ const ItemForm = () => {
           })
         );
         setIsEditMode(true);
+
         return () => {
           dispatch(
             fetchItem({
@@ -77,7 +73,7 @@ const ItemForm = () => {
 
         return () => {
           setEditItem(null);
-          setIsEditMode(null);
+          setIsEditMode(false);
         };
       }
     }
@@ -98,11 +94,12 @@ const ItemForm = () => {
         }
         setEditItem(item);
       }
-    }
 
-    return () => {
-      setEditItem(null);
-    };
+      return () => {
+        setEditItem(null);
+        setIsEditMode(false);
+      };
+    }
   }, [bindItem]);
 
   useEffect(() => {
@@ -187,7 +184,6 @@ const ItemForm = () => {
         .split(",");
 
       const tagsDividedByComma = _.uniq(replaceTagsName);
-      console.log(tagsDividedByComma);
 
       if (tagsDividedByComma.length > 10) {
         ftToast("タグは10個以上設定することができません");
@@ -254,7 +250,7 @@ const ItemForm = () => {
           )}
 
           <Box w="500px" mx="auto">
-            <FormControl isRequired py={"30px"}>
+            <FormControl isRequired py="30px">
               <FormLabel>Item Images</FormLabel>
               <SubImagesForm
                 images={editItem.images}

@@ -1,7 +1,6 @@
-import { useForm } from "react-hook-form";
-import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/router";
-import { useSelector, useDispatch } from "react-redux";
+import SubImagesForm from "@/components/pages/shop/SubImagesForm";
+import scheme from "@/helpers/scheme";
+import rules from "@/plugins/validation";
 import {
   FormControl,
   FormLabel,
@@ -36,14 +35,13 @@ import { UploadSingleImage } from "@/components/ui/ImageUpload";
 
 import { db } from "@/plugins/firebase";
 import { doc, query, collection, getDocs, where } from "firebase/firestore";
-
 import _ from "lodash";
-import rules from "@/plugins/validation";
-import scheme from "@/helpers/scheme";
-
-import SubImagesForm from "@/components/pages/shop/SubImagesForm";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { useState, useRef, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { MdArrowForward } from "react-icons/md";
+import { useSelector, useDispatch } from "react-redux";
 
 const ShopForm = () => {
   const [iconUrl, setIconUrl] = useState(null);
@@ -72,8 +70,6 @@ const ShopForm = () => {
             type: "fetch",
           })
         );
-
-        setIsEditMode(true);
 
         return () => {
           dispatch(
@@ -112,14 +108,15 @@ const ShopForm = () => {
           setTags(tags);
         }
 
+        setIsEditMode(true);
         setEditShop(shop);
       }
-    }
 
-    return () => {
-      setEditShop(null);
-      setTags(null);
-    };
+      return () => {
+        setEditShop(null);
+        setTags(null);
+      };
+    }
   }, [bindShop]);
 
   const {
@@ -266,7 +263,6 @@ const ShopForm = () => {
       ftToast("shopを更新しました");
     }
 
-    console.log(">>>>>>>>> finish submit");
     router.push(`/shops/${editShop.id}`);
     // setIsLoading(false);
   };
@@ -287,7 +283,7 @@ const ShopForm = () => {
           </Box>
         )}
 
-        <HStack bg={"lightGray"} position="relative" overflow="hidden">
+        <HStack bg="lightGray" position="relative" overflow="hidden">
           <Box
             position="absolute"
             top="0"
@@ -335,7 +331,7 @@ const ShopForm = () => {
         <HStack mt="50px" align="top">
           <Stack w="25%">
             <VStack>
-              <Text mb={"15px"}>Shop Icon</Text>
+              <Text mb="15px">Shop Icon</Text>
               <Box>
                 <Image
                   boxSize="120px"
@@ -382,7 +378,7 @@ const ShopForm = () => {
                 defaultValue={tags}
                 placeholder="例） 2011,英国,サッカー,football"
               ></Textarea>
-              <Text w={"80%"} fontSize="sm">
+              <Text w="80%" fontSize="sm">
                 カンマを入れて、最大10個まで作成するこができます。
               </Text>
             </VStack>
@@ -406,7 +402,7 @@ const ShopForm = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                <FormControl isInvalid={errors.originalUrl} mt={"10px"}>
+                <FormControl isInvalid={errors.originalUrl} mt="10px">
                   <FormLabel>Original URL</FormLabel>
                   <Input
                     variant="filled"
@@ -426,7 +422,7 @@ const ShopForm = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                <FormControl mt={"10px"}>
+                <FormControl mt="10px">
                   <FormLabel>Bio</FormLabel>
                   <Textarea
                     variant="filled"
@@ -438,7 +434,7 @@ const ShopForm = () => {
                   ></Textarea>
                 </FormControl>
 
-                <FormControl isRequired mt={"10px"}>
+                <FormControl isRequired mt="10px">
                   <FormLabel>Address</FormLabel>
                   <Textarea
                     variant="filled"
@@ -449,7 +445,7 @@ const ShopForm = () => {
                   ></Textarea>
                 </FormControl>
 
-                <FormControl isRequired isInvalid={errors.phone} mt={"10px"}>
+                <FormControl isRequired isInvalid={errors.phone} mt="10px">
                   <FormLabel>Phone</FormLabel>
                   <Input
                     variant="filled"
@@ -464,7 +460,7 @@ const ShopForm = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                <FormControl isRequired isInvalid={errors.email} mt={"10px"}>
+                <FormControl isRequired isInvalid={errors.email} mt="10px">
                   <FormLabel>Email</FormLabel>
                   <Input
                     variant="filled"
@@ -479,7 +475,7 @@ const ShopForm = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                <FormControl mt={"10px"}>
+                <FormControl mt="10px">
                   <FormLabel>Open Hour</FormLabel>
                   <Input
                     variant="filled"
@@ -489,7 +485,7 @@ const ShopForm = () => {
                   />
                 </FormControl>
 
-                <FormControl mt={"10px"}>
+                <FormControl mt="10px">
                   <FormLabel>Holidays</FormLabel>
                   <Input
                     variant="filled"
@@ -499,10 +495,10 @@ const ShopForm = () => {
                   />
                 </FormControl>
 
-                <Text mt={"10px"}>Links</Text>
-                <Stack align={"end"}>
+                <Text mt="10px">Links</Text>
+                <Stack align="end">
                   {snsLinks.map((sns, index) => (
-                    <FormControl key={index} mt={"10px"} w={"90%"}>
+                    <FormControl key={index} mt="10px" w="90%">
                       <FormLabel>{sns[0]}</FormLabel>
                       <Input
                         variant="filled"

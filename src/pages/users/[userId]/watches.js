@@ -1,10 +1,10 @@
-import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { db } from "@/plugins/firebase";
-import { query, collection, where, getDocs } from "firebase/firestore";
 import ItemSmallCard from "@/components/cards/ItemSmallCard";
-import _ from "lodash";
+import { db } from "@/plugins/firebase";
 import { Text } from "@chakra-ui/react";
+import { query, collection, where, getDocs } from "firebase/firestore";
+import _ from "lodash";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const Watches = () => {
   const currentUser = useSelector((state) => state.account);
@@ -31,7 +31,7 @@ const Watches = () => {
       return like.item.id;
     });
 
-    setItemIds(_itemIds);
+    setItemIds(_.uniq(_itemIds));
   };
 
   const getItems = async () => {

@@ -9,7 +9,7 @@ const useFtToast = () => {
       // isClosable: true,
       render: ({ id, onClose }) => (
         <Box
-          display={"inline-block"}
+          display="inline-block"
           color="white"
           py="2"
           px="10"

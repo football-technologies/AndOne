@@ -1,3 +1,8 @@
+import DialogImage from "@/components/pages/shop/DialogImage";
+import MyShopItemsList from "@/components/pages/shop/MyShopItemsList";
+import ShopMenu from "@/components/pages/shop/ShopMenu";
+import LikeButton from "@/components/ui/LikeButton";
+import { fetchShop } from "@/store/shop";
 import {
   AspectRatio,
   Box,
@@ -10,7 +15,13 @@ import {
   Heading,
   Link,
   Text,
+  Avatar,
+  Center,
 } from "@chakra-ui/react";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useRef } from "react";
 import {
   FaBookOpen,
   FaDesktop,
@@ -23,21 +34,7 @@ import {
   FaTwitter,
 } from "react-icons/fa";
 import { MdMail } from "react-icons/md";
-
-import { useRouter } from "next/router";
-import NextLink from "next/link";
-
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
-
-import { fetchShop } from "@/store/shop";
-
-import DialogImage from "@/components/pages/shop/DialogImage";
-import { useRef } from "react";
-import LikeButton from "@/components/ui/LikeButton";
-
-import ShopMenu from "@/components/pages/shop/ShopMenu";
-import MyShopItemsList from "@/components/pages/shop/MyShopItemsList";
 
 const ShopShow = () => {
   const dispatch = useDispatch();
@@ -84,7 +81,6 @@ const ShopShow = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      console.log(router.query);
       dispatch(
         fetchShop({
           query: `shops/${shopId}`,
@@ -92,6 +88,16 @@ const ShopShow = () => {
           type: "fetch",
         })
       );
+
+      return () => {
+        dispatch(
+          fetchShop({
+            query: `shops/${shopId}`,
+            isOnSnapshot: true,
+            type: "delete",
+          })
+        );
+      };
     }
   }, [router.isReady]);
 
@@ -104,11 +110,23 @@ const ShopShow = () => {
               <Image src={bindShop.cover}></Image>
             </AspectRatio>
 
-            <ShopMenu shopId={bindShop.id}></ShopMenu>
+            <ShopMenu shop={bindShop}></ShopMenu>
           </Box>
 
           <HStack align="start" p="5" className="mainContainer">
             <Stack w="20%" className="tagsBlock">
+              <Center>
+                <Avatar
+                  src={bindShop.icon}
+                  name={bindShop.name}
+                  size="xl"
+                  border="1px"
+                  borderColor="paleGray"
+                  style={{ marginTop: "-70px" }}
+                  mb="10"
+                ></Avatar>
+              </Center>
+
               {bindShop.tags.map((tag) => {
                 return (
                   <NextLink href={`/tags/${tag.id}`} passHref key={tag.id}>
@@ -154,47 +172,57 @@ const ShopShow = () => {
               </Text>
 
               <Box bg="paleGray" p="5">
-                <Text
-                  fontSize="xs"
-                  fontWeight="700"
-                  borderBottom="1px"
-                  borderColor="white"
-                >
-                  <Icon as={FaMapMarked} boxSize="1em" mr="2"></Icon>
-                  {bindShop.address}
-                </Text>
-                <Text
-                  fontSize="xs"
-                  fontWeight="700"
-                  borderBottom="1px"
-                  borderColor="white"
-                  pt="3"
-                >
-                  <Icon as={FaPhone} boxSize="1em" mr="2"></Icon>
-                  {bindShop.phone}
-                </Text>
-                <Text
-                  fontSize="xs"
-                  fontWeight="700"
-                  borderBottom="1px"
-                  borderColor="white"
-                  pt="3"
-                >
-                  <Icon as={MdMail} boxSize="1em" mr="2"></Icon>
-                  {bindShop.email}
-                </Text>
+                {bindShop.address && (
+                  <Text
+                    fontSize="xs"
+                    fontWeight="700"
+                    borderBottom="1px"
+                    borderColor="white"
+                  >
+                    <Icon as={FaMapMarked} boxSize="1em" mr="2"></Icon>
+                    {bindShop.address}
+                  </Text>
+                )}
 
-                <Text
-                  fontSize="xs"
-                  fontWeight="700"
-                  borderBottom="1px"
-                  borderColor="white"
-                  pt="3"
-                >
-                  <Icon as={FaBookOpen} boxSize="1em" mr="2"></Icon>
-                  営業時間： {bindShop.openHour}
-                  、定休：{bindShop.holidays}
-                </Text>
+                {bindShop.phone && (
+                  <Text
+                    fontSize="xs"
+                    fontWeight="700"
+                    borderBottom="1px"
+                    borderColor="white"
+                    pt="3"
+                  >
+                    <Icon as={FaPhone} boxSize="1em" mr="2"></Icon>
+                    {bindShop.phone}
+                  </Text>
+                )}
+
+                {bindShop.email && (
+                  <Text
+                    fontSize="xs"
+                    fontWeight="700"
+                    borderBottom="1px"
+                    borderColor="white"
+                    pt="3"
+                  >
+                    <Icon as={MdMail} boxSize="1em" mr="2"></Icon>
+                    {bindShop.email}
+                  </Text>
+                )}
+
+                {(bindShop.openHour || bindShop.holidays) && (
+                  <Text
+                    fontSize="xs"
+                    fontWeight="700"
+                    borderBottom="1px"
+                    borderColor="white"
+                    pt="3"
+                  >
+                    <Icon as={FaBookOpen} boxSize="1em" mr="2"></Icon>
+                    営業時間： {bindShop.openHour}
+                    、定休：{bindShop.holidays}
+                  </Text>
+                )}
               </Box>
             </Stack>
 

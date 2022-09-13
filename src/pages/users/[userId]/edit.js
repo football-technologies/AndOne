@@ -1,11 +1,7 @@
-import { useForm } from "react-hook-form";
-import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/router";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchUser, updateUser } from "@/store/user";
-import { fetchSecret, updateSecret } from "@/store/secret";
+import rules from "@/plugins/validation";
 import { updateAccount } from "@/store/account";
-
+import { fetchSecret, updateSecret } from "@/store/secret";
+import { fetchUser, updateUser } from "@/store/user";
 import {
   FormControl,
   FormLabel,
@@ -26,7 +22,10 @@ import { FtSmallButtonOutlined } from "@/components/ui/FtButton";
 import { UploadSingleImage } from "@/components/ui/ImageUpload";
 
 import _ from "lodash";
-import rules from "@/plugins/validation";
+import { useRouter } from "next/router";
+import { useState, useRef, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useSelector, useDispatch } from "react-redux";
 
 const Edit = () => {
   const [url, setUrl] = useState(null);
@@ -108,8 +107,6 @@ const Edit = () => {
   };
 
   const onSubmit = (data) => {
-    console.log(">>>>>>>>>>>>>> data", data);
-
     user.displayName = data.displayName;
     user.screenName = data.screenName;
     user.description = data.description;
@@ -174,7 +171,7 @@ const Edit = () => {
             </Box>
           </HStack>
 
-          <FormControl isRequired isInvalid={errors.displayName} mt={"45px"}>
+          <FormControl isRequired isInvalid={errors.displayName} mt="45px">
             <FormLabel>Display Name</FormLabel>
             <Input
               variant="filled"
@@ -190,7 +187,7 @@ const Edit = () => {
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={errors.screenName} mt={"45px"}>
+          <FormControl isInvalid={errors.screenName} mt="45px">
             <FormLabel>Screen Name</FormLabel>
             <Input
               variant="filled"
@@ -206,7 +203,7 @@ const Edit = () => {
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={errors.bio} mt={"45px"}>
+          <FormControl isInvalid={errors.bio} mt="45px">
             <FormLabel>Bio</FormLabel>
             <Textarea
               variant="filled"
@@ -221,7 +218,7 @@ const Edit = () => {
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl isRequired isInvalid={errors.email} mt={"45px"}>
+          <FormControl isRequired isInvalid={errors.email} mt="45px">
             <FormLabel>Email</FormLabel>
             <Input
               variant="filled"
@@ -241,38 +238,33 @@ const Edit = () => {
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl isRequired isInvalid={errors.address} mt={"45px"}>
+          <FormControl mt="45px">
             <FormLabel>Address</FormLabel>
             <Textarea
               variant="filled"
               placeholder="例）東京都千代田区1-11-1"
               defaultValue={secret.address}
-              {...register("address", {
-                required: "住所は必須入力です",
-              })}
+              {...register("address")}
             ></Textarea>
             <FormHelperText>
               他の人に表示されません <br />
               アイテム購入時に、販売ショップの人のみが確認してすることができます。
             </FormHelperText>
-            <FormErrorMessage>
-              {errors.address && errors.address.message}
-            </FormErrorMessage>
           </FormControl>
 
-          <VStack mt={"20px"}>
+          <VStack mt="20px">
             <Button
               colorScheme="pink"
               type="submit"
               isLoading={isSubmitting}
-              mt={"20px"}
+              mt="20px"
             >
               更新する
             </Button>
           </VStack>
         </form>
         <Box w="50%">
-          <Text mb="30px" color="red.400" textAlign={"left"}>
+          <Text mb="30px" color="red.400" textAlign="left">
             *必須
           </Text>
         </Box>

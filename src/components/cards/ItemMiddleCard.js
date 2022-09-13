@@ -1,3 +1,7 @@
+import DisplayTimeToFinish from "@/components/pages/item/DisplayTimeToFinish";
+import { ToPrice } from "@/plugins/filter";
+import { db } from "@/plugins/firebase";
+import { currentBiddingPrice } from "@/plugins/mixin";
 import {
   Stack,
   Image,
@@ -7,13 +11,9 @@ import {
   Box,
   AspectRatio,
 } from "@chakra-ui/react";
-import NextLink from "next/link";
-import { currentBiddingPrice } from "@/plugins/mixin";
-import { ToFinish, ToPrice } from "@/plugins/filter";
-import { useEffect } from "react";
-import { db } from "@/plugins/firebase";
 import { query, collection, orderBy, onSnapshot } from "firebase/firestore";
-
+import NextLink from "next/link";
+import { useEffect } from "react";
 import { useState } from "react";
 
 const ItemMiddleCard = ({ item }) => {
@@ -71,6 +71,7 @@ const ItemMiddleCard = ({ item }) => {
     <>
       <Stack
         w="100%"
+        maxW="300px"
         borderWidth="1px"
         borderRadius="10px"
         overflow="hidden"
@@ -92,32 +93,36 @@ const ItemMiddleCard = ({ item }) => {
               </Heading>
 
               <Stack direction="row" align="center" pt="5">
-                <Avatar
-                  size="sm"
-                  name="imoto"
-                  src="https://bit.ly/broken-link"
-                />
+                <Avatar size="sm" name={item.shop.name} src={item.shop.icon} />
                 <Text fontSize="xs" noOfLines={2}>
                   {item.shop.name}
                 </Text>
               </Stack>
 
-              {item.sale.startedAt && bindBiddings && (
+              {item.sale.startedAt && bindBiddings ? (
                 <Stack
                   direction="row"
-                  align="center"
+                  align="end"
                   justify="space-between"
                   pt="2"
                 >
                   <Text fontSize="md" fontWeight="bold" color="primary">
                     {ToPrice(currentPrice)}
                   </Text>
-                  <Text fontSize="xs">
-                    {ToFinish({
-                      finishedSeconds: item.sale.finishedAt.seconds,
-                    })}
+                  <Text fontSize="xs" className="nl2br" textAlign="right">
+                    <DisplayTimeToFinish item={item}></DisplayTimeToFinish>
                   </Text>
                 </Stack>
+              ) : (
+                <Text
+                  fontSize="xs"
+                  fontWeight="700"
+                  pt="3"
+                  display="block"
+                  textAlign="center"
+                >
+                  発売準備中
+                </Text>
               )}
             </Box>
           </a>

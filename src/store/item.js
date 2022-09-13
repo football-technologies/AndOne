@@ -1,6 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-
 import { db } from "@/plugins/firebase";
+import { createSlice } from "@reduxjs/toolkit";
 import {
   doc,
   setDoc,
@@ -39,8 +38,6 @@ const item = createSlice({
 
 const fetchItem = ({ query, type, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchItem");
-
     let unsubscribe = null;
 
     if (isOnSnapshot) {
@@ -67,8 +64,6 @@ const fetchItem = ({ query, type, isOnSnapshot = false }) => {
 
 const fetchItems = ({ type, query, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchItems");
-
     let unsubscribe = null;
     const newItems = [];
 

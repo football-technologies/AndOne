@@ -1,7 +1,4 @@
-import { useState } from "react";
-import { forwardRef, useImperativeHandle } from "react";
 import { ToPrice, ToAgo } from "@/plugins/filter";
-
 import {
   Modal,
   ModalOverlay,
@@ -14,8 +11,10 @@ import {
   Avatar,
   Divider,
 } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
 import _ from "lodash";
+import { useState } from "react";
+import { forwardRef, useImperativeHandle } from "react";
+import { useSelector } from "react-redux";
 
 const DialogBiddingHistory = forwardRef((props, ref) => {
   const [dialog, setDialog] = useState(false);

@@ -1,8 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
-
 import { auth } from "@/plugins/firebase";
+import { createSlice } from "@reduxjs/toolkit";
 import { signOut } from "firebase/auth";
-
 import { onSnapshot, getDocs } from "firebase/firestore";
 import _ from "lodash";
 
@@ -15,6 +13,7 @@ const account = createSlice({
     name: null,
     icon: null,
     shopId: null,
+    shopItems: [],
     biddingItemIds: [],
     biddingItems: [],
   },
@@ -53,6 +52,10 @@ const account = createSlice({
       state.shopId = payload.shopId;
     },
 
+    readShopItems(state, { type, payload }) {
+      state.shopItems = [...payload];
+    },
+
     readBiddingItemIds(state, { type, payload }) {
       state.biddingItemIds = [...payload];
     },
@@ -70,8 +73,6 @@ const fetchBiddingItemIds = ({
   limit = 5,
 }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchBiddingItemIds");
-
     let unsubscribe = null;
     const newBiddingItemIds = [];
 
@@ -128,8 +129,6 @@ const fetchBiddingItemIds = ({
 
 const fetchBiddingItems = ({ type, query, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchBiddingItems");
-
     let unsubscribe = null;
     const newBiddingItems = [];
 
@@ -172,6 +171,50 @@ const fetchBiddingItems = ({ type, query, isOnSnapshot = false }) => {
   };
 };
 
+const fetchShopItems = ({ type, query, isOnSnapshot = false }) => {
+  return async (dispatch, getState) => {
+    let unsubscribe = null;
+    const newItems = [];
+
+    if (isOnSnapshot) {
+      unsubscribe = await onSnapshot(query, async (snapshot) => {
+        if (snapshot) {
+          await snapshot.docChanges().forEach(async (change) => {
+            if (change.type === "added") {
+              if (change.doc.data().id) {
+                const newIndex = change.newIndex;
+                newItems.splice(newIndex, 0, change.doc.data());
+              }
+            }
+            if (change.type === "modified") {
+              if (change.doc.data().id) {
+                const newIndex = change.newIndex;
+                newItems.splice(newIndex, 1, change.doc.data());
+              }
+            }
+          });
+        }
+        dispatch(readShopItems(newItems));
+      });
+    }
+
+    if (!isOnSnapshot) {
+      await getDocs(query).then((snapshot) => {
+        snapshot.forEach((doc) => {
+          if (doc.id) {
+            newItems.push(doc.data());
+          }
+        });
+      });
+      dispatch(readShopItems(newItems));
+    }
+
+    if (type === "delete") {
+      unsubscribe();
+    }
+  };
+};
+
 export const {
   signup,
   login,
@@ -179,7 +222,8 @@ export const {
   updateAccount,
   readBiddingItemIds,
   readBiddingItems,
+  readShopItems,
 } = account.actions;
-export { fetchBiddingItems, fetchBiddingItemIds };
+export { fetchBiddingItems, fetchBiddingItemIds, fetchShopItems };
 
 export default account;

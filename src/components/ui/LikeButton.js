@@ -1,15 +1,15 @@
 import { FtSmallButtonOutlined } from "./FtButton";
-import { useSelector, useDispatch } from "react-redux";
-import { createLike, deleteLike, fetchLikes } from "@/store/like";
-import { ftCreateId } from "@/plugins/mixin";
-import { db } from "@/plugins/firebase";
-import { doc, query, collectionGroup, where } from "firebase/firestore";
 import useFtToast from "@/components/ui/FtToast";
-import { useEffect } from "react";
 import scheme from "@/helpers/scheme";
-import _ from "lodash";
+import { db } from "@/plugins/firebase";
+import { ftCreateId } from "@/plugins/mixin";
+import { createLike, deleteLike, fetchLikes } from "@/store/like";
 import { Button, Icon } from "@chakra-ui/react";
+import { doc, query, collectionGroup, where } from "firebase/firestore";
+import _ from "lodash";
+import { useEffect } from "react";
 import { MdCheck } from "react-icons/md";
+import { useSelector, useDispatch } from "react-redux";
 
 const LikeButton = ({ target, id, name }) => {
   const dispatch = useDispatch();

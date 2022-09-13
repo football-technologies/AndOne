@@ -1,7 +1,7 @@
-import { useDispatch } from "react-redux";
-import { logout } from "@/store/account";
 import useFtToast from "@/components/ui/FtToast";
+import { logout } from "@/store/account";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
 
 const useLogout = () => {
   const dispatch = useDispatch();

@@ -1,18 +1,17 @@
-import { configureStore } from "@reduxjs/toolkit";
-
 import account from "@/store/account";
-import user from "@/store/user";
+import bidding from "@/store/bidding";
+import comment from "@/store/comment";
+import item from "@/store/item";
+import like from "@/store/like";
 import secret from "@/store/secret";
 import shop from "@/store/shop";
 import tag from "@/store/tag";
-import item from "@/store/item";
-import bidding from "@/store/bidding";
-import like from "@/store/like";
-import comment from "@/store/comment";
-
-import storage from "redux-persist/lib/storage";
+import user from "@/store/user";
+import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+
 // import thunk from "redux-thunk";
 
 const reducers = combineReducers({

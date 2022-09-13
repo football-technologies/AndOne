@@ -1,8 +1,8 @@
-import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useRouter } from "next/router";
-
+import { FtLargeButton } from "@/components/ui/FtButton";
+import useFtToast from "@/components/ui/FtToast";
+import { db, auth } from "@/plugins/firebase";
+import rules from "@/plugins/validation";
+import { login } from "@/store/account";
 import {
   FormControl,
   FormLabel,
@@ -16,11 +16,7 @@ import {
   Heading,
   Icon,
 } from "@chakra-ui/react";
-import useFtToast from "@/components/ui/FtToast";
-
-import { BiHide, BiShow } from "react-icons/bi";
-
-import { db, auth } from "@/plugins/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import {
   getDocs,
   where,
@@ -29,11 +25,11 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
-import { signInWithEmailAndPassword } from "firebase/auth";
-
-import { login } from "@/store/account";
-
-import rules from "@/plugins/validation";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { BiHide, BiShow } from "react-icons/bi";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const [show, setShow] = useState(false);
@@ -50,7 +46,6 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(">>>>>>>>>>>> data", data);
     setIsLoading(true);
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(async (auth) => {
@@ -96,21 +91,15 @@ const Login = () => {
         router.push("/");
       })
       .catch((error) => {
-        console.log(">>>>>>>>>>>>> error", error.message);
         setIsLoading(false);
         ftToast(error.message);
       });
   };
 
-  const form = {
-    width: "400px",
-    margin: "45px auto",
-  };
-
   return (
-    <Box bg="white" h={"100vh"} w={"90%"} mx={"auto"}>
-      <form onSubmit={handleSubmit(onSubmit)} style={form}>
-        <Heading py={"50px"} as="h3" size="lg">
+    <Box w="400px" h="100vh" mx="auto">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Heading py="50px" as="h3" size="lg">
           Login
         </Heading>
         <FormControl isInvalid={errors.email}>
@@ -128,7 +117,7 @@ const Login = () => {
             {errors.email && errors.email.message}
           </FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={errors.password} mt={"45px"}>
+        <FormControl isInvalid={errors.password} mt="45px">
           <FormLabel>Password</FormLabel>
           <InputGroup>
             <Input
@@ -151,15 +140,15 @@ const Login = () => {
           </FormErrorMessage>
         </FormControl>
 
-        <VStack mt={"20px"}>
-          <Button
+        <VStack mt="10">
+          <FtLargeButton
             colorScheme="pink"
             type="submit"
             isLoading={isLoading}
-            mt={"20px"}
+            mt="20px"
           >
             ログインする
-          </Button>
+          </FtLargeButton>
         </VStack>
       </form>
     </Box>
