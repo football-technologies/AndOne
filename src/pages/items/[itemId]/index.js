@@ -39,16 +39,14 @@ import { useSelector, useDispatch } from "react-redux";
 const ItemShow = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [isSelling, setIsSelling] = useState(false);
-
-  const { itemId } = router.query;
-  const bindItem = useSelector((state) => state.item.item);
-  const bindBiddings = useSelector((state) => state.bidding.biddings);
-
   const dialogPostBidding = useRef(null);
   const dialogBiddingHistory = useRef(null);
-
   const dialogImage = useRef();
+
+  const bindItem = useSelector((state) => state.item.item);
+  const bindBiddings = useSelector((state) => state.bidding.biddings);
+  const [isSelling, setIsSelling] = useState(false);
+  const { itemId } = router.query;
 
   const openDialogImage = (index) => {
     dialogImage.current.openDialog({
