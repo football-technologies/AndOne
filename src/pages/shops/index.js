@@ -19,6 +19,16 @@ const ShopIndex = () => {
         type: "fetch",
       })
     );
+
+    return () => {
+      dispatch(
+        fetchShops({
+          query: collection(db, "shops"),
+          isOnSnapshot: true,
+          type: "delete",
+        })
+      );
+    };
   }, []);
 
   return (

@@ -54,6 +54,7 @@ const ItemForm = () => {
           })
         );
         setIsEditMode(true);
+
         return () => {
           dispatch(
             fetchItem({
@@ -72,7 +73,7 @@ const ItemForm = () => {
 
         return () => {
           setEditItem(null);
-          setIsEditMode(null);
+          setIsEditMode(false);
         };
       }
     }
@@ -93,11 +94,12 @@ const ItemForm = () => {
         }
         setEditItem(item);
       }
-    }
 
-    return () => {
-      setEditItem(null);
-    };
+      return () => {
+        setEditItem(null);
+        setIsEditMode(false);
+      };
+    }
   }, [bindItem]);
 
   useEffect(() => {

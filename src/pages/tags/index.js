@@ -18,6 +18,16 @@ const TagIndex = () => {
         type: "fetch",
       })
     );
+
+    return () => {
+      dispatch(
+        fetchTags({
+          query: query(collection(db, `tags`)),
+          isOnSnapshot: true,
+          type: "delete",
+        })
+      );
+    };
   }, [dispatch]);
 
   return (

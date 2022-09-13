@@ -63,6 +63,16 @@ const ItemSettings = () => {
           type: "fetch",
         })
       );
+
+      return () => {
+        dispatch(
+          fetchItem({
+            query: `items/${itemId}`,
+            isOnSnapshot: true,
+            type: "delete",
+          })
+        );
+      };
     }
   }, [router.isReady]);
 

@@ -30,6 +30,20 @@ export default function Home() {
           type: "fetch",
         })
       );
+
+      return () => {
+        dispatch(
+          fetchItems({
+            query: query(
+              collection(db, "items"),
+              where("shop.id", "==", shopId),
+              orderBy("createdAt", "desc")
+            ),
+            isOnSnapshot: true,
+            type: "delete",
+          })
+        );
+      };
     }
   }, [router.isReady]);
 
