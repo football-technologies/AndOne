@@ -1,3 +1,4 @@
+import { FtLargeButton } from "@/components/ui/FtButton";
 import useFtToast from "@/components/ui/FtToast";
 import { db, auth } from "@/plugins/firebase";
 import rules from "@/plugins/validation";
@@ -45,7 +46,6 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(">>>>>>>>>>>> data", data);
     setIsLoading(true);
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(async (auth) => {
@@ -97,14 +97,9 @@ const Login = () => {
       });
   };
 
-  const form = {
-    width: "400px",
-    margin: "45px auto",
-  };
-
   return (
-    <Box bg="white" h="100vh" w="90%" mx="auto">
-      <form onSubmit={handleSubmit(onSubmit)} style={form}>
+    <Box w="400px" h="100vh" mx="auto">
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Heading py="50px" as="h3" size="lg">
           Login
         </Heading>
@@ -146,15 +141,15 @@ const Login = () => {
           </FormErrorMessage>
         </FormControl>
 
-        <VStack mt="20px">
-          <Button
+        <VStack mt="10">
+          <FtLargeButton
             colorScheme="pink"
             type="submit"
             isLoading={isLoading}
             mt="20px"
           >
             ログインする
-          </Button>
+          </FtLargeButton>
         </VStack>
       </form>
     </Box>

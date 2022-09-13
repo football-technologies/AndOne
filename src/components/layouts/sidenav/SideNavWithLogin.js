@@ -23,9 +23,6 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
-  Button,
-  Badge,
-  Circle,
 } from "@chakra-ui/react";
 import {
   query,
@@ -39,11 +36,9 @@ import { useEffect } from "react";
 import { FaRegImages } from "react-icons/fa";
 import { FaRegHourglass } from "react-icons/fa";
 import {
-  MdOutlineCollections,
   MdOutlineAlarmOn,
   MdOutlineNotificationsNone,
   MdOutlineMoreVert,
-  MdPhoto,
 } from "react-icons/md";
 import { RiHeartAddLine } from "react-icons/ri";
 import { useSelector, useDispatch } from "react-redux";
@@ -80,11 +75,11 @@ const SideNavWithoutLogin = () => {
       url: `/users/${currentUser.id}/likes`,
       icon: RiHeartAddLine,
     },
-    {
-      name: "Notifications",
-      url: `/users/${currentUser.id}/notifications`,
-      icon: MdOutlineNotificationsNone,
-    },
+    // {
+    //   name: "Notifications",
+    //   url: `/users/${currentUser.id}/notifications`,
+    //   icon: MdOutlineNotificationsNone,
+    // },
   ];
 
   useEffect(() => {
@@ -209,7 +204,7 @@ const SideNavWithoutLogin = () => {
             <ListItem>
               <NextLink href={`/shops/${currentUser.shopId}/items`} passHref>
                 <a>
-                  <Text className="ftTextLink">
+                  <Box className="ftTextLink">
                     <ListIcon as={FaRegImages} mr="5" />
                     My Shop Items
                     <Text
@@ -223,7 +218,7 @@ const SideNavWithoutLogin = () => {
                     >
                       {bindShopItems?.length}
                     </Text>
-                  </Text>
+                  </Box>
                 </a>
               </NextLink>
             </ListItem>

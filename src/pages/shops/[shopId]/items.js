@@ -1,5 +1,6 @@
 import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
 import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
+import { FtMiddleButtonOutlined } from "@/components/ui/FtButton";
 import { db } from "@/plugins/firebase";
 import { fetchItems } from "@/store/item";
 import { Wrap, Box, Button, Icon } from "@chakra-ui/react";
@@ -35,14 +36,17 @@ export default function Home() {
 
   return (
     <>
-      <Box textAlign="right" p="5">
+      <Wrap justify="space-between" p="5" spacing="0">
+        <NextLink href={`/items/new`}>
+          <FtMiddleButtonOutlined>+ アイテムを追加</FtMiddleButtonOutlined>
+        </NextLink>
         <NextLink href={`/shops/${shopId}`}>
           <Button as="a" variant="link">
             Go to Shop Page
             <Icon as={MdArrowForward} ml="1"></Icon>
           </Button>
         </NextLink>
-      </Box>
+      </Wrap>
 
       {bindItems && (
         <Wrap p="1%" spacing="0">

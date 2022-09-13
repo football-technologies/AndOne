@@ -85,7 +85,7 @@ const ItemShow = () => {
         })
       );
     }
-  }, [router.isReady]);
+  }, [router.isReady, itemId]);
 
   useEffect(() => {
     if (bindItem?.itemStatus === 3) {

@@ -1,7 +1,7 @@
+import { FtMiddleButtonOutlined } from "@/components/ui/FtButton";
 import {
   Box,
   Text,
-  Button,
   VStack,
   Stack,
   HStack,
@@ -33,24 +33,28 @@ const SideNavWithoutLogin = () => {
     <Stack>
       <HStack>
         <Box>
-          <Text my="30px">好きなものに囲まれて生活する</Text>
-
-          <Text mb="30px">
-            オークション形式で、お気に入りのアイテムを購入して、日常の生活に+1してみませんか。
+          <Text mb="30px" fontSize="sm">
+            We Love Football ⚽️<br></br>
+            オークション形式で、懐かしのユニフォーム、限定ユニフォームが購入できるAnd
+            Oneです。
           </Text>
         </Box>
       </HStack>
 
       <VStack align="stretch" spacing={5}>
         <Stack>
-          <Button display="block" colorScheme="pink" onClick={toSignupPage}>
+          <FtMiddleButtonOutlined
+            display="block"
+            colorScheme="pink"
+            onClick={toSignupPage}
+          >
             アカウント作成をする
-          </Button>
+          </FtMiddleButtonOutlined>
         </Stack>
         <Stack>
-          <Button colorScheme="pink" onClick={toLoginPage}>
+          <FtMiddleButtonOutlined colorScheme="pink" onClick={toLoginPage}>
             ログインする
-          </Button>
+          </FtMiddleButtonOutlined>
         </Stack>
       </VStack>
 
