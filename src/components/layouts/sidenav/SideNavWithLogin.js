@@ -24,29 +24,20 @@ import {
   MenuItem,
   MenuDivider,
 } from "@chakra-ui/react";
-import {
-  query,
-  collection,
-  orderBy,
-  where,
-  collectionGroup,
-} from "firebase/firestore";
+import { query, collection, where, collectionGroup } from "firebase/firestore";
 import NextLink from "next/link";
 import { useEffect } from "react";
 import { FaRegImages } from "react-icons/fa";
 import { FaRegHourglass } from "react-icons/fa";
-import {
-  MdOutlineAlarmOn,
-  MdOutlineNotificationsNone,
-  MdOutlineMoreVert,
-} from "react-icons/md";
+import { MdOutlineAlarmOn, MdOutlineMoreVert } from "react-icons/md";
 import { RiHeartAddLine } from "react-icons/ri";
 import { useSelector, useDispatch } from "react-redux";
 
 const SideNavWithoutLogin = () => {
   const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.account);
   const { logoutAuth } = useLogout();
+  const currentUser = useSelector((state) => state.account);
+
   const bindBiddingItemIds = useSelector(
     (state) => state.account.biddingItemIds
   );
@@ -54,12 +45,6 @@ const SideNavWithoutLogin = () => {
   const bindShopItems = useSelector((state) => state.account.shopItems);
 
   const links = [
-    // {
-    //   id: 1,
-    //   name: "My Shop Items",
-    //   url: `/shops/${currentUser.shopId}/items`,
-    //   icon: MdOutlineCollections,
-    // },
     {
       name: "Bidding Items",
       url: `/users/${currentUser.id}/biddings`,
@@ -88,8 +73,8 @@ const SideNavWithoutLogin = () => {
         fetchBiddingItemIds({
           query: query(
             collectionGroup(db, "biddings"),
-            where("user.id", "==", currentUser.id),
-            orderBy("created", "desc")
+            where("user.id", "==", currentUser.id)
+            // orderBy("createdAt", "desc")
             // where("status", "==", 1)
           ),
           limit: 5,
@@ -113,8 +98,7 @@ const SideNavWithoutLogin = () => {
         fetchBiddingItemIds({
           query: query(
             collectionGroup(db, "biddings"),
-            where("user.id", "==", currentUser.id),
-            orderBy("created", "desc")
+            where("user.id", "==", currentUser.id)
           ),
           limit: 5,
           isOnSnapshot: true,
@@ -139,6 +123,7 @@ const SideNavWithoutLogin = () => {
         fetchBiddingItems({
           query: query(
             collection(db, "items"),
+            where("itemStatus", "==", 3),
             where("id", "in", bindBiddingItemIds)
           ),
           isOnSnapshot: true,
