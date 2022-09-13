@@ -66,21 +66,21 @@ const Likes = () => {
 
   return (
     <>
-      <Wrap p="5">
-        {shops && shops.length > 0 ? (
-          shops.map((shop) => {
+      {shops && shops.length > 0 ? (
+        <Wrap p="5">
+          {shops.map((shop) => {
             return (
               <Stack w="31%" p="1%" key={shop.id}>
                 <ShopMiddleCard shop={shop}></ShopMiddleCard>;
               </Stack>
             );
-          })
-        ) : (
-          <Text display="block" textAlign="center" p="10">
-            Likeしたショップは、まだありません。
-          </Text>
-        )}
-      </Wrap>
+          })}
+        </Wrap>
+      ) : (
+        <Text display="block" textAlign="center" p="10">
+          Likeしたショップは、まだありません。
+        </Text>
+      )}
     </>
   );
 };

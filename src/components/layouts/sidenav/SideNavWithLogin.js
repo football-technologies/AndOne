@@ -3,7 +3,11 @@ import { useSelector, useDispatch } from "react-redux";
 import useLogout from "../Logout";
 
 import { useEffect } from "react";
-import { fetchBiddingItems, fetchBiddingItemIds } from "@/store/account";
+import {
+  fetchBiddingItems,
+  fetchBiddingItemIds,
+  fetchShopItems,
+} from "@/store/account";
 import { db } from "@/plugins/firebase";
 import {
   query,
@@ -31,6 +35,8 @@ import {
   MenuItem,
   MenuDivider,
   Button,
+  Badge,
+  Circle,
 } from "@chakra-ui/react";
 import {
   MdOutlineCollections,
@@ -56,6 +62,7 @@ const SideNavWithoutLogin = () => {
     (state) => state.account.biddingItemIds
   );
   const bindBiddingItems = useSelector((state) => state.account.biddingItems);
+  const bindShopItems = useSelector((state) => state.account.shopItems);
 
   const links = [
     // {
@@ -97,6 +104,17 @@ const SideNavWithoutLogin = () => {
             // where("status", "==", 1)
           ),
           limit: 5,
+          isOnSnapshot: true,
+          type: "fetch",
+        })
+      );
+
+      dispatch(
+        fetchShopItems({
+          query: query(
+            collection(db, "items"),
+            where("shop.id", "==", currentUser.shopId)
+          ),
           isOnSnapshot: true,
           type: "fetch",
         })
@@ -200,6 +218,17 @@ const SideNavWithoutLogin = () => {
                   <Text className="ftTextLink">
                     <ListIcon as={FaRegImages} mr="5" />
                     My Shop Items
+                    <Text
+                      bg="primary"
+                      rounded="full"
+                      px="1.5"
+                      ml="2"
+                      color="white"
+                      fontSize="xs"
+                      display="inline-block"
+                    >
+                      {bindShopItems?.length}
+                    </Text>
                   </Text>
                 </a>
               </NextLink>
