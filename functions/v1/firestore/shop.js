@@ -1,6 +1,7 @@
 const functions = require("firebase-functions").region("asia-northeast1");
 const sentryWrapper = require("../../common/sentryErrorWrapper");
 const deleteMasterTag = require("../module/deleteMasterTag");
+const _ = require("lodash");
 
 const runtimeOpts = {
   timeoutSeconds: 540,
