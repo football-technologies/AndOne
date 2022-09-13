@@ -14,6 +14,8 @@ const nextjsHandle = nextjsServer.getRequestHandler();
 const runtimeOpts = {
   timeoutSeconds: 540,
   memory: "8GB",
+  // TODO: 料金が発生。不要な時は0に設定すること
+  minInstances: 1,
 };
 
 module.exports = functions
