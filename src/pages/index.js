@@ -1,13 +1,11 @@
-import { useEffect } from "react";
-
 import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
-import { Wrap, Box } from "@chakra-ui/react";
-
-import { fetchItems } from "@/store/item";
-import { useDispatch, useSelector } from "react-redux";
 import { db } from "@/plugins/firebase";
+import { fetchItems } from "@/store/item";
+import { Wrap, Box } from "@chakra-ui/react";
 import { query, collection, where } from "firebase/firestore";
 import _ from "lodash";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Home() {
   const bindItems = useSelector((state) => state.item.items);

@@ -1,6 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-
 import { db } from "@/plugins/firebase";
+import { createSlice } from "@reduxjs/toolkit";
 import {
   doc,
   setDoc,

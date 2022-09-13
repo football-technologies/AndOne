@@ -1,3 +1,6 @@
+import useFtToast from "./FtToast";
+import { db } from "@/plugins/firebase";
+import { fetchItems } from "@/store/item";
 import {
   Button,
   Icon,
@@ -13,17 +16,14 @@ import {
   InputRightElement,
   Divider,
 } from "@chakra-ui/react";
-import React from "react";
-import { MdSearch } from "react-icons/md";
-import { useState } from "react";
-import useFtToast from "./FtToast";
-import { useRouter } from "next/router";
-import { fetchItems } from "@/store/item";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { db } from "@/plugins/firebase";
 import { query, collection } from "firebase/firestore";
 import _ from "lodash";
+import { useRouter } from "next/router";
+import React from "react";
+import { useState } from "react";
+import { useEffect } from "react";
+import { MdSearch } from "react-icons/md";
+import { useDispatch } from "react-redux";
 
 const FtSearchBox = () => {
   const { ftToast } = useFtToast();

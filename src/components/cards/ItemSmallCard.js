@@ -1,3 +1,7 @@
+import DisplayTimeToFinish from "@/components/pages/item/DisplayTimeToFinish";
+import { ToPrice } from "@/plugins/filter";
+import { db } from "@/plugins/firebase";
+import { currentBiddingPrice } from "@/plugins/mixin";
 import {
   Stack,
   Image,
@@ -7,15 +11,10 @@ import {
   Box,
   AspectRatio,
 } from "@chakra-ui/react";
-import NextLink from "next/link";
-import { currentBiddingPrice } from "@/plugins/mixin";
-import { ToPrice } from "@/plugins/filter";
-import { useEffect } from "react";
-import { db } from "@/plugins/firebase";
 import { query, collection, orderBy, onSnapshot } from "firebase/firestore";
-
+import NextLink from "next/link";
+import { useEffect } from "react";
 import { useState } from "react";
-import DisplayTimeToFinish from "@/components/pages/item/DisplayTimeToFinish";
 
 const ItemSmallCard = ({ item }) => {
   const [bindBiddings, setBindBiddings] = useState();

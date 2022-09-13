@@ -1,13 +1,11 @@
-import { useEffect } from "react";
-
 import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
-import { Text, Wrap, Stack, Divider, Box } from "@chakra-ui/react";
-
-import { fetchItems } from "@/store/item";
-import { useDispatch, useSelector } from "react-redux";
 import { db } from "@/plugins/firebase";
+import { fetchItems } from "@/store/item";
+import { Text, Wrap, Stack, Divider, Box } from "@chakra-ui/react";
 import { where, query, collection } from "firebase/firestore";
 import _ from "lodash";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const SuggestItemsList = ({ itemId }) => {
   const bindItems = useSelector((state) => state.item.items);

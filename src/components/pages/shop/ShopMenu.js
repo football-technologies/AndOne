@@ -9,13 +9,11 @@ import {
   Circle,
   Icon,
 } from "@chakra-ui/react";
-
 import NextLink from "next/link";
-import { MdOutlineMoreVert } from "react-icons/md";
-
-import { useSelector } from "react-redux";
 import { useState } from "react";
 import { useEffect } from "react";
+import { MdOutlineMoreVert } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 const ShopMenu = ({ shop }) => {
   const [isShopOwner, setIsShopOwner] = useState(false);

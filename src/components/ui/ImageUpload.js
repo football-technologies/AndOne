@@ -1,9 +1,9 @@
-import { Input, Spinner } from "@chakra-ui/react";
-import { forwardRef, useState } from "react";
+import LoadingSpinner from "./LoadingSpinner";
 import useFtToast from "@/components/ui/FtToast";
 import { storage } from "@/plugins/firebase";
+import { Input, Spinner } from "@chakra-ui/react";
 import { getDownloadURL, ref, uploadString } from "@firebase/storage";
-import LoadingSpinner from "./LoadingSpinner";
+import { forwardRef, useState } from "react";
 
 const UploadIcon = forwardRef(({ folderPath, uploadIcon }, iconRef) => {
   const [isLoading, setIsLoading] = useState(false);

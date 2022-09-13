@@ -1,22 +1,11 @@
-import { useSelector, useDispatch } from "react-redux";
-
 import useLogout from "../Logout";
-
-import { useEffect } from "react";
+import ItemExtraSmallCard from "@/components/cards/ItemExtraSmallCard";
+import { db } from "@/plugins/firebase";
 import {
   fetchBiddingItems,
   fetchBiddingItemIds,
   fetchShopItems,
 } from "@/store/account";
-import { db } from "@/plugins/firebase";
-import {
-  query,
-  collection,
-  orderBy,
-  where,
-  collectionGroup,
-} from "firebase/firestore";
-
 import {
   Box,
   Text,
@@ -39,20 +28,25 @@ import {
   Circle,
 } from "@chakra-ui/react";
 import {
+  query,
+  collection,
+  orderBy,
+  where,
+  collectionGroup,
+} from "firebase/firestore";
+import NextLink from "next/link";
+import { useEffect } from "react";
+import { FaRegImages } from "react-icons/fa";
+import { FaRegHourglass } from "react-icons/fa";
+import {
   MdOutlineCollections,
   MdOutlineAlarmOn,
   MdOutlineNotificationsNone,
   MdOutlineMoreVert,
   MdPhoto,
 } from "react-icons/md";
-
-import { FaRegImages } from "react-icons/fa";
-
-import { FaRegHourglass } from "react-icons/fa";
 import { RiHeartAddLine } from "react-icons/ri";
-
-import ItemExtraSmallCard from "@/components/cards/ItemExtraSmallCard";
-import NextLink from "next/link";
+import { useSelector, useDispatch } from "react-redux";
 
 const SideNavWithoutLogin = () => {
   const dispatch = useDispatch();

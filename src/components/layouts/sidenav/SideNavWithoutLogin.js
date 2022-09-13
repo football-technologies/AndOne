@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import {
   Box,
   Text,
@@ -9,6 +8,7 @@ import {
   List,
   ListItem,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 const SideNavWithoutLogin = () => {
   const router = useRouter();

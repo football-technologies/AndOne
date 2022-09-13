@@ -1,9 +1,9 @@
 import useSyncTime from "@/helpers/clock";
 import { ToFinish } from "@/plugins/filter";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { updateItem } from "@/store/item";
 import moment from "moment/moment";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 const DisplayTimeToFinish = ({ item, isSync = false }) => {
   let currentSeconds;

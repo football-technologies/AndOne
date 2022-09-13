@@ -1,7 +1,19 @@
-import { useForm } from "react-hook-form";
-import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/router";
-import { useSelector, useDispatch } from "react-redux";
+import SubImagesForm from "@/components/pages/shop/SubImagesForm";
+import {
+  FtSmallButtonOutlined,
+  FtMiddleButtonOutlined,
+  FtLargeButton,
+} from "@/components/ui/FtButton";
+import useFtToast from "@/components/ui/FtToast";
+import { UploadIcon, UploadMain } from "@/components/ui/ImageUpload";
+import scheme from "@/helpers/scheme";
+import { db } from "@/plugins/firebase";
+import { ftCreateId } from "@/plugins/mixin";
+import rules from "@/plugins/validation";
+import { updateAccount } from "@/store/account";
+import { createShop, fetchShop, updateShop } from "@/store/shop";
+import { createTag } from "@/store/tag";
+import { updateUser } from "@/store/user";
 import {
   FormControl,
   FormLabel,
@@ -19,31 +31,14 @@ import {
   AspectRatio,
   Icon,
 } from "@chakra-ui/react";
-
-import useFtToast from "@/components/ui/FtToast";
-import {
-  FtSmallButtonOutlined,
-  FtMiddleButtonOutlined,
-  FtLargeButton,
-} from "@/components/ui/FtButton";
-import { ftCreateId } from "@/plugins/mixin";
-import { createShop, fetchShop, updateShop } from "@/store/shop";
-import { updateUser } from "@/store/user";
-import { createTag } from "@/store/tag";
-import { updateAccount } from "@/store/account";
-
-import { UploadIcon, UploadMain } from "@/components/ui/ImageUpload";
-
-import { db } from "@/plugins/firebase";
 import { doc, query, collection, getDocs, where } from "firebase/firestore";
-
 import _ from "lodash";
-import rules from "@/plugins/validation";
-import scheme from "@/helpers/scheme";
-
-import SubImagesForm from "@/components/pages/shop/SubImagesForm";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { useState, useRef, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { MdArrowForward } from "react-icons/md";
+import { useSelector, useDispatch } from "react-redux";
 
 const ShopForm = () => {
   const [iconUrl, setIconUrl] = useState(null);

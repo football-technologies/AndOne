@@ -1,6 +1,6 @@
-import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import ItemSmallCard from "@/components/cards/ItemSmallCard";
 import { db } from "@/plugins/firebase";
+import { Text } from "@chakra-ui/react";
 import {
   query,
   collection,
@@ -8,9 +8,9 @@ import {
   getDocs,
   collectionGroup,
 } from "firebase/firestore";
-import ItemSmallCard from "@/components/cards/ItemSmallCard";
 import _ from "lodash";
-import { Text } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const Biddings = () => {
   const currentUser = useSelector((state) => state.account);

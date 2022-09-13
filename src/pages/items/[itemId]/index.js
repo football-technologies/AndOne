@@ -1,13 +1,19 @@
-import { useRouter } from "next/router";
-import { useRef, useEffect } from "react";
-import DialogPostBidding from "@/components/dialog/DialogPostBidding";
-import ItemComments from "@/components/pages/item/ItemComments";
 import DialogBiddingHistory from "@/components/dialog/DialogBiddingHistory";
-
+import DialogPostBidding from "@/components/dialog/DialogPostBidding";
+import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
+import DisplayTimeToFinish from "@/components/pages/item/DisplayTimeToFinish";
+import ItemComments from "@/components/pages/item/ItemComments";
+import ItemMenu from "@/components/pages/item/ItemMenu";
+import SuggestItemsList from "@/components/pages/item/SuggestItemsList";
+import DialogImage from "@/components/pages/shop/DialogImage";
 import { FtMiddleButton } from "@/components/ui/FtButton";
+import LikeButton from "@/components/ui/LikeButton";
+import { ToPrice } from "@/plugins/filter";
 import { db } from "@/plugins/firebase";
-import { query, collection, orderBy } from "firebase/firestore";
-
+import { currentBiddingPrice } from "@/plugins/mixin";
+import { fetchBiddings } from "@/store/bidding";
+import { fetchComments } from "@/store/comment";
+import { fetchItem } from "@/store/item";
 import {
   Box,
   HStack,
@@ -22,25 +28,13 @@ import {
   Icon,
   Container,
 } from "@chakra-ui/react";
+import { query, collection, orderBy } from "firebase/firestore";
 import NextLink from "next/link";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchItem, updateItem } from "@/store/item";
-import { fetchComments } from "@/store/comment";
-import { fetchBiddings } from "@/store/bidding";
-import DialogImage from "@/components/pages/shop/DialogImage";
-
-import ItemMenu from "@/components/pages/item/ItemMenu";
-import LikeButton from "@/components/ui/LikeButton";
-
-import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
-
-import { currentBiddingPrice } from "@/plugins/mixin";
-import { ToPrice } from "@/plugins/filter";
-import { GoCommentDiscussion } from "react-icons/go";
-
+import { useRouter } from "next/router";
+import { useRef, useEffect } from "react";
 import { useState } from "react";
-import SuggestItemsList from "@/components/pages/item/SuggestItemsList";
-import DisplayTimeToFinish from "@/components/pages/item/DisplayTimeToFinish";
+import { GoCommentDiscussion } from "react-icons/go";
+import { useSelector, useDispatch } from "react-redux";
 
 const ItemShow = () => {
   const router = useRouter();

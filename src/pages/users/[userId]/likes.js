@@ -1,10 +1,10 @@
-import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { db } from "@/plugins/firebase";
-import { query, collection, where, getDocs } from "firebase/firestore";
 import ShopMiddleCard from "@/components/cards/ShopMiddleCard";
-import _ from "lodash";
+import { db } from "@/plugins/firebase";
 import { Wrap, Stack, Text } from "@chakra-ui/react";
+import { query, collection, where, getDocs } from "firebase/firestore";
+import _ from "lodash";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const Likes = () => {
   const currentUser = useSelector((state) => state.account);

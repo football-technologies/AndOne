@@ -1,6 +1,12 @@
-import { useState, forwardRef, useImperativeHandle } from "react";
+import DisplayTimeToFinish from "@/components/pages/item/DisplayTimeToFinish";
+import { FtLargeButton } from "@/components/ui/FtButton";
+import useFtToast from "@/components/ui/FtToast";
+import scheme from "@/helpers/scheme";
 import { ToPrice } from "@/plugins/filter";
-
+import { ToFinish } from "@/plugins/filter";
+import { db } from "@/plugins/firebase";
+import { currentBiddingPrice, ftCreateId } from "@/plugins/mixin";
+import { createBidding } from "@/store/bidding";
 import {
   Input,
   Modal,
@@ -18,20 +24,10 @@ import {
   InputRightAddon,
   InputGroup,
 } from "@chakra-ui/react";
-import { FtLargeButton } from "@/components/ui/FtButton";
-import { currentBiddingPrice, ftCreateId } from "@/plugins/mixin";
-import { ToFinish } from "@/plugins/filter";
-import { useSelector, useDispatch } from "react-redux";
-
-import { createBidding } from "@/store/bidding";
-import scheme from "@/helpers/scheme";
-import _ from "lodash";
-
-import { db } from "@/plugins/firebase";
 import { doc } from "firebase/firestore";
-import useFtToast from "@/components/ui/FtToast";
-
-import DisplayTimeToFinish from "@/components/pages/item/DisplayTimeToFinish";
+import _ from "lodash";
+import { useState, forwardRef, useImperativeHandle } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 const DialogPostBidding = forwardRef((props, ref) => {
   const [dialog, setDialog] = useState(false);

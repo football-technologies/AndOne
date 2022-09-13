@@ -1,3 +1,8 @@
+import DialogImage from "@/components/pages/shop/DialogImage";
+import MyShopItemsList from "@/components/pages/shop/MyShopItemsList";
+import ShopMenu from "@/components/pages/shop/ShopMenu";
+import LikeButton from "@/components/ui/LikeButton";
+import { fetchShop } from "@/store/shop";
 import {
   AspectRatio,
   Box,
@@ -13,6 +18,10 @@ import {
   Avatar,
   Center,
 } from "@chakra-ui/react";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useRef } from "react";
 import {
   FaBookOpen,
   FaDesktop,
@@ -25,21 +34,7 @@ import {
   FaTwitter,
 } from "react-icons/fa";
 import { MdMail } from "react-icons/md";
-
-import { useRouter } from "next/router";
-import NextLink from "next/link";
-
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
-
-import { fetchShop } from "@/store/shop";
-
-import DialogImage from "@/components/pages/shop/DialogImage";
-import { useRef } from "react";
-import LikeButton from "@/components/ui/LikeButton";
-
-import ShopMenu from "@/components/pages/shop/ShopMenu";
-import MyShopItemsList from "@/components/pages/shop/MyShopItemsList";
 
 const ShopShow = () => {
   const dispatch = useDispatch();

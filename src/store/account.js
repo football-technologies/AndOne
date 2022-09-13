@@ -1,8 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
-
 import { auth } from "@/plugins/firebase";
+import { createSlice } from "@reduxjs/toolkit";
 import { signOut } from "firebase/auth";
-
 import { onSnapshot, getDocs } from "firebase/firestore";
 import _ from "lodash";
 

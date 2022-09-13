@@ -1,18 +1,15 @@
-import { useEffect } from "react";
-
 import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
-import { Wrap, Box, Button, Icon } from "@chakra-ui/react";
-
-import { fetchItems } from "@/store/item";
-import { useDispatch, useSelector } from "react-redux";
+import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
 import { db } from "@/plugins/firebase";
+import { fetchItems } from "@/store/item";
+import { Wrap, Box, Button, Icon } from "@chakra-ui/react";
 import { where, query, collection, orderBy } from "firebase/firestore";
 import _ from "lodash";
-import { useRouter } from "next/router";
-import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
-
-import { MdArrowForward } from "react-icons/md";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { MdArrowForward } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Home() {
   const bindItems = useSelector((state) => state.item.items);

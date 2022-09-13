@@ -1,10 +1,9 @@
 import SideNavBasic from "@/components/layouts/sidenav/SideNavBasic";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import FtSearchBox from "@/components/ui/FtSearchBox";
 import { auth } from "@/plugins/firebase";
-import { onAuthStateChanged } from "firebase/auth";
-import { login, logout } from "@/store/account";
 import { db } from "@/plugins/firebase";
+import { login, logout } from "@/store/account";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   getDocs,
   where,
@@ -13,8 +12,8 @@ import {
   getDoc,
   doc,
 } from "firebase/firestore";
-
-import FtSearchBox from "@/components/ui/FtSearchBox";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 const DefaultLayout = ({ children }) => {
   const dispatch = useDispatch();

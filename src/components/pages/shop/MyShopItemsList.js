@@ -1,13 +1,10 @@
+import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
+import { db } from "@/plugins/firebase";
+import { fetchItems } from "@/store/item";
+import { Box, Wrap, Tabs, TabList, Tab } from "@chakra-ui/react";
+import { query, collection, where } from "firebase/firestore";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-import { fetchItems } from "@/store/item";
-import { db } from "@/plugins/firebase";
-import { query, collection, orderBy, where } from "firebase/firestore";
-
-import { Box, Wrap, Tabs, TabList, Tab } from "@chakra-ui/react";
-
-import ItemMiddleCard from "@/components/cards/ItemMiddleCard";
 
 const MyShopItemsList = ({ shopId }) => {
   const dispatch = useDispatch();
