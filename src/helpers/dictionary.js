@@ -31,14 +31,14 @@ const dictionary = {
       key: "selling",
       text: "販売中",
       icon: "MdAlarmAdd",
-      color: "orange",
+      color: "blue",
     },
     {
       id: 4,
       key: "sold",
       text: "販売終了",
       icon: "MdAlarmOff",
-      color: "black",
+      color: "green",
     },
   ],
 };
