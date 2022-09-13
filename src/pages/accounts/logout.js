@@ -1,5 +1,9 @@
+import { useRouter } from "next/router";
+
 const LogoutPage = () => {
-  return <h1>Logoutしました</h1>;
+  const router = useRouter();
+  router.push("/");
+  return;
 };
 
 export default LogoutPage;

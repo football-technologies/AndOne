@@ -112,10 +112,8 @@ const ItemShow = () => {
       {bindItem && bindBiddings && (
         <>
           <HStack align="start" position="relative">
-            <Box position="absolute" top="-30px" right="0" zIndex="2">
-              <DisplayItemStatus
-                itemStatus={bindItem.itemStatus}
-              ></DisplayItemStatus>
+            <Box position="absolute" top="-30px" right="left" zIndex="2">
+              <DisplayItemStatus item={bindItem}></DisplayItemStatus>
             </Box>
 
             <Stack width="70%">
@@ -145,10 +143,7 @@ const ItemShow = () => {
             </Stack>
 
             <Box width="30%" p="5" position="relative">
-              <ItemMenu
-                itemId={bindItem.id}
-                itemStatus={bindItem.itemStatus}
-              ></ItemMenu>
+              <ItemMenu item={bindItem}></ItemMenu>
 
               <Heading as="h1" fontSize="md">
                 {bindItem.name}
