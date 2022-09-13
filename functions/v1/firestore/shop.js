@@ -17,7 +17,9 @@ exports.onUpdate = functions
       const before = snapshot.before.data();
       const after = snapshot.after.data();
 
-      if (before.tags !== after.tags) {
+      const isSameTags = _.isEqual(before.tags, after.tags);
+
+      if (!isSameTags) {
         await deleteMasterTag({
           beforeTags: before.tags,
           afterTags: after.tags,
