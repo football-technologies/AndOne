@@ -1,13 +1,19 @@
-import { useRouter } from "next/router";
-import { useRef, useEffect } from "react";
-import DialogPostBidding from "@/components/dialog/DialogPostBidding";
-import ItemComments from "@/components/pages/item/ItemComments";
 import DialogBiddingHistory from "@/components/dialog/DialogBiddingHistory";
-
+import DialogPostBidding from "@/components/dialog/DialogPostBidding";
+import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
+import DisplayTimeToFinish from "@/components/pages/item/DisplayTimeToFinish";
+import ItemComments from "@/components/pages/item/ItemComments";
+import ItemMenu from "@/components/pages/item/ItemMenu";
+import SuggestItemsList from "@/components/pages/item/SuggestItemsList";
+import DialogImage from "@/components/pages/shop/DialogImage";
 import { FtMiddleButton } from "@/components/ui/FtButton";
+import LikeButton from "@/components/ui/LikeButton";
+import { ToPrice } from "@/plugins/filter";
 import { db } from "@/plugins/firebase";
-import { query, collection, orderBy } from "firebase/firestore";
-
+import { currentBiddingPrice } from "@/plugins/mixin";
+import { fetchBiddings } from "@/store/bidding";
+import { fetchComments } from "@/store/comment";
+import { fetchItem } from "@/store/item";
 import {
   Box,
   HStack,
@@ -20,31 +26,19 @@ import {
   Center,
   Spacer,
   Icon,
+  Container,
 } from "@chakra-ui/react";
+import { query, collection, orderBy } from "firebase/firestore";
 import NextLink from "next/link";
-import { useSelector, useDispatch } from "react-redux";
-import item, { fetchItem, updateItem } from "@/store/item";
-import { fetchComments } from "@/store/comment";
-import { fetchBiddings } from "@/store/bidding";
-import DialogImage from "@/components/pages/shop/DialogImage";
-
-import ItemMenu from "@/components/pages/item/ItemMenu";
-import LikeButton from "@/components/ui/LikeButton";
-
-import DisplayItemStatus from "@/components/pages/item/DisplayItemStatus";
-
-import { currentBiddingPrice } from "@/plugins/mixin";
-import { ToFinish, ToPrice } from "@/plugins/filter";
-import { GoCommentDiscussion } from "react-icons/go";
-
-import useSyncTime from "@/helpers/clock";
+import { useRouter } from "next/router";
+import { useRef, useEffect } from "react";
 import { useState } from "react";
+import { GoCommentDiscussion } from "react-icons/go";
+import { useSelector, useDispatch } from "react-redux";
 
 const ItemShow = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const currentSeconds = useSyncTime(1000);
-
   const [isSelling, setIsSelling] = useState(false);
 
   const { itemId } = router.query;
@@ -97,23 +91,7 @@ const ItemShow = () => {
     if (bindItem?.itemStatus === 3) {
       setIsSelling(true);
     }
-  }, [bindItem]);
-
-  useEffect(() => {
-    if (
-      bindItem &&
-      bindItem.itemStatus === 3 &&
-      bindItem.sale.finishedAt.seconds < currentSeconds
-    ) {
-      dispatch(
-        updateItem({
-          id: bindItem.id,
-          itemStatus: 4,
-        })
-      );
-      setIsSelling(false);
-    }
-  }, [currentSeconds]);
+  }, [bindItem?.itemStatus]);
 
   const openDialogBidding = () => {
     dialogPostBidding.current.openDialog();
@@ -128,10 +106,8 @@ const ItemShow = () => {
       {bindItem && bindBiddings && (
         <>
           <HStack align="start" position="relative">
-            <Box position="absolute" top="-30px" right="0" zIndex="2">
-              <DisplayItemStatus
-                itemStatus={bindItem.itemStatus}
-              ></DisplayItemStatus>
+            <Box position="absolute" top="-30px" right="left" zIndex="2">
+              <DisplayItemStatus item={bindItem}></DisplayItemStatus>
             </Box>
 
             <Stack width="70%">
@@ -161,10 +137,7 @@ const ItemShow = () => {
             </Stack>
 
             <Box width="30%" p="5" position="relative">
-              <ItemMenu
-                itemId={bindItem.id}
-                itemStatus={bindItem.itemStatus}
-              ></ItemMenu>
+              <ItemMenu item={bindItem}></ItemMenu>
 
               <Heading as="h1" fontSize="md">
                 {bindItem.name}
@@ -195,9 +168,10 @@ const ItemShow = () => {
                     </Text>
                     <Spacer></Spacer>
                     <Text fontWeight={700} fontSize="xs">
-                      {ToFinish({
-                        finishedSeconds: bindItem.sale.finishedAt.seconds,
-                      })}
+                      <DisplayTimeToFinish
+                        item={bindItem}
+                        isSync={true}
+                      ></DisplayTimeToFinish>
                     </Text>
                   </Stack>
 
@@ -298,8 +272,12 @@ const ItemShow = () => {
           <Box width="600px" mx="auto" p="10">
             <Text fontSize="sm">{bindItem.description}</Text>
           </Box>
-          {/* dialog */}
 
+          <Container w="100%" maxW="1000px">
+            <SuggestItemsList itemId={bindItem.id}></SuggestItemsList>
+          </Container>
+
+          {/* dialog */}
           {bindItem.sale.startedAt && (
             <>
               {isSelling && (

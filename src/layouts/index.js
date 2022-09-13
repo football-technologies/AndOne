@@ -1,10 +1,9 @@
 import SideNavBasic from "@/components/layouts/sidenav/SideNavBasic";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import FtSearchBox from "@/components/ui/FtSearchBox";
 import { auth } from "@/plugins/firebase";
-import { onAuthStateChanged } from "firebase/auth";
-import { login, logout } from "@/store/account";
 import { db } from "@/plugins/firebase";
+import { login, logout } from "@/store/account";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   getDocs,
   where,
@@ -13,6 +12,8 @@ import {
   getDoc,
   doc,
 } from "firebase/firestore";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 const DefaultLayout = ({ children }) => {
   const dispatch = useDispatch();
@@ -37,15 +38,17 @@ const DefaultLayout = ({ children }) => {
         });
 
         const secret = null;
-        await getDoc(doc(db, `users/${user.id}/secrets`, user.id)).then(
-          async (doc) => {
-            if (doc.id) {
-              secret = doc.data();
+        if (user) {
+          await getDoc(doc(db, `users/${user.id}/secrets`, user.id)).then(
+            async (doc) => {
+              if (doc.id) {
+                secret = doc.data();
+              }
             }
-          }
-        );
+          );
+        }
 
-        if (user && secret) {
+        if (secret) {
           dispatch(
             login({
               id: user.id,
@@ -71,6 +74,7 @@ const DefaultLayout = ({ children }) => {
       </header>
 
       <article id="ftMain">
+        <FtSearchBox></FtSearchBox>
         <main id="ftMainContainer">{children}</main>
       </article>
     </>

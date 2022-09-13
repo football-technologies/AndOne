@@ -1,3 +1,7 @@
+import DisplayTimeToFinish from "@/components/pages/item/DisplayTimeToFinish";
+import { ToPrice } from "@/plugins/filter";
+import { db } from "@/plugins/firebase";
+import { currentBiddingPrice } from "@/plugins/mixin";
 import {
   Stack,
   Image,
@@ -7,13 +11,9 @@ import {
   Box,
   AspectRatio,
 } from "@chakra-ui/react";
-import NextLink from "next/link";
-import { currentBiddingPrice } from "@/plugins/mixin";
-import { ToFinish, ToPrice } from "@/plugins/filter";
-import { useEffect } from "react";
-import { db } from "@/plugins/firebase";
 import { query, collection, orderBy, onSnapshot } from "firebase/firestore";
-
+import NextLink from "next/link";
+import { useEffect } from "react";
 import { useState } from "react";
 
 const ItemMiddleCard = ({ item }) => {
@@ -71,6 +71,7 @@ const ItemMiddleCard = ({ item }) => {
     <>
       <Stack
         w="100%"
+        maxW="300px"
         borderWidth="1px"
         borderRadius="10px"
         overflow="hidden"
@@ -109,9 +110,7 @@ const ItemMiddleCard = ({ item }) => {
                     {ToPrice(currentPrice)}
                   </Text>
                   <Text fontSize="xs" className="nl2br" textAlign="right">
-                    {ToFinish({
-                      finishedSeconds: item.sale.finishedAt.seconds,
-                    })}
+                    <DisplayTimeToFinish item={item}></DisplayTimeToFinish>
                   </Text>
                 </Stack>
               ) : (

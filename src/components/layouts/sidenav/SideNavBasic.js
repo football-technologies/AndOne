@@ -1,9 +1,8 @@
-import SideNavWithoutLogin from "./SideNavWithoutLogin";
 import SideNavWithLogin from "./SideNavWithLogin";
-import { useSelector } from "react-redux";
-
+import SideNavWithoutLogin from "./SideNavWithoutLogin";
 import { Image } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useSelector } from "react-redux";
 
 const SideNavBasic = () => {
   const currentUser = useSelector((state) => state.account);

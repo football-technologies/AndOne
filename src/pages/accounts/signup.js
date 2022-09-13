@@ -1,8 +1,11 @@
-import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
-
+import useFtToast from "@/components/ui/FtToast";
+import scheme from "@/helpers/scheme";
+import { auth } from "@/plugins/firebase";
+import { ftCreateId } from "@/plugins/mixin";
+import rules from "@/plugins/validation";
+import { signup } from "@/store/account";
+import { createSecret } from "@/store/secret";
+import { create } from "@/store/user";
 import {
   FormControl,
   FormLabel,
@@ -16,20 +19,13 @@ import {
   Icon,
   Heading,
 } from "@chakra-ui/react";
-import { BiHide, BiShow } from "react-icons/bi";
-import useFtToast from "@/components/ui/FtToast";
-
-import { auth } from "@/plugins/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-
-import { create } from "@/store/user";
-import { createSecret } from "@/store/secret";
-import { signup } from "@/store/account";
-
 import _ from "lodash";
-import rules from "@/plugins/validation";
-import scheme from "@/helpers/scheme";
-import { ftCreateId } from "@/plugins/mixin";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { BiHide, BiShow } from "react-icons/bi";
+import { useDispatch } from "react-redux";
 
 const Signup = () => {
   const [show, setShow] = useState(false);

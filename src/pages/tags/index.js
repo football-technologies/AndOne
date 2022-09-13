@@ -1,11 +1,10 @@
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
-
-import NextLink from "next/link";
+import { db } from "@/plugins/firebase";
 import { fetchTags } from "@/store/tag";
 import { Button } from "@chakra-ui/react";
-import { db } from "@/plugins/firebase";
 import { query, collection } from "firebase/firestore";
+import NextLink from "next/link";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 const TagIndex = () => {
   const bindTags = useSelector((state) => state.tag.tags);

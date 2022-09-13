@@ -1,10 +1,10 @@
-import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { db } from "@/plugins/firebase";
-import { query, collection, where, getDocs } from "firebase/firestore";
 import ShopMiddleCard from "@/components/cards/ShopMiddleCard";
-import _ from "lodash";
+import { db } from "@/plugins/firebase";
 import { Wrap, Stack, Text } from "@chakra-ui/react";
+import { query, collection, where, getDocs } from "firebase/firestore";
+import _ from "lodash";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const Likes = () => {
   const currentUser = useSelector((state) => state.account);
@@ -66,21 +66,21 @@ const Likes = () => {
 
   return (
     <>
-      <Wrap p="5">
-        {shops && shops.length > 0 ? (
-          shops.map((shop) => {
+      {shops && shops.length > 0 ? (
+        <Wrap p="5">
+          {shops.map((shop) => {
             return (
               <Stack w="31%" p="1%" key={shop.id}>
                 <ShopMiddleCard shop={shop}></ShopMiddleCard>;
               </Stack>
             );
-          })
-        ) : (
-          <Text display="block" textAlign="center" p="10">
-            Likeしたショップは、まだありません。
-          </Text>
-        )}
-      </Wrap>
+          })}
+        </Wrap>
+      ) : (
+        <Text display="block" textAlign="center" p="10">
+          Likeしたショップは、まだありません。
+        </Text>
+      )}
     </>
   );
 };

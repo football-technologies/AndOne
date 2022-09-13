@@ -1,18 +1,15 @@
-import { useState, forwardRef, useImperativeHandle } from "react";
-
 import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
   Box,
-  Text,
   Stack,
   AspectRatio,
   Image,
 } from "@chakra-ui/react";
+import { useState, forwardRef, useImperativeHandle } from "react";
 
 const DialogImage = forwardRef((props, ref) => {
   const [dialog, setDialog] = useState(false);

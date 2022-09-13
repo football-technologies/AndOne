@@ -1,7 +1,7 @@
+import { Button, Text } from "@chakra-ui/react";
 import { forwardRef } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Button, Text } from "@chakra-ui/react";
 
 const FtDateTimePicker = forwardRef((props, ref) => {
   const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (

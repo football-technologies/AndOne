@@ -1,18 +1,13 @@
-import { useState, useRef, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/router";
-
-import { createComment } from "@/store/comment";
-import { ftCreateId } from "@/plugins/mixin";
-import useFtToast from "@/components/ui/FtToast";
-
+import DisplayItemComments from "./DisplayItemComments";
 import {
   FtMiddleButtonOutlined,
   FtSmallButton,
 } from "@/components/ui/FtButton";
-
-import DisplayItemComments from "./DisplayItemComments";
-
+import useFtToast from "@/components/ui/FtToast";
+import scheme from "@/helpers/scheme";
+import { db } from "@/plugins/firebase";
+import { ftCreateId } from "@/plugins/mixin";
+import { createComment } from "@/store/comment";
 import {
   Icon,
   Box,
@@ -29,13 +24,12 @@ import {
   Button,
   Textarea,
 } from "@chakra-ui/react";
-import { GoCommentDiscussion } from "react-icons/go";
-
-import { db } from "@/plugins/firebase";
 import { doc } from "firebase/firestore";
-
-import scheme from "@/helpers/scheme";
 import _ from "lodash";
+import { useRouter } from "next/router";
+import { useState, useRef, useEffect } from "react";
+import { GoCommentDiscussion } from "react-icons/go";
+import { useDispatch, useSelector } from "react-redux";
 
 const ItemComments = () => {
   const [dialog, setDialog] = useState(false);
@@ -141,6 +135,11 @@ const ItemComments = () => {
     if (replyId) {
       comment.parent.id = replyId;
       comment.parent.ref = doc(db, `items/${itemId}/comments/${replyId}`);
+
+      comment.shop.id = bindItem.shop.id;
+      comment.shop.name = bindItem.shop.name;
+      comment.shop.icon = bindItem.shop.icon;
+      comment.shop.ref = doc(db, `shops/${bindItem.shop.id}`);
     }
 
     initialFocusRef.current.value = "";

@@ -1,8 +1,8 @@
 import { initializeApp, getApps } from "firebase/app";
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
-import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
-import { getStorage, ref } from "firebase/storage";
+import { getStorage } from "firebase/storage";
 
 const REGION_TOKYO = "asia-northeast1";
 

@@ -1,11 +1,10 @@
-import { useForm } from "react-hook-form";
-import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/router";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchUser, updateUser } from "@/store/user";
-import { fetchSecret, updateSecret } from "@/store/secret";
+import { FtSmallButtonOutlined } from "@/components/ui/FtButton";
+import useFtToast from "@/components/ui/FtToast";
+import { UploadIcon } from "@/components/ui/ImageUpload";
+import rules from "@/plugins/validation";
 import { updateAccount } from "@/store/account";
-
+import { fetchSecret, updateSecret } from "@/store/secret";
+import { fetchUser, updateUser } from "@/store/user";
 import {
   FormControl,
   FormLabel,
@@ -20,13 +19,11 @@ import {
   Avatar,
   Text,
 } from "@chakra-ui/react";
-import useFtToast from "@/components/ui/FtToast";
-import { FtSmallButtonOutlined } from "@/components/ui/FtButton";
-
-import { UploadIcon } from "@/components/ui/ImageUpload";
-
 import _ from "lodash";
-import rules from "@/plugins/validation";
+import { useRouter } from "next/router";
+import { useState, useRef, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useSelector, useDispatch } from "react-redux";
 
 const Edit = () => {
   const [url, setUrl] = useState(null);

@@ -1,8 +1,7 @@
-import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useRouter } from "next/router";
-
+import useFtToast from "@/components/ui/FtToast";
+import { db, auth } from "@/plugins/firebase";
+import rules from "@/plugins/validation";
+import { login } from "@/store/account";
 import {
   FormControl,
   FormLabel,
@@ -16,11 +15,7 @@ import {
   Heading,
   Icon,
 } from "@chakra-ui/react";
-import useFtToast from "@/components/ui/FtToast";
-
-import { BiHide, BiShow } from "react-icons/bi";
-
-import { db, auth } from "@/plugins/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import {
   getDocs,
   where,
@@ -29,11 +24,11 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
-import { signInWithEmailAndPassword } from "firebase/auth";
-
-import { login } from "@/store/account";
-
-import rules from "@/plugins/validation";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { BiHide, BiShow } from "react-icons/bi";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const [show, setShow] = useState(false);
