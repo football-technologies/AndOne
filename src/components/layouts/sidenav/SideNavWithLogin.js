@@ -23,9 +23,6 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
-  Button,
-  Badge,
-  Circle,
 } from "@chakra-ui/react";
 import {
   query,
@@ -43,7 +40,6 @@ import {
   MdOutlineAlarmOn,
   MdOutlineNotificationsNone,
   MdOutlineMoreVert,
-  MdPhoto,
 } from "react-icons/md";
 import { RiHeartAddLine } from "react-icons/ri";
 import { useSelector, useDispatch } from "react-redux";
