@@ -269,7 +269,6 @@ const ShopForm = () => {
       ftToast("shopを更新しました");
     }
 
-    console.log(">>>>>>>>> finish submit");
     router.push(`/shops/${editShop.id}`);
     // setIsLoading(false);
   };

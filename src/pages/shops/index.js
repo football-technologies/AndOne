@@ -9,7 +9,6 @@ import { useSelector, useDispatch } from "react-redux";
 const ShopIndex = () => {
   const bindShops = useSelector((state) => state.shop.shops);
 
-  console.log(">>>>>>>> bindShops", bindShops);
   const dispatch = useDispatch();
 
   useEffect(() => {

@@ -81,7 +81,6 @@ const ShopShow = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      console.log(router.query);
       dispatch(
         fetchShop({
           query: `shops/${shopId}`,

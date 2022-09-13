@@ -26,7 +26,5 @@ exports.onUpdate = functions
           afterTags: after.tags,
         });
       }
-
-      console.log(">>>>>>>>>>>>> finish item.onUpdate");
     })
   );

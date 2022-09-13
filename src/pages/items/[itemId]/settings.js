@@ -85,8 +85,6 @@ const ItemSettings = () => {
   }, [bindItem]);
 
   const onSubmit = async (data) => {
-    console.log(">>>>>>>>> submit", data);
-
     if (startedDate >= finishedDate) {
       ftToast("終了日時は、開始日時より後ろで設定してください");
       return false;

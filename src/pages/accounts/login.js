@@ -45,7 +45,6 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(">>>>>>>>>>>> data", data);
     setIsLoading(true);
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(async (auth) => {
@@ -91,7 +90,6 @@ const Login = () => {
         router.push("/");
       })
       .catch((error) => {
-        console.log(">>>>>>>>>>>>> error", error.message);
         setIsLoading(false);
         ftToast(error.message);
       });

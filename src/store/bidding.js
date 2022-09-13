@@ -55,8 +55,6 @@ const bidding = createSlice({
 
 const fetchBidding = ({ query, type, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchBidding");
-
     let unsubscribe = null;
 
     if (isOnSnapshot) {
@@ -83,8 +81,6 @@ const fetchBidding = ({ query, type, isOnSnapshot = false }) => {
 
 const fetchBiddings = ({ type, query, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchBiddings");
-
     let unsubscribe = null;
     const newBiddings = [];
 

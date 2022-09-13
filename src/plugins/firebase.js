@@ -16,8 +16,6 @@ const config = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-console.log(">>>>>>>>>> called firebase.js", config);
-
 const apps = getApps();
 if (!apps.length) {
   initializeApp(config);

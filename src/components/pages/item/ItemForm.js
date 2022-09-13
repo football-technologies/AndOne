@@ -182,7 +182,6 @@ const ItemForm = () => {
         .split(",");
 
       const tagsDividedByComma = _.uniq(replaceTagsName);
-      console.log(tagsDividedByComma);
 
       if (tagsDividedByComma.length > 10) {
         ftToast("タグは10個以上設定することができません");

@@ -38,8 +38,6 @@ const shop = createSlice({
 
 const fetchShop = ({ query, type, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchShop");
-
     let unsubscribe = null;
 
     if (isOnSnapshot) {
@@ -66,8 +64,6 @@ const fetchShop = ({ query, type, isOnSnapshot = false }) => {
 
 const fetchShops = ({ type, query, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchShops");
-
     let unsubscribe = null;
     const newShops = [];
 
