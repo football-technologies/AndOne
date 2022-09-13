@@ -39,7 +39,7 @@ const DisplayItemStatus = ({ item }) => {
   return (
     <>
       {isShopOwner && (
-        <Tag rounded="none" size="md" bgColor={row.color} color="red.200">
+        <Tag rounded="none" size="md" colorScheme={row.color}>
           <TagLeftIcon as={getIcon(row.icon)} />
           <TagLabel>{row.text}</TagLabel>
         </Tag>

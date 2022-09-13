@@ -84,7 +84,7 @@ const ItemMenu = ({ item }) => {
                     </Text>
                   </Box>
                 )}
-                {item.itemStatus > 2 && (
+                {item.itemStatus >= 2 && (
                   <Box onClick={() => closeItem()}>
                     <Text fontSize="sm" p="5">
                       アイテムを下書きに設定
