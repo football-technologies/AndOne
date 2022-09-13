@@ -19,7 +19,7 @@ const MyShopItemsList = ({ shopId }) => {
         query: query(
           collection(db, "items"),
           where("shop.id", "==", shopId),
-          orderBy("createdAt", "desc")
+          where("itemStatus", ">=", 2)
         ),
         isOnSnapshot: true,
         type: "fetch",

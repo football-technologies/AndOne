@@ -39,15 +39,17 @@ const DefaultLayout = ({ children }) => {
         });
 
         const secret = null;
-        await getDoc(doc(db, `users/${user.id}/secrets`, user.id)).then(
-          async (doc) => {
-            if (doc.id) {
-              secret = doc.data();
+        if (user) {
+          await getDoc(doc(db, `users/${user.id}/secrets`, user.id)).then(
+            async (doc) => {
+              if (doc.id) {
+                secret = doc.data();
+              }
             }
-          }
-        );
+          );
+        }
 
-        if (user && secret) {
+        if (secret) {
           dispatch(
             login({
               id: user.id,

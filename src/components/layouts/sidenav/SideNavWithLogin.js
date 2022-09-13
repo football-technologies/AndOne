@@ -3,7 +3,11 @@ import { useSelector, useDispatch } from "react-redux";
 import useLogout from "../Logout";
 
 import { useEffect } from "react";
-import { fetchBiddingItems, fetchBiddingItemIds } from "@/store/account";
+import {
+  fetchBiddingItems,
+  fetchBiddingItemIds,
+  fetchShopItems,
+} from "@/store/account";
 import { db } from "@/plugins/firebase";
 import {
   query,
@@ -31,13 +35,19 @@ import {
   MenuItem,
   MenuDivider,
   Button,
+  Badge,
+  Circle,
 } from "@chakra-ui/react";
 import {
   MdOutlineCollections,
   MdOutlineAlarmOn,
   MdOutlineNotificationsNone,
   MdOutlineMoreVert,
+  MdPhoto,
 } from "react-icons/md";
+
+import { FaRegImages } from "react-icons/fa";
+
 import { FaRegHourglass } from "react-icons/fa";
 import { RiHeartAddLine } from "react-icons/ri";
 
@@ -52,36 +62,31 @@ const SideNavWithoutLogin = () => {
     (state) => state.account.biddingItemIds
   );
   const bindBiddingItems = useSelector((state) => state.account.biddingItems);
+  const bindShopItems = useSelector((state) => state.account.shopItems);
 
   const links = [
+    // {
+    //   id: 1,
+    //   name: "My Shop Items",
+    //   url: `/shops/${currentUser.shopId}/items`,
+    //   icon: MdOutlineCollections,
+    // },
     {
-      id: 1,
-      name: "My Collections",
-
-      url: `/users/${currentUser.id}/collections`,
-
-      icon: MdOutlineCollections,
-    },
-    {
-      id: 2,
       name: "Bidding Items",
       url: `/users/${currentUser.id}/biddings`,
       icon: FaRegHourglass,
     },
     {
-      id: 3,
       name: "Watch Items",
       url: `/users/${currentUser.id}/watches`,
       icon: MdOutlineAlarmOn,
     },
     {
-      id: 4,
       name: "Like Shops",
       url: `/users/${currentUser.id}/likes`,
       icon: RiHeartAddLine,
     },
     {
-      id: 5,
       name: "Notifications",
       url: `/users/${currentUser.id}/notifications`,
       icon: MdOutlineNotificationsNone,
@@ -99,6 +104,17 @@ const SideNavWithoutLogin = () => {
             // where("status", "==", 1)
           ),
           limit: 5,
+          isOnSnapshot: true,
+          type: "fetch",
+        })
+      );
+
+      dispatch(
+        fetchShopItems({
+          query: query(
+            collection(db, "items"),
+            where("shop.id", "==", currentUser.shopId)
+          ),
           isOnSnapshot: true,
           type: "fetch",
         })
@@ -195,8 +211,32 @@ const SideNavWithoutLogin = () => {
 
       <Box py="10" px="3">
         <List spacing={5}>
+          {currentUser.shopId && (
+            <ListItem>
+              <NextLink href={`/shops/${currentUser.shopId}/items`} passHref>
+                <a>
+                  <Text className="ftTextLink">
+                    <ListIcon as={FaRegImages} mr="5" />
+                    My Shop Items
+                    <Text
+                      bg="primary"
+                      rounded="full"
+                      px="1.5"
+                      ml="2"
+                      color="white"
+                      fontSize="xs"
+                      display="inline-block"
+                    >
+                      {bindShopItems?.length}
+                    </Text>
+                  </Text>
+                </a>
+              </NextLink>
+            </ListItem>
+          )}
+
           {links.map((link) => (
-            <ListItem key={link.id}>
+            <ListItem key={link.name}>
               <NextLink href={link.url} passHref>
                 <a>
                   <Text className="ftTextLink">
