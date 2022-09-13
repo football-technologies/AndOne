@@ -1,6 +1,7 @@
 const functions = require("firebase-functions").region("asia-northeast1");
 const sentryWrapper = require("../../common/sentryErrorWrapper");
 const deleteMasterTag = require("../module/deleteMasterTag");
+const _ = require("lodash");
 
 const runtimeOpts = {
   timeoutSeconds: 540,
@@ -17,7 +18,9 @@ exports.onUpdate = functions
       const before = snapshot.before.data();
       const after = snapshot.after.data();
 
-      if (before.tags !== after.tags) {
+      const isSameTags = _.isEqual(before.tags, after.tags);
+
+      if (!isSameTags) {
         await deleteMasterTag({
           beforeTags: before.tags,
           afterTags: after.tags,
