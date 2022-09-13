@@ -1,3 +1,4 @@
+import { FtLargeButton } from "@/components/ui/FtButton";
 import useFtToast from "@/components/ui/FtToast";
 import scheme from "@/helpers/scheme";
 import { auth } from "@/plugins/firebase";
@@ -92,14 +93,9 @@ const Signup = () => {
       });
   };
 
-  const form = {
-    width: "400px",
-    margin: "45px auto",
-  };
-
   return (
-    <Box bg="white" h="100vh" w="90%" mx="auto">
-      <form onSubmit={handleSubmit(onSubmit)} style={form}>
+    <Box h="100vh" w="400px" mx="auto">
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Heading py="50px" as="h3" size="lg">
           Signup
         </Heading>
@@ -197,14 +193,14 @@ const Signup = () => {
           </FormErrorMessage>
         </FormControl>
         <VStack mt="20px">
-          <Button
+          <FtLargeButton
             colorScheme="pink"
             type="submit"
             isLoading={isLoading}
             mt="20px"
           >
             アカウントを作成
-          </Button>
+          </FtLargeButton>
         </VStack>
       </form>
     </Box>
