@@ -77,6 +77,7 @@ const ItemShow = () => {
           type: "fetch",
         })
       );
+
       dispatch(
         fetchComments({
           query: query(collection(db, `items/${itemId}/comments`)),
@@ -84,6 +85,35 @@ const ItemShow = () => {
           type: "fetch",
         })
       );
+
+      return () => {
+        dispatch(
+          fetchItem({
+            query: `items/${itemId}`,
+            isOnSnapshot: true,
+            type: "delete",
+          })
+        );
+
+        dispatch(
+          fetchBiddings({
+            query: query(
+              collection(db, `items/${itemId}/biddings`),
+              orderBy("price", "desc")
+            ),
+            isOnSnapshot: true,
+            type: "delete",
+          })
+        );
+
+        dispatch(
+          fetchComments({
+            query: query(collection(db, `items/${itemId}/comments`)),
+            isOnSnapshot: true,
+            type: "delete",
+          })
+        );
+      };
     }
   }, [router.isReady, itemId]);
 

@@ -22,7 +22,21 @@ const MyShopItemsList = ({ shopId }) => {
         type: "fetch",
       })
     );
-  }, []);
+
+    return () => {
+      dispatch(
+        fetchItems({
+          query: query(
+            collection(db, "items"),
+            where("shop.id", "==", shopId),
+            where("itemStatus", ">=", 2)
+          ),
+          isOnSnapshot: true,
+          type: "delete",
+        })
+      );
+    };
+  }, [dispatch]);
 
   return (
     <>

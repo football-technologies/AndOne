@@ -49,12 +49,9 @@ const Signup = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(">>>>>>>>>>>>>> data", data);
     setIsLoading(true);
     createUserWithEmailAndPassword(auth, data.email, data.password)
       .then(async (auth) => {
-        console.log(">>>>>>>>>>> auth.user", auth.user);
-
         await updateProfile(auth.user, {
           displayName: data.name,
         });
@@ -82,12 +79,9 @@ const Signup = () => {
 
         setIsLoading(false);
 
-        console.log(">>>>>>>> Create User Done");
         router.push("/");
       })
       .catch((error) => {
-        console.log(">>>>>>>>>>>>>> error", error.message);
-
         ftToast(error.message);
         setIsLoading(false);
       });

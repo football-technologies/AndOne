@@ -108,6 +108,28 @@ const SideNavWithoutLogin = () => {
           type: "fetch",
         })
       );
+
+      return () => {
+        fetchBiddingItemIds({
+          query: query(
+            collectionGroup(db, "biddings"),
+            where("user.id", "==", currentUser.id),
+            orderBy("created", "desc")
+          ),
+          limit: 5,
+          isOnSnapshot: true,
+          type: "delete",
+        });
+
+        fetchShopItems({
+          query: query(
+            collection(db, "items"),
+            where("shop.id", "==", currentUser.shopId)
+          ),
+          isOnSnapshot: true,
+          type: "delete",
+        });
+      };
     }
   }, []);
 
@@ -123,6 +145,19 @@ const SideNavWithoutLogin = () => {
           type: "fetch",
         })
       );
+
+      return () => {
+        dispatch(
+          fetchBiddingItems({
+            query: query(
+              collection(db, "items"),
+              where("id", "in", bindBiddingItemIds)
+            ),
+            isOnSnapshot: true,
+            type: "delete",
+          })
+        );
+      };
     }
   }, [bindBiddingItemIds]);
 

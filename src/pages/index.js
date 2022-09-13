@@ -20,7 +20,18 @@ export default function Home() {
         type: "fetch",
       })
     );
+
+    return () => {
+      dispatch(
+        fetchItems({
+          query: query(collection(db, "items"), where("itemStatus", ">=", 2)),
+          isOnSnapshot: true,
+          type: "delete",
+        })
+      );
+    };
   }, []);
+
   return (
     <>
       {shuffledItems && (

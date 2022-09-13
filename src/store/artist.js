@@ -29,8 +29,6 @@ const artist = createSlice({
 
 const fetchArtist = ({ query, type, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchArtist");
-
     let unsubscribe = null;
 
     if (isOnSnapshot) {
@@ -57,8 +55,6 @@ const fetchArtist = ({ query, type, isOnSnapshot = false }) => {
 
 const fetchArtists = ({ type, query, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchArtists");
-
     let unsubscribe = null;
     const newArtists = [];
 

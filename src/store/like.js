@@ -47,8 +47,6 @@ const like = createSlice({
 
 const fetchLike = ({ query, type, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchLike");
-
     let unsubscribe = null;
 
     if (isOnSnapshot) {
@@ -75,8 +73,6 @@ const fetchLike = ({ query, type, isOnSnapshot = false }) => {
 
 const fetchLikes = ({ type, query, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchLikes");
-
     let unsubscribe = null;
     const newLikes = [];
 

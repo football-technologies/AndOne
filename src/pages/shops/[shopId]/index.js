@@ -81,7 +81,6 @@ const ShopShow = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      console.log(router.query);
       dispatch(
         fetchShop({
           query: `shops/${shopId}`,
@@ -89,6 +88,16 @@ const ShopShow = () => {
           type: "fetch",
         })
       );
+
+      return () => {
+        dispatch(
+          fetchShop({
+            query: `shops/${shopId}`,
+            isOnSnapshot: true,
+            type: "delete",
+          })
+        );
+      };
     }
   }, [router.isReady]);
 

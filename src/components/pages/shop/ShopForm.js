@@ -89,6 +89,7 @@ const ShopForm = () => {
         return () => {
           setEditShop(null);
           setTags(null);
+          setIsEditMode(false);
         };
       }
     }
@@ -110,12 +111,13 @@ const ShopForm = () => {
 
         setEditShop(shop);
       }
-    }
 
-    return () => {
-      setEditShop(null);
-      setTags(null);
-    };
+      return () => {
+        setEditShop(null);
+        setTags(null);
+        setIsEditMode(false);
+      };
+    }
   }, [bindShop]);
 
   const {
@@ -269,7 +271,6 @@ const ShopForm = () => {
       ftToast("shopを更新しました");
     }
 
-    console.log(">>>>>>>>> finish submit");
     router.push(`/shops/${editShop.id}`);
     // setIsLoading(false);
   };

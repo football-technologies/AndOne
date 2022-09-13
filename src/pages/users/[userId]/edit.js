@@ -105,7 +105,6 @@ const Edit = () => {
   };
 
   const onSubmit = (data) => {
-    console.log(">>>>>>>>>>>>>> data", data);
 
     user.displayName = data.displayName;
     user.screenName = data.screenName;

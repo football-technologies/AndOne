@@ -51,8 +51,6 @@ const comment = createSlice({
 
 const fetchComment = ({ query, type, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchComment");
-
     let unsubscribe = null;
 
     if (isOnSnapshot) {
@@ -79,8 +77,6 @@ const fetchComment = ({ query, type, isOnSnapshot = false }) => {
 
 const fetchComments = ({ type, query, isOnSnapshot = false }) => {
   return async (dispatch, getState) => {
-    console.log(">>>>>>>>> called fetchComments");
-
     let unsubscribe = null;
     const newComments = [];
 
