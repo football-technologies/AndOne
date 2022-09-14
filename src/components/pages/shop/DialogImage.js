@@ -45,24 +45,22 @@ const DialogImage = forwardRef((props, ref) => {
             <Box w="15%">
               {images.map((img, index) => {
                 return (
-                  <>
-                    <Box
-                      p="2%"
-                      pl="0"
-                      border="2px"
-                      borderColor={index === targetIndex ? "primary" : "white"}
-                      key={index}
-                      onClick={() => showNextImage({ img, index })}
-                    >
-                      <AspectRatio ratio={1}>
-                        <Image
-                          rounded="md"
-                          src={img.url}
-                          className="ftHover"
-                        ></Image>
-                      </AspectRatio>
-                    </Box>
-                  </>
+                  <Box
+                    p="2%"
+                    pl="0"
+                    border="2px"
+                    borderColor={index === targetIndex ? "primary" : "white"}
+                    key={index}
+                    onClick={() => showNextImage({ img, index })}
+                  >
+                    <AspectRatio ratio={1}>
+                      <Image
+                        rounded="md"
+                        src={img.url}
+                        className="ftHover"
+                      ></Image>
+                    </AspectRatio>
+                  </Box>
                 );
               })}
             </Box>

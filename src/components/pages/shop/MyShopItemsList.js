@@ -65,7 +65,7 @@ const MyShopItemsList = ({ shopId }) => {
         })
       );
     };
-  }, [dispatch]);
+  }, [dispatch, shopId]);
 
   const tabClick = (type) => {
     setTabType(type);

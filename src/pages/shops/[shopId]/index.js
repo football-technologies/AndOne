@@ -99,7 +99,7 @@ const ShopShow = () => {
         );
       };
     }
-  }, [router.isReady]);
+  }, [router.isReady, shopId]);
 
   return (
     <>
