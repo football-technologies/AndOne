@@ -19,6 +19,7 @@ import {
   InputRightElement,
   Icon,
   Heading,
+  Text,
 } from "@chakra-ui/react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import _ from "lodash";
@@ -104,6 +105,9 @@ const Signup = () => {
               pattern: rules.name,
             })}
           />
+          <Text fontSize="sm" pt="2" color="darkGray">
+            半角英数字のみがご利用できます
+          </Text>
           <FormErrorMessage>
             {errors.name && errors.name.message}
           </FormErrorMessage>
@@ -146,6 +150,11 @@ const Signup = () => {
               </Button>
             </InputRightElement>
           </InputGroup>
+
+          <Text fontSize="sm" pt="2" color="darkGray">
+            8文字以上を推奨しています。
+          </Text>
+
           <FormErrorMessage>
             {errors.password && errors.password.message}
           </FormErrorMessage>
