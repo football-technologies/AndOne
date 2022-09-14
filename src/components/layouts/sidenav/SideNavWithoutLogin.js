@@ -48,7 +48,7 @@ const SideNavWithoutLogin = () => {
             colorScheme="pink"
             onClick={toSignupPage}
           >
-            アカウント作成をする
+            アカウントを作成する
           </FtMiddleButtonOutlined>
         </Stack>
         <Stack>
