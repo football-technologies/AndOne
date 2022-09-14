@@ -21,22 +21,24 @@ app.use(basicAuth(USERNAME, PASSWORD));
 
 const nextjsHandle = nextjsServer.getRequestHandler();
 
+// cold start対策
+// TODO: 料金が発生。不要な時は0に設定すること
+const MIN_INSTANCE = functions.config().basic.env === "production" ? 1 : 0;
+
 const runtimeOpts = {
   timeoutSeconds: 540,
   memory: "8GB",
-  // TODO: 料金が発生。不要な時は0に設定すること
-  minInstances: 1,
+  minInstances: MIN_INSTANCE,
 };
 
 app.use(async (req, res) => {
-  module.exports = functions
-    .runWith(runtimeOpts)
-    .https.onRequest(async (req, res) => {
-      // exports.nextjsFunc = https.onRequest((req, res) => {
-      res.set("Cache-Control", "public, max-age=600, s-maxage=1200");
-      return nextjsServer.prepare().then(() => nextjsHandle(req, res));
-    });
+  res.set("Cache-Control", "public, max-age=600, s-maxage=1200");
+  return nextjsServer.prepare().then(() => nextjsHandle(req, res));
 });
+
+module.exports = functions
+  .runWith(runtimeOpts)
+  .https.onRequest(sentryWrapper(app));
 
 // module.exports = functions
 //   .runWith(runtimeOpts)
