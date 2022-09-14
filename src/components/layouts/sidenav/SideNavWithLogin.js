@@ -27,6 +27,7 @@ import {
 import { query, collection, where, collectionGroup } from "firebase/firestore";
 import NextLink from "next/link";
 import { useEffect } from "react";
+import { useState } from "react";
 import { FaRegImages } from "react-icons/fa";
 import { FaRegHourglass } from "react-icons/fa";
 import { MdOutlineAlarmOn, MdOutlineMoreVert } from "react-icons/md";
@@ -43,6 +44,7 @@ const SideNavWithoutLogin = () => {
   );
   const bindBiddingItems = useSelector((state) => state.account.biddingItems);
   const bindShopItems = useSelector((state) => state.account.shopItems);
+  const [shopItemsCounts, setShopItemsCounts] = useState(bindShopItems.length);
 
   const links = [
     {
@@ -68,14 +70,16 @@ const SideNavWithoutLogin = () => {
   ];
 
   useEffect(() => {
+    setShopItemsCounts(bindShopItems.length);
+  }, [bindShopItems]);
+
+  useEffect(() => {
     if (currentUser.id) {
       dispatch(
         fetchBiddingItemIds({
           query: query(
             collectionGroup(db, "biddings"),
             where("user.id", "==", currentUser.id)
-            // orderBy("createdAt", "desc")
-            // where("status", "==", 1)
           ),
           limit: 5,
           isOnSnapshot: true,
@@ -115,7 +119,7 @@ const SideNavWithoutLogin = () => {
         });
       };
     }
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (bindBiddingItemIds && bindBiddingItemIds.length > 0) {
@@ -144,7 +148,7 @@ const SideNavWithoutLogin = () => {
         );
       };
     }
-  }, [bindBiddingItemIds]);
+  }, [dispatch, bindBiddingItemIds]);
 
   return (
     <Stack>
@@ -236,7 +240,7 @@ const SideNavWithoutLogin = () => {
                       fontSize="xs"
                       display="inline-block"
                     >
-                      {bindShopItems?.length}
+                      {shopItemsCounts}
                     </Text>
                   </Box>
                 </a>
