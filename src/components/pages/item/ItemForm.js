@@ -218,8 +218,8 @@ const ItemForm = () => {
   const deleteItem = () => {
     editItem.status = 3;
     dispatch(updateItem(editItem));
-    ftToast("アイテムを削除しました");
-    router.push(`/items/${editItem.id}`);
+    ftToast("itemを削除しました");
+    router.push("/");
   };
 
   const form = {

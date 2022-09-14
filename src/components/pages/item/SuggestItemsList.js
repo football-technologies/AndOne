@@ -15,7 +15,11 @@ const SuggestItemsList = ({ itemId }) => {
   useEffect(() => {
     dispatch(
       fetchItems({
-        query: query(collection(db, "items"), where("id", "!=", itemId)),
+        query: query(
+          collection(db, "items"),
+          where("id", "!=", itemId),
+          where("status", "==", 1)
+        ),
         isOnSnapshot: false,
         type: "fetch",
       })

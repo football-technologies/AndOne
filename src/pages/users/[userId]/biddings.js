@@ -45,7 +45,8 @@ const Biddings = () => {
     for (const chunkedItemIds of _.chunk(itemIds, 10)) {
       const q = query(
         collection(db, `items`),
-        where("id", "in", chunkedItemIds)
+        where("id", "in", chunkedItemIds),
+        where("status", "==", 1)
       );
       await getDocs(q).then((snapshot) => {
         snapshot.forEach((doc) => {

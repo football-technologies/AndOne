@@ -44,7 +44,8 @@ const MyShopItemsList = ({ shopId }) => {
       fetchItems({
         query: query(
           collection(db, "items"),
-          where("shop.id", "==", shopId)
+          where("shop.id", "==", shopId),
+          where("status", "==", 1),
           // where("itemStatus", ">=", 2)
         ),
         isOnSnapshot: true,
@@ -57,7 +58,8 @@ const MyShopItemsList = ({ shopId }) => {
         fetchItems({
           query: query(
             collection(db, "items"),
-            where("shop.id", "==", shopId)
+            where("shop.id", "==", shopId),
+            where("status", "==", 1),
             // where("itemStatus", ">=", 2)
           ),
           isOnSnapshot: true,
