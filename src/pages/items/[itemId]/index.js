@@ -13,7 +13,7 @@ import { db } from "@/plugins/firebase";
 import { currentBiddingPrice } from "@/plugins/mixin";
 import { fetchBiddings } from "@/store/bidding";
 import { fetchComments } from "@/store/comment";
-import { fetchItem } from "@/store/item";
+import item, { fetchItem } from "@/store/item";
 import {
   Box,
   HStack,
@@ -46,6 +46,7 @@ const ItemShow = () => {
   const bindItem = useSelector((state) => state.item.item);
   const bindBiddings = useSelector((state) => state.bidding.biddings);
   const [isSelling, setIsSelling] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const { itemId } = router.query;
 
   const openDialogImage = (index) => {
@@ -121,7 +122,13 @@ const ItemShow = () => {
     } else {
       setIsSelling(false);
     }
-  }, [bindItem?.id, bindItem?.itemStatus]);
+
+    if (bindItem?.status === 1) {
+      setIsOpen(true);
+    } else {
+      setIsOpen(false);
+    }
+  }, [bindItem?.id, bindItem?.itemStatus, bindItem?.status]);
 
   const openDialogBidding = () => {
     dialogPostBidding.current.openDialog();
@@ -133,7 +140,7 @@ const ItemShow = () => {
 
   return (
     <>
-      {bindItem && bindBiddings && (
+      {bindItem && isOpen && (
         <>
           <HStack align="start" position="relative">
             <Box position="absolute" top="-30px" right="left" zIndex="2">
@@ -179,7 +186,7 @@ const ItemShow = () => {
                 name={bindItem.name}
               ></LikeButton>
 
-              {bindItem.sale.startedAt && (
+              {bindBiddings && bindItem.sale.startedAt && (
                 <Box>
                   <Stack
                     direction="row"
@@ -321,6 +328,10 @@ const ItemShow = () => {
 
           <DialogImage ref={dialogImage}></DialogImage>
         </>
+      )}
+
+      {bindItem && !isOpen && (
+        <Text p="10">このURLのアイテムは、削除されました。</Text>
       )}
     </>
   );
