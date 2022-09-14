@@ -91,7 +91,8 @@ const SideNavWithoutLogin = () => {
         fetchShopItems({
           query: query(
             collection(db, "items"),
-            where("shop.id", "==", currentUser.shopId)
+            where("shop.id", "==", currentUser.shopId),
+            where("status", "==", 1)
           ),
           isOnSnapshot: true,
           type: "fetch",
@@ -112,7 +113,8 @@ const SideNavWithoutLogin = () => {
         fetchShopItems({
           query: query(
             collection(db, "items"),
-            where("shop.id", "==", currentUser.shopId)
+            where("shop.id", "==", currentUser.shopId),
+            where("status", "==", 1)
           ),
           isOnSnapshot: true,
           type: "delete",
@@ -127,6 +129,7 @@ const SideNavWithoutLogin = () => {
         fetchBiddingItems({
           query: query(
             collection(db, "items"),
+            where("status", "==", 1),
             where("itemStatus", "==", 3),
             where("id", "in", bindBiddingItemIds)
           ),
@@ -140,6 +143,7 @@ const SideNavWithoutLogin = () => {
           fetchBiddingItems({
             query: query(
               collection(db, "items"),
+              where("status", "==", 1),
               where("id", "in", bindBiddingItemIds)
             ),
             isOnSnapshot: true,

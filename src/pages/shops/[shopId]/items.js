@@ -25,6 +25,7 @@ export default function Home() {
           query: query(
             collection(db, "items"),
             where("shop.id", "==", shopId),
+            where("status", "==", 1),
             orderBy("createdAt", "desc")
           ),
           isOnSnapshot: true,
@@ -38,6 +39,7 @@ export default function Home() {
             query: query(
               collection(db, "items"),
               where("shop.id", "==", shopId),
+              where("status", "==", 1),
               orderBy("createdAt", "desc")
             ),
             isOnSnapshot: true,

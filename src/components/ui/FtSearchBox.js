@@ -16,7 +16,7 @@ import {
   InputRightElement,
   Divider,
 } from "@chakra-ui/react";
-import { query, collection } from "firebase/firestore";
+import { query, collection, where } from "firebase/firestore";
 import _ from "lodash";
 import { useRouter } from "next/router";
 import React from "react";
@@ -50,7 +50,7 @@ const FtSearchBox = () => {
   useEffect(() => {
     dispatch(
       fetchItems({
-        query: query(collection(db, "items")),
+        query: query(collection(db, "items"), where("status", "==", 1)),
         isOnSnapshot: false,
         type: "fetch",
       })
