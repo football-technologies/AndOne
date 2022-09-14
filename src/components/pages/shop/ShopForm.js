@@ -1,6 +1,19 @@
 import SubImagesForm from "@/components/pages/shop/SubImagesForm";
+import {
+  FtSmallButtonOutlined,
+  FtMiddleButtonOutlined,
+  FtLargeButton,
+} from "@/components/ui/FtButton";
+import useFtToast from "@/components/ui/FtToast";
+import { UploadSingleImage } from "@/components/ui/ImageUpload";
 import scheme from "@/helpers/scheme";
+import { db } from "@/plugins/firebase";
+import { ftCreateId } from "@/plugins/mixin";
 import rules from "@/plugins/validation";
+import { updateAccount } from "@/store/account";
+import { createShop, fetchShop, updateShop } from "@/store/shop";
+import { createTag } from "@/store/tag";
+import { updateUser } from "@/store/user";
 import {
   FormControl,
   FormLabel,
@@ -18,22 +31,6 @@ import {
   AspectRatio,
   Icon,
 } from "@chakra-ui/react";
-
-import useFtToast from "@/components/ui/FtToast";
-import {
-  FtSmallButtonOutlined,
-  FtMiddleButtonOutlined,
-  FtLargeButton,
-} from "@/components/ui/FtButton";
-import { ftCreateId } from "@/plugins/mixin";
-import { createShop, fetchShop, updateShop } from "@/store/shop";
-import { updateUser } from "@/store/user";
-import { createTag } from "@/store/tag";
-import { updateAccount } from "@/store/account";
-
-import { UploadSingleImage } from "@/components/ui/ImageUpload";
-
-import { db } from "@/plugins/firebase";
 import { doc, query, collection, getDocs, where } from "firebase/firestore";
 import _ from "lodash";
 import NextLink from "next/link";
@@ -434,7 +431,7 @@ const ShopForm = () => {
                   ></Textarea>
                 </FormControl>
 
-                <FormControl isRequired mt="10px">
+                <FormControl mt="10px">
                   <FormLabel>Address</FormLabel>
                   <Textarea
                     variant="filled"
@@ -445,7 +442,7 @@ const ShopForm = () => {
                   ></Textarea>
                 </FormControl>
 
-                <FormControl isRequired isInvalid={errors.phone} mt="10px">
+                <FormControl isInvalid={errors.phone} mt="10px">
                   <FormLabel>Phone</FormLabel>
                   <Input
                     variant="filled"
@@ -460,7 +457,7 @@ const ShopForm = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                <FormControl isRequired isInvalid={errors.email} mt="10px">
+                <FormControl isInvalid={errors.email} mt="10px">
                   <FormLabel>Email</FormLabel>
                   <Input
                     variant="filled"

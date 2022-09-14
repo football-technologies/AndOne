@@ -119,7 +119,7 @@ const SideNavWithoutLogin = () => {
         });
       };
     }
-  }, [dispatch]);
+  }, [dispatch, currentUser.shopId]);
 
   useEffect(() => {
     if (bindBiddingItemIds && bindBiddingItemIds.length > 0) {
