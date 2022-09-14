@@ -25,8 +25,6 @@ const DummyIndex = () => {
           <FtUiPallet></FtUiPallet>
         </Box>
       </Box>
-
-      {/* <ItemMiddleCard></ItemMiddleCard> */}
     </>
   );
 };
