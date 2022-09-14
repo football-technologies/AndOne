@@ -20,7 +20,7 @@ const SuggestItemsList = ({ itemId }) => {
         type: "fetch",
       })
     );
-  }, [dispatch]);
+  }, [dispatch, itemId]);
 
   return (
     <>

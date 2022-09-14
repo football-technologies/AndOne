@@ -42,7 +42,7 @@ const LikeButton = ({ target, id, name }) => {
 
   useEffect(() => {
     _fetchLikes();
-  }, [dispatch]);
+  }, [dispatch, id]);
 
   const _fetchLikes = () => {
     if (target === "shop") {

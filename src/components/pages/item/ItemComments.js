@@ -54,7 +54,7 @@ const ItemComments = () => {
     if (currentUser.shopId === bindItem.shop.id) {
       setIsSeller(true);
     }
-  }, []);
+  }, [bindItem.id]);
 
   useEffect(() => {
     if (bindComments) {
