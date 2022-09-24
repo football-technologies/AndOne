@@ -21,7 +21,7 @@ const MIN_INSTANCE = functions.config().basic.env === "production" ? 2 : 0;
 const runtimeOpts = {
   timeoutSeconds: 540,
   memory: "8GB",
-  minInstances: MIN_INSTANCE,
+  // minInstances: MIN_INSTANCE,
 };
 
 // 本番環境には、Basic Authをつける
