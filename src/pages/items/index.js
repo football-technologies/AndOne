@@ -1,7 +1,7 @@
 import { db } from "@/plugins/firebase";
 import { fetchItems } from "@/store/item";
 import { Button } from "@chakra-ui/react";
-import { query, collection, orderBy } from "firebase/firestore";
+import { query, collection, orderBy, where } from "firebase/firestore";
 import NextLink from "next/link";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -14,7 +14,11 @@ const ItemIndex = () => {
   useEffect(() => {
     dispatch(
       fetchItems({
-        query: query(collection(db, "items"), orderBy("createdAt", "desc")),
+        query: query(
+          collection(db, "items"),
+          where("status", "==", 1),
+          orderBy("createdAt", "desc")
+        ),
         isOnSnapshot: true,
         type: "fetch",
       })
@@ -23,7 +27,11 @@ const ItemIndex = () => {
     return () => {
       dispatch(
         fetchItems({
-          query: query(collection(db, "items"), orderBy("createdAt", "desc")),
+          query: query(
+            collection(db, "items"),
+            where("status", "==", 1),
+            orderBy("createdAt", "desc")
+          ),
           isOnSnapshot: true,
           type: "delete",
         })

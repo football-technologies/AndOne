@@ -15,7 +15,11 @@ export default function Home() {
   useEffect(() => {
     dispatch(
       fetchItems({
-        query: query(collection(db, "items"), where("itemStatus", ">=", 2)),
+        query: query(
+          collection(db, "items"),
+          where("status", "==", 1),
+          where("itemStatus", ">=", 2),
+        ),
         isOnSnapshot: true,
         type: "fetch",
       })
@@ -24,7 +28,11 @@ export default function Home() {
     return () => {
       dispatch(
         fetchItems({
-          query: query(collection(db, "items"), where("itemStatus", ">=", 2)),
+          query: query(
+            collection(db, "items"),
+            where("status", "==", 1),
+            where("itemStatus", ">=", 2),
+          ),
           isOnSnapshot: true,
           type: "delete",
         })
