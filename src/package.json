@@ -21,7 +21,9 @@
     "start:production": "NODE_ENV=\"production\" next start",
     "ci-deploy:mino": "firebase deploy --non-interactive --force --project mino",
     "ci-deploy:imoto": "firebase deploy --non-interactive --force --project imoto",
-    "ci-deploy:production": "firebase deploy --non-interactive --force --project production"
+    "ci-deploy:production": "firebase deploy --non-interactive --force --project production",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.9",
@@ -49,7 +51,17 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.19.3",
+    "@storybook/addon-actions": "^6.5.12",
+    "@storybook/addon-essentials": "^6.5.12",
+    "@storybook/addon-interactions": "^6.5.12",
+    "@storybook/addon-links": "^6.5.12",
+    "@storybook/builder-webpack5": "^6.5.12",
+    "@storybook/manager-webpack5": "^6.5.12",
+    "@storybook/react": "^6.5.12",
+    "@storybook/testing-library": "^0.0.13",
     "@trivago/prettier-plugin-sort-imports": "^3.3.0",
+    "babel-loader": "^8.2.5",
     "eslint": "8.22.0",
     "eslint-config-next": "12.2.5"
   }

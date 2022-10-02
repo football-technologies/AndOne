@@ -1,0 +1,32 @@
+button {
+  font-size: 14px;
+  padding: 10px;
+  border: 0;
+  border-radius: 1em;
+  cursor: pointer;
+  display: inline-block;
+  color: white;
+}
+
+.default {
+  background-color: #6c757d;
+}
+
+.primary {
+  background-color: #caaa00;
+}
+
+.base {
+  font-size: 14px;
+  padding: 10px;
+}
+
+.sm {
+  font-size: 12px;
+  padding: 8px;
+}
+
+.lg {
+  font-size: 18px;
+  padding: 14px;
+}
