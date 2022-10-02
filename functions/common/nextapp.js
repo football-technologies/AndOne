@@ -16,12 +16,12 @@ const nextjsHandle = nextjsServer.getRequestHandler();
 
 // cold start対策
 // TODO: 料金が発生。不要な時は0に設定すること
-const MIN_INSTANCE = functions.config().basic.env === "production" ? 2 : 0;
+const MIN_INSTANCE = functions.config().basic.env === "production" ? 0 : 0;
 
 const runtimeOpts = {
   timeoutSeconds: 540,
   memory: "8GB",
-  // minInstances: MIN_INSTANCE,
+  minInstances: MIN_INSTANCE,
 };
 
 // 本番環境には、Basic Authをつける
