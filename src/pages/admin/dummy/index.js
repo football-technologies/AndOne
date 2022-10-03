@@ -1,32 +1,47 @@
 import FtUiPallet from "@/components/ui/FtUiPallet";
 import { functions } from "@/plugins/firebase";
-import { Box, Button } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  List,
+  ListItem,
+  ListIcon,
+  OrderedList,
+} from "@chakra-ui/react";
 import { httpsCallable } from "firebase/functions";
+import { useState } from "react";
 
-const DummyIndex = () => {
-  const helloOnCall = async () => {
-    const hello = httpsCallable(functions, "v1-callable-hello");
-    console.log(">>>>>> Start");
-    const result = await hello();
-    console.log(">>>>>> Return: ->", result);
-  };
-
+export const DummyIndex = () => {
   return (
-    <>
-      <Box p="10" bg="paleGray">
-        <Box>
-          <h3>functions</h3>
-          <Button colorScheme="red" onClick={helloOnCall}>
-            Hello On Call
-          </Button>
-        </Box>
+    <Box>
+      ダミーページです。
+      <DummyList />
+    </Box>
+  );
+};
 
-        <Box>
-          <FtUiPallet></FtUiPallet>
-        </Box>
-      </Box>
-    </>
+const DummyList = () => {
+  return (
+    <List>
+      <ListItem>1</ListItem>
+      <ListItem>2</ListItem>
+      <ListItem>3</ListItem>
+      <ListItem>4</ListItem>
+      <ListItem>5</ListItem>
+    </List>
   );
 };
 
 export default DummyIndex;
+// const DummyIndex = () => {
+//   const helloOnCall = async () => {
+//     const hello = httpsCallable(functions, "v1-callable-hello");
+//     console.log(">>>>>> Start");
+//     const result = await hello();
+//     console.log(">>>>>> Return: ->", result);
+//   };
+
+//   return;
+// };
+
+// export default DummyIndex;
