@@ -8,6 +8,7 @@ const DummyIndex = () => {
     const hello = httpsCallable(functions, "v1-callable-hello");
     console.log(">>>>>> Start");
     const result = await hello();
+
     console.log(">>>>>> Return: ->", result);
   };
 
